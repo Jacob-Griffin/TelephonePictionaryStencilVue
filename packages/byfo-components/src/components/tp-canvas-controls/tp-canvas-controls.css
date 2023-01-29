@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+[value="active"]{
+  @apply bg-green-400;
+}
