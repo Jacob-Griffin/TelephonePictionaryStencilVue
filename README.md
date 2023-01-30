@@ -21,4 +21,4 @@ root (turbo)
 All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
-The app loads right into one the input tools, determined by the round prop on `<tp-input-zone>`. Only the canvas is styled using *some* tailwind. Event model for canvas actions and grabbing the submitted input are in place.
+The app loads right into one the input tools, determined by the round prop on `<tp-input-zone>`. Only the stencil package is styled. Event model for canvas actions and grabbing the submitted input are in place.
