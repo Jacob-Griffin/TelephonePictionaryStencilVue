@@ -1,15 +1,45 @@
 <script lang="typescript">
   import { defineCustomElements } from "byfo-components/loader";
   defineCustomElements();
-  const handler = function (event: CustomEvent<string>) {
-    console.log(`'${event.type}'' event recieved with data "${event.detail}"`);
-  };
-  document.addEventListener("tpSubmitted", handler);
+
+  let roundData = {
+    round: 1,
+    from: "me",
+    to: "you",
+    content: "You got this prompt",
+    contentType: "text",
+    endTime: Date.now()+180000
+  }
+
+  let waiting = false;
+
+  const newRoundHandler = (event) =>{
+    roundData = event.detail;
+    waiting = false;
+  }
+  document.addEventListener('newRound',newRoundHandler);
+
+  const submittedHandler = (event) =>{
+    waiting = true;
+  }
+  document.addEventListener('tpSubmitted',submittedHandler);
 </script>
 
-<main>
-  <tp-input-zone round="0" />
-</main>
+{#if !waiting}
+  <main>
+    {#if roundData.round != 0}
+      <p><strong>From:</strong> {roundData.from}</p>
+      <tp-content content={roundData.content} type={roundData.contentType}/>
+    {/if}
+    <tp-timer endtime={roundData.endTime}></tp-timer>
+    <tp-input-zone round={roundData.round} />
+  </main>
+{/if}
+{#if waiting}
+  <main>
+    <h3>Waiting for other players</h3>
+  </main>
+{/if}
 
 <style>
   main{
@@ -17,5 +47,7 @@
     width:100%;
     flex-direction: column;
     justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
   }
 </style>

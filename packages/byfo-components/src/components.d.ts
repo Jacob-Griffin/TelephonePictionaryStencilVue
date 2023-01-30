@@ -13,8 +13,15 @@ export namespace Components {
     }
     interface TpCanvasControls {
     }
+    interface TpContent {
+        "content": string;
+        "type": string;
+    }
     interface TpInputZone {
         "round": number;
+    }
+    interface TpTimer {
+        "endtime": number;
     }
 }
 declare global {
@@ -30,16 +37,30 @@ declare global {
         prototype: HTMLTpCanvasControlsElement;
         new (): HTMLTpCanvasControlsElement;
     };
+    interface HTMLTpContentElement extends Components.TpContent, HTMLStencilElement {
+    }
+    var HTMLTpContentElement: {
+        prototype: HTMLTpContentElement;
+        new (): HTMLTpContentElement;
+    };
     interface HTMLTpInputZoneElement extends Components.TpInputZone, HTMLStencilElement {
     }
     var HTMLTpInputZoneElement: {
         prototype: HTMLTpInputZoneElement;
         new (): HTMLTpInputZoneElement;
     };
+    interface HTMLTpTimerElement extends Components.TpTimer, HTMLStencilElement {
+    }
+    var HTMLTpTimerElement: {
+        prototype: HTMLTpTimerElement;
+        new (): HTMLTpTimerElement;
+    };
     interface HTMLElementTagNameMap {
         "tp-canvas": HTMLTpCanvasElement;
         "tp-canvas-controls": HTMLTpCanvasControlsElement;
+        "tp-content": HTMLTpContentElement;
         "tp-input-zone": HTMLTpInputZoneElement;
+        "tp-timer": HTMLTpTimerElement;
     }
 }
 declare namespace LocalJSX {
@@ -49,13 +70,22 @@ declare namespace LocalJSX {
     }
     interface TpCanvasControls {
     }
+    interface TpContent {
+        "content"?: string;
+        "type"?: string;
+    }
     interface TpInputZone {
         "round"?: number;
+    }
+    interface TpTimer {
+        "endtime"?: number;
     }
     interface IntrinsicElements {
         "tp-canvas": TpCanvas;
         "tp-canvas-controls": TpCanvasControls;
+        "tp-content": TpContent;
         "tp-input-zone": TpInputZone;
+        "tp-timer": TpTimer;
     }
 }
 export { LocalJSX as JSX };
@@ -64,7 +94,9 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "tp-canvas": LocalJSX.TpCanvas & JSXBase.HTMLAttributes<HTMLTpCanvasElement>;
             "tp-canvas-controls": LocalJSX.TpCanvasControls & JSXBase.HTMLAttributes<HTMLTpCanvasControlsElement>;
+            "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
+            "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
         }
     }
 }

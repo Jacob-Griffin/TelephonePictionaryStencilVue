@@ -23,6 +23,14 @@ export class TpInputZone {
     }
   }
 
+  connectedCallback(){
+    document.addEventListener('tpTimerFinished',this.sendRound);
+  }
+
+  disconnectedCallback(){
+    document.removeEventListener('tpTimerFinished',this.sendRound);
+  }
+
   sendRound = async () => {
     let value;
     if (this.isTextRound) {
@@ -51,7 +59,7 @@ export class TpInputZone {
             placeholder={this.placeholderText}
           ></textarea>
         ) : (
-          <div>
+          <div class="w-full">
             <tp-canvas ref={el => (this.canvasEl = el)}></tp-canvas>
             <tp-canvas-controls></tp-canvas-controls>
           </div>

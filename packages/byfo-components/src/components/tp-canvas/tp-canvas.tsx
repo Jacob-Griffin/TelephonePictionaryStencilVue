@@ -38,10 +38,10 @@ export class TpCanvas {
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                           :(String)
 
-  componentDidRender() {
+  componentDidRender(){
     //Set up the canvas context now that the canvas exists
     this.setupContext();
-
+    
     //Listen for the controller buttons to say anything
     document.addEventListener('undoInput', this.undo);
     document.addEventListener('redoInput', this.redo);
@@ -63,6 +63,18 @@ export class TpCanvas {
     document.addEventListener('pointercancel', this.finishLine);
 
     //Note, leaving the canvas area DOES NOT stop the line.
+  }
+
+  disconnectedCallback(){
+    document.removeEventListener('redoInput', this.redo);
+    document.removeEventListener('sizeInput', this.changeLine);
+    document.removeEventListener('undoInput', this.undo);
+    document.removeEventListener('clearInput', this.clearCanvas);
+    document.removeEventListener('penInput', () => this.setDrawMode('#000'));
+    document.removeEventListener('eraserInput', () => this.setDrawMode('#FFF'));
+    document.removeEventListener('pointermove', this.draw);
+    document.removeEventListener('pointercancel', this.finishLine);
+    document.removeEventListener('pointerup', this.finishLine);
   }
 
   setupContext() {
@@ -208,14 +220,12 @@ export class TpCanvas {
 
   render() {
     return (
-      <div id="canvasHolder" class="flex justify-center w-full">
-        <canvas
-          class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg w-full"
-          height={this.height}
-          width={this.width}
-          ref={el => (this.canvasElement = el as HTMLElement)}
-        ></canvas>
-      </div>
+      <canvas
+        class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg w-full"
+        height={this.height}
+        width={this.width}
+        ref={el => (this.canvasElement = el as HTMLElement)}
+      ></canvas>
     );
   }
 }
