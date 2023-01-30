@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'tp-input-zone',
@@ -12,6 +12,15 @@ export class TpInputZone {
 
   get isTextRound() {
     return this.round % 2 === 0;
+  }
+
+  get placeholderText(){
+    if(this.round === 0){
+      return 'Type in a word, phrase, or sentence to be passed along';
+    }
+    else{
+      return 'Describe the image your were sent';
+    }
   }
 
   sendRound = async () => {
@@ -33,17 +42,28 @@ export class TpInputZone {
 
   render() {
     return (
-      <Host>
+      <div class="flex flex-col items-center w-full">
         {this.isTextRound ? (
-          <textarea ref={el => (this.textEl = el)}></textarea>
+          <textarea
+            class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg
+                  text-black text-3xl text-center font-medium p-4 w-full bg-white aspect-[5/3]"
+            ref={el => (this.textEl = el)}
+            placeholder={this.placeholderText}
+          ></textarea>
         ) : (
           <div>
             <tp-canvas ref={el => (this.canvasEl = el)}></tp-canvas>
             <tp-canvas-controls></tp-canvas-controls>
           </div>
         )}
-        <button onClick={this.sendRound}>Send</button>
-      </Host>
+        <button
+          class="mt-4 rounded-md w-32 h-16 text-white text-lg font-medium 
+                      border-none shadow-md shadow-gray-400 bg-blue-500"
+          onClick={this.sendRound}
+        >
+          Send
+        </button>
+      </div>
     );
   }
 }

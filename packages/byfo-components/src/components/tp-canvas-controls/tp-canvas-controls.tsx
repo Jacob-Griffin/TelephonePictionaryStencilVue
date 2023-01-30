@@ -71,7 +71,7 @@ export class TpCanvasControls {
 
   render() {
     return (
-      <section class="flex flex-wrap justify-center gap-4 m-2 p-4 bg-gray-200">
+      <section class="flex flex-wrap justify-center gap-4 m-2 p-4 rounded-sm">
         <button class={this.buttonClasses} ref={el => (this.undoButton = el)}>
           Undo
         </button>

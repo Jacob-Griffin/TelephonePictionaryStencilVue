@@ -1,4 +1,5 @@
 import { Config } from '@stencil/core';
+import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 
 export const config: Config = {
   namespace: 'byfo-components',
@@ -18,4 +19,8 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
     },
   ],
+  plugins: [
+    tailwind(),
+    tailwindHMR()
+  ]
 };
