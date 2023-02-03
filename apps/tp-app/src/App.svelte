@@ -1,6 +1,8 @@
 <script lang="typescript">
-  import { defineCustomElements } from "byfo-components/loader";
-  defineCustomElements();
+  //These are auto-imports for the stencil 
+  import { TpContent } from "byfo-components/dist/components/tp-content";
+  import { TpTimer } from "byfo-components/dist/components/tp-timer";
+  import { TpInputZone } from "byfo-components/dist/components/tp-input-zone";
 
   let roundData = {
     round: 1,

@@ -5,11 +5,9 @@ export const config: Config = {
   namespace: 'byfo-components',
   outputTargets: [
     {
-      type: 'dist',
-      esmLoaderPath: '../loader',
-    },
-    {
       type: 'dist-custom-elements',
+      customElementsExportBehavior: 'auto-define-custom-elements',
+      generateTypeDeclarations: true
     },
     {
       type: 'docs-readme',
