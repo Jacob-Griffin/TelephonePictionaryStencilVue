@@ -6,6 +6,8 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 
 ## Running
 
+Prerequisites: pnpm (`npm i -g pnpm`, if you need it)
+
 After cloning the repo, run `pnpm install` at the project root, then `turbo dev`
 
 ## Structure
