@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Element } from '@stencil/core';
 
 @Component({
   tag: 'tp-canvas-controls',
@@ -15,6 +15,8 @@ export class TpCanvasControls {
   lineButtons = {};
   lineWidths = ['small', 'medium', 'large', 'xlarge'];
   buttonClasses = 'rounded-md w-16 h-16 text-white border-none shadow-md shadow-gray-400 bg-blue-500 selected:bg-green-400';
+
+  @Element() el: HTMLElement;
 
   componentDidRender() {
     this.undoButton.addEventListener('click', this.sendUndo);
@@ -35,31 +37,31 @@ export class TpCanvasControls {
   }
 
   sendUndo() {
-    document.dispatchEvent(new CustomEvent('undoInput'));
+    this.el.parentElement.dispatchEvent(new CustomEvent('undo-input'));
   }
 
   sendRedo() {
-    document.dispatchEvent(new CustomEvent('redoInput'));
+    this.el.parentElement.dispatchEvent(new CustomEvent('redo-input'));
   }
 
   sendClear(color) {
-    document.dispatchEvent(new CustomEvent('clearInput', { detail: { color } }));
+    this.el.parentElement.dispatchEvent(new CustomEvent('clear-input', { detail: { color } }));
   }
 
   sendDraw = () => {
-    document.dispatchEvent(new CustomEvent('penInput'));
+    this.el.parentElement.dispatchEvent(new CustomEvent('pen-input'));
     this.drawButton.setAttribute('value', 'active');
     this.eraseButton.setAttribute('value', 'inactive');
   };
 
   sendErase = () => {
-    document.dispatchEvent(new CustomEvent('eraserInput'));
+    this.el.parentElement.dispatchEvent(new CustomEvent('eraser-input'));
     this.drawButton.setAttribute('value', 'inactive');
     this.eraseButton.setAttribute('value', 'active');
   };
 
   sendSize = newSize => {
-    document.dispatchEvent(new CustomEvent('sizeInput', { detail: { newSize } }));
+    this.el.parentElement.dispatchEvent(new CustomEvent('size-input', { detail: { newSize } }));
     Object.keys(this.lineButtons).forEach(width => {
       if (width == newSize) {
         this.lineButtons[width].setAttribute('value', 'active');

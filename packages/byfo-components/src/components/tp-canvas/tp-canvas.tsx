@@ -11,7 +11,7 @@ export class TpCanvas {
   @Prop() width = 1000;
 
   //Static Properties (elements and such)
-  @Element() hostElement: HTMLElement;
+  @Element() el: HTMLElement;
   canvasElement;
   ctx;
 
@@ -42,15 +42,15 @@ export class TpCanvas {
     //Set up the canvas context now that the canvas exists
     this.setupContext();
     
-    //Listen for the controller buttons to say anything
-    document.addEventListener('undoInput', this.undo);
-    document.addEventListener('redoInput', this.redo);
-    document.addEventListener('sizeInput', this.changeLine);
-    document.addEventListener('clearInput', this.clearCanvas);
-    document.addEventListener('penInput', () => this.setDrawMode('#000'));
-    document.addEventListener('eraserInput', () => this.setDrawMode('#FFF'));
+    //Listen for the controller buttons to say anything (Should have shared parent)
+    this.el.parentElement.addEventListener('undo-input', this.undo);
+    this.el.parentElement.addEventListener('redo-input', this.redo);
+    this.el.parentElement.addEventListener('size-input', this.changeLine);
+    this.el.parentElement.addEventListener('clear-input', this.clearCanvas);
+    this.el.parentElement.addEventListener('pen-input', () => this.setDrawMode('#000'));
+    this.el.parentElement.addEventListener('eraser-input', () => this.setDrawMode('#FFF'));
 
-    //Listen for drawing-related events:
+    //Listen for drawing-related events (Listen to full document for finishes):
 
     //Start drawing when their pen comes down onto the canvas
     this.canvasElement.addEventListener('pointerdown', this.startDraw);
@@ -66,12 +66,12 @@ export class TpCanvas {
   }
 
   disconnectedCallback(){
-    document.removeEventListener('redoInput', this.redo);
-    document.removeEventListener('sizeInput', this.changeLine);
-    document.removeEventListener('undoInput', this.undo);
-    document.removeEventListener('clearInput', this.clearCanvas);
-    document.removeEventListener('penInput', () => this.setDrawMode('#000'));
-    document.removeEventListener('eraserInput', () => this.setDrawMode('#FFF'));
+    this.el.parentElement.removeEventListener('redo-input', this.redo);
+    this.el.parentElement.removeEventListener('size-input', this.changeLine);
+    this.el.parentElement.removeEventListener('undo-input', this.undo);
+    this.el.parentElement.removeEventListener('clear-input', this.clearCanvas);
+    this.el.parentElement.removeEventListener('pen-input', () => this.setDrawMode('#000'));
+    this.el.parentElement.removeEventListener('eraser-input', () => this.setDrawMode('#FFF'));
     document.removeEventListener('pointermove', this.draw);
     document.removeEventListener('pointercancel', this.finishLine);
     document.removeEventListener('pointerup', this.finishLine);
@@ -97,7 +97,7 @@ export class TpCanvas {
       this.currentPath = new Path2D();
       this.currentPath.moveTo(...this.transformCoordinates(event));
 
-      //this.hostElement.setPointerCapture(event.pointerid);
+      //this.el.setPointerCapture(event.pointerid);
     }
   };
 
@@ -110,7 +110,7 @@ export class TpCanvas {
   };
 
   finishLine = event => {
-    //this.hostElement.releasePointerCapture(event.pointerid);
+    //this.el.releasePointerCapture(event.pointerid);
     //Only add the path if there is one
     if (this.currentPath != undefined) {
       this.draw(event);

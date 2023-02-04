@@ -24,11 +24,11 @@ export class TpInputZone {
   }
 
   connectedCallback(){
-    document.addEventListener('tpTimerFinished',this.sendRound);
+    document.addEventListener('tp-timer-finished',this.sendRound);
   }
 
   disconnectedCallback(){
-    document.removeEventListener('tpTimerFinished',this.sendRound);
+    document.removeEventListener('tp-timer-finished',this.sendRound);
   }
 
   sendRound = async () => {
@@ -41,7 +41,7 @@ export class TpInputZone {
       value = await canvas.exportDrawing();
     }
 
-    const submitEvent = new CustomEvent<string>('tpSubmitted', {
+    const submitEvent = new CustomEvent<string>('tp-submitted', {
       detail: value,
     });
 

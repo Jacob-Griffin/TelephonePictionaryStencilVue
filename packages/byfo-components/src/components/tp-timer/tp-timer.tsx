@@ -21,7 +21,7 @@ export class TpTimer {
   }
 
   timeoutRound(){
-    document.dispatchEvent(new CustomEvent('tpTimerFinished',{}));
+    document.dispatchEvent(new CustomEvent('tp-timer-finished',{}));
   }
 
   get secondsLeft():number{
