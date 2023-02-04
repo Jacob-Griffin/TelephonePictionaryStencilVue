@@ -36,15 +36,15 @@ export class TpCanvasControls {
     });
   }
 
-  sendUndo() {
+  sendUndo = () => {
     this.el.parentElement.dispatchEvent(new CustomEvent('undo-input'));
   }
 
-  sendRedo() {
+  sendRedo = () => {
     this.el.parentElement.dispatchEvent(new CustomEvent('redo-input'));
   }
 
-  sendClear(color) {
+  sendClear = (color) => {
     this.el.parentElement.dispatchEvent(new CustomEvent('clear-input', { detail: { color } }));
   }
 

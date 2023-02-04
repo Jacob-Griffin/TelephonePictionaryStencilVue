@@ -17,15 +17,30 @@ export default {
       },
       waiting: false,
       globalListeners: {
-        'tp-submitted':this.onSendHandler
+        'tp-submitted':this.onSendHandler,
+        'round-progressed':this.getNextRound
       }
     };
   },
   methods: {
-    onSendHandler(event) {
-      console.log(event.detail);
+    onSendHandler({detail}) {
+      //TEMPORARY: send back own data to self to test round-progression data updates
+      const loopBackEvent = new CustomEvent('round-progressed',{detail})
+      setTimeout(()=>{document.dispatchEvent(loopBackEvent)},Math.floor(Math.random()*5000));
       this.waiting = true;
     },
+    getNextRound({ detail }){
+      //
+      this.roundData = {
+        round: this.roundData.round + 1,
+        from: "me",
+        to: "you",
+        content: detail,
+        contentType: this.roundData.round % 2 === 0 ? "text" : "image",
+        endTime: Date.now() + 180000
+      }
+      this.waiting = false;
+    }
   },
   mounted(){
     //Add global (document) event listeners here

@@ -19,12 +19,12 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-
-  --vt-c-brand: rgb(50, 78, 163);
 }
 
 /* semantic color variables for this project */
 :root {
+  --color-brand: rgb(50, 78, 163);
+
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
@@ -35,7 +35,9 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --section-gap: 160px;
+  --color-button: rgb(60,90,190);
+  --color-button-hover: rgb(47, 155, 72);
+  --color-button-disabled: #889;
 }
 
 @media (prefers-color-scheme: dark) {

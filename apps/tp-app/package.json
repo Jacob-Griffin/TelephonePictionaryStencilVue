@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "vite --host",
+    "dev:local": "vite",
     "build": "vite build",
+    "start": "vite build; vite --host",
+    "start:local": "vite build; vite",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
