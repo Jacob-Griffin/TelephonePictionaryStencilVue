@@ -6,8 +6,7 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 
 ## Running
 
-After cloning the repo, run `pnpm install` at the project root, then `turbo dev`. 
-If it's giving you problems about typescript notation in the svelte project, run `turbo build` first, then try `turbo dev` again
+After cloning the repo, run `pnpm install` at the project root, then `turbo dev`
 
 ## Structure
 
