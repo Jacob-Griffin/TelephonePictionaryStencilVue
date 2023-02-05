@@ -4,6 +4,7 @@ import {
   validUsername,
   invalidCharactersList,
 } from "../utils/expressions.js";
+import { addPlayerToLobby } from '../firebase/rtdb.js';
 
 export default {
   data() {
@@ -50,31 +51,21 @@ export default {
   },
   methods: {
     joinGame() {
-      /*
-      if(game started check){
-        this.joinError =  `Game ${gameid} has already been started`;
+      //Valid gameid and username are being checked by is disabled
+      if(this.isDisabled){
         return;
       }
 
-      if(name in game){
-        this.joinError =  `Name already used in game ${gameid}`;
+      //All other checks are handled by the db
+      const result = addPlayerToLobby(this.gameid,this.username);
+      if(typeof result == 'string'){
+        //If there is an error, it will be a string, pass it to the error area
+        this.joinError = result;
         return;
       }
-
-      if(game doesn't exist){
-        this.joinError =  `Game ${this.gameid} doesn't exist`
-        return;
-      }
-      */
-
-      if (!validGameId(this.gameid)) {
-        this.joinError = `Please input a valid gameId`;
-        return;
-      }
-
-      //If we made it past all the checks, navigate to the game, storing username
+      //If we're all good, navigate to the lobby
       document.cookie = `username=${this.username} path=/`;
-      window.open(`/game/${this.gameid}`, "_self");
+      //window.open(`/lobby/${this.gameid}`, "_self");
       return;
     },
   },
