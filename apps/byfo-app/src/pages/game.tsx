@@ -1,30 +1,42 @@
-import { createSignal } from 'solid-js';
+import { createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
+import {} from "../firebase/rtdb";
 
-export default function Game() {
-  const [count, setCount] = createSignal(0);
+import RoundData from "../types/RoundData";
+import type { Component } from "solid-js";
+
+const Game: Component = () => {
+  const name = document.cookie.search(/(?<=username = \w+)[^;]+/);
+  const [round, setRound] = createSignal(0);
+  const [waiting, setWaiting] = createSignal(false);
+  const [incomingGameData, setIncomingGameData] = createStore(new RoundData());
+  const [outgoingData, setOutgoingGameData] = createStore(new RoundData());
+  const endtime = Date.now() + 180000;
+  const roundChanged = () => {};
 
   return (
     <section class="bg-gray-100 text-gray-700 p-8">
-      <h1 class="text-2xl font-bold">Home</h1>
-      <p class="mt-4">This is the home page.</p>
-
-      <div class="flex items-center space-x-2">
-        <button
-          class="border rounded-lg px-2 border-gray-900"
-          onClick={() => setCount(count() - 1)}
-        >
-          -
-        </button>
-
-        <output class="p-10px">Count: {count}</output>
-
-        <button
-          class="border rounded-lg px-2 border-gray-900"
-          onClick={() => setCount(count() + 1)}
-        >
-          +
-        </button>
-      </div>
+      {waiting() ? (
+        <h1 class="text-2xl font-bold">Home</h1>
+      ) : (
+        <>
+          {round() !== 0 ? (
+            <>
+              <p>
+                <strong>From:</strong> {incomingGameData.from}
+              </p>
+              <tp-content
+                content={incomingGameData.content}
+                type={incomingGameData.contentType}
+              />
+            </>
+          ) : null}
+          <tp-timer endtime={endtime}/>
+          <tp-input-zone round={round()} />
+        </>
+      )}
     </section>
   );
-}
+};
+
+export default Game;

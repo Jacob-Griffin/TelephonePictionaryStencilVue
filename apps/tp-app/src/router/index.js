@@ -20,8 +20,8 @@ const router = createRouter({
     {
       path: "/lobby/:gameid",
       name: "lobby",
-      component: () => import("../views/Lobby.vue")
-    }
+      component: () => import("../views/Lobby.vue"),
+    },
   ],
 });
 

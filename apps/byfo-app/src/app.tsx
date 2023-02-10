@@ -1,8 +1,8 @@
-import type { Component } from 'solid-js';
-import { Link, useRoutes, useLocation } from '@solidjs/router';
+import type { Component } from "solid-js";
+import { Link, useRoutes, useLocation } from "@solidjs/router";
 
-import { routes } from './routes';
-import Logo from './components/Logo';
+import { routes } from "./routes";
+import Logo from "./components/Logo";
 
 const App: Component = () => {
   const location = useLocation();

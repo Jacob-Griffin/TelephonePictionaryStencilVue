@@ -1,15 +1,15 @@
-export function validGameId(input){
+export function validGameId(input):boolean{
     const exp = /^[1-9]{1,6}$/;
     return exp.test(input);
 }
-export function validUsername(input){
+export function validUsername(input):boolean{
     const exp = /^[^?=\-/%#><+]+$/g;
     return exp.test(input)
 }
 
-const invalidCharacters = /[?=\-/%#><+]/g;
+const invalidCharacters:RegExp = /[?=\-/%#><+;]/g;
 
-export function invalidCharactersList(input,{raw}={raw:false}){
+export function invalidCharactersList(input,{raw}={raw:false}):string|string[]{
     const badCharactersUsed = [...input.matchAll(invalidCharacters)];
     const rawList = badCharactersUsed.map((match) => match[0]);
     if(raw) return rawList;

@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal } from "solid-js";
 
 export default function Lobby() {
   const [count, setCount] = createSignal(0);

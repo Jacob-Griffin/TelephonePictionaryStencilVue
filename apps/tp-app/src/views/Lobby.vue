@@ -5,10 +5,10 @@ export default {
       players: [],
     };
   },
-  methods:{
-    handleNewPlayer({detail}){
+  methods: {
+    handleNewPlayer({ detail }) {
       this.players = detail;
-    }
-  }
+    },
+  },
 };
 </script>

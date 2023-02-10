@@ -5,33 +5,33 @@ import Modal from "../components/Modal";
 export default function Home() {
   const modals = {
     join: {
-      modalName:'join',
-      header:"Join a game",
-      needsName:true,
-      needsId:true,
-      needsVerification:true
+      modalName: "join",
+      header: "Join a game",
+      needsName: true,
+      needsId: true,
+      needsVerification: true,
     },
     host: {
-      modalName: 'host',
+      modalName: "host",
       header: "Host a game",
-      needsName:true,
-      needsId:false,
-      needsVerification:true
+      needsName: true,
+      needsId: false,
+      needsVerification: true,
     },
     view: {
-      modalName:'view',
-      header:"Review an old game",
-      needsName:false,
-      needsId:true,
-      needsVerification:false
-    }
+      modalName: "view",
+      header: "Review an old game",
+      needsName: false,
+      needsId: true,
+      needsVerification: false,
+    },
   };
 
-  const [activeModal,setActiveModal] = createSignal(undefined);
+  const [activeModal, setActiveModal] = createSignal(undefined);
 
   const openModal = (event) => {
     const modalName = event.target.id;
-    setActiveModal(modals[modalName])
+    setActiveModal(modals[modalName]);
     return true;
   };
 
@@ -42,13 +42,14 @@ export default function Home() {
         {Object.keys(modals).map((modalName) => (
           <button
             class="h-20 w-full text-xl text-center bg-brand-primary hover:bg-brand-select rounded-lg text-white"
-            onClick={openModal} id={modalName}
+            onClick={openModal}
+            id={modalName}
           >
             {modals[modalName].header}
           </button>
         ))}
       </div>
-      <Modal {...activeModal()} setActiveModal={setActiveModal}/>
+      <Modal {...activeModal()} setActiveModal={setActiveModal} />
     </section>
   );
 }

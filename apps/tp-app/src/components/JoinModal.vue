@@ -4,7 +4,7 @@ import {
   validUsername,
   invalidCharactersList,
 } from "../utils/expressions.js";
-import { addPlayerToLobby } from '../firebase/rtdb.js';
+import { addPlayerToLobby } from "../firebase/rtdb.js";
 
 export default {
   data() {
@@ -17,23 +17,22 @@ export default {
   computed: {
     isDisabled() {
       if (!validUsername(this.username)) {
-        if(this.username.length !== 0){
+        if (this.username.length !== 0) {
           //If the username exists and is invalid for other reasons, say why
           this.joinError = `Names cannot contain ${invalidCharactersList(
             this.username
           )}`;
           return true;
         }
-        
       } else if (this.joinError && this.joinError.startsWith("Names cannot")) {
         //If the name was valid and that was the current error, clear it
         this.joinError = false;
       }
-      
+
       if (!validGameId(this.gameid)) {
-        if(this.gameid?.length){
+        if (this.gameid?.length) {
           //If the username exists and is invalid for other reasons, say why
-          this.joinError = 'Game Id must be 1-6 digits'
+          this.joinError = "Game Id must be 1-6 digits";
           return true;
         }
       } else if (this.joinError && this.joinError.startsWith("Game Id must")) {
@@ -52,13 +51,13 @@ export default {
   methods: {
     joinGame() {
       //Valid gameid and username are being checked by is disabled
-      if(this.isDisabled){
+      if (this.isDisabled) {
         return;
       }
 
       //All other checks are handled by the db
-      const result = addPlayerToLobby(this.gameid,this.username);
-      if(typeof result == 'string'){
+      const result = addPlayerToLobby(this.gameid, this.username);
+      if (typeof result == "string") {
         //If there is an error, it will be a string, pass it to the error area
         this.joinError = result;
         return;

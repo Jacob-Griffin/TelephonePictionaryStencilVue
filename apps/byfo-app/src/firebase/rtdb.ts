@@ -1,7 +1,7 @@
 import { rtdb } from "../../Firebase";
 import { ref, push, get, set } from "firebase/database";
 
-export async function addPlayerToLobby(gameid, username) {
+export async function addPlayerToLobby(gameid, username):Promise<string|boolean> {
   //Grab the game
   const gameRef = ref(rtdb,`games/${gameid}`);
   if(!gameRef){
@@ -30,6 +30,17 @@ export async function addPlayerToLobby(gameid, username) {
   return true;
 }
 
-export async function createLobby(gameid,username){
+export async function createLobby(gameid,username):Promise<string|boolean>{
+  return false;
+}
 
+export async function getRound(gameid,username,round):Promise<{}>{
+    return {
+      content: '',
+      contentType: 'text'
+    }
+}
+
+export async function getRecipient(gameid,username):Promise<string>{
+  return 'you';
 }
