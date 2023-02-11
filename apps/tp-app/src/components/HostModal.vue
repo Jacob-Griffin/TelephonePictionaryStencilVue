@@ -1,6 +1,6 @@
 <script>
-import { validUsername, invalidCharactersList } from "../utils/expressions.js";
-
+import { validUsername, invalidCharactersList } from "../utils/expressions";
+import { listGameStatus, createLobby } from "../firebase/rtdb";
 export default {
   data() {
     return {
@@ -26,21 +26,25 @@ export default {
     },
   },
   methods: {
-    joinGame() {
-      const gameid = this.createGame();
+    async joinGame() {
+      const gameid = await this.createGame();
+      if(!gameid){
+        return;
+      }
       window.name = this.username;
       document.cookie = `username=${this.username} path=/`;
       window.open(`/game/${gameid}`, "_self");
       return;
     },
-    createGame() {
+    async createGame() {
       if (!validUsername(this.username)) {
         return false;
       }
 
+      const gameStatuses = await listGameStatus();
       // Check which gameIds were/are in use via firestore, then generate one that's not there
       const usedIds = new Set(
-        /*Firestore check goes here. TEMP: no ids are used*/ []
+        Object.keys(gameStatuses)
       );
 
       // Try a random old game id
@@ -58,7 +62,7 @@ export default {
       }
 
       //Send the request for this game to firestore
-      /* */
+      await createLobby(newId,this.username);
 
       //Pass this id back so we can route the player to the lobby
       return newId;
@@ -76,7 +80,7 @@ export default {
       <input id="name-input" type="text" v-model="username" />
       <p class="error-text" v-if="hostError">{{ hostError }}</p>
       <button class="main-action" :disabled="isDisabled" @click="joinGame">
-        Join
+        Host
       </button>
     </article>
   </div>

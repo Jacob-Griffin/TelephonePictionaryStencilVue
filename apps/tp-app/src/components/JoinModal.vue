@@ -49,14 +49,14 @@ export default {
     },
   },
   methods: {
-    joinGame() {
+    async joinGame() {
       //Valid gameid and username are being checked by is disabled
       if (this.isDisabled) {
         return;
       }
 
       //All other checks are handled by the db
-      const result = addPlayerToLobby(this.gameid, this.username);
+      const result = await addPlayerToLobby(this.gameid, this.username);
       if (typeof result == "string") {
         //If there is an error, it will be a string, pass it to the error area
         this.joinError = result;
@@ -64,7 +64,7 @@ export default {
       }
       //If we're all good, navigate to the lobby
       document.cookie = `username=${this.username} path=/`;
-      //window.open(`/lobby/${this.gameid}`, "_self");
+      window.open(`/game/${this.gameid}`, "_self");
       return;
     },
   },

@@ -1,8 +1,8 @@
 <script>
 //These are auto-imports for the stencil components
-import { TpContent } from "byfo-components/dist/components/tp-content";
-import { TpTimer } from "byfo-components/dist/components/tp-timer";
-import { TpInputZone } from "byfo-components/dist/components/tp-input-zone";
+import "byfo-components/dist/components/tp-content";
+import "byfo-components/dist/components/tp-timer";
+import "byfo-components/dist/components/tp-input-zone";
 
 export default {
   data() {

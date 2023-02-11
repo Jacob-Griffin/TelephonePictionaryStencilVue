@@ -1,5 +1,5 @@
 export function validGameId(input){
-    const exp = /^[1-9]{1,6}$/;
+    const exp = /^[0-9]{1,6}$/;
     return exp.test(input);
 }
 export function validUsername(input){

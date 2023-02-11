@@ -37,7 +37,7 @@ export default {
       <p>Game Id:</p>
       <input type="text" v-model="gameid" />
       <p class="error-text" v-if="findError">{{ findError }}</p>
-      <button class="main-action" @click="reviewGame">Join</button>
+      <button class="main-action" @click="reviewGame">View</button>
     </article>
   </div>
 </template>
