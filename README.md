@@ -24,6 +24,6 @@ root (turbo)
 All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
-Vue: The app has a home menu that links to a working sample of a single round's gameplay
+Vue: The app has a home menu that links to a fully functional lobby. There is a game page that you can visit via url that implements the client-side functionality
 Solid: The app has a home menu that is set up to display the appropriate modals for Join/Host/View game
     - The Solid version is canceled for now, due to stencil component typings not fitting right into solid

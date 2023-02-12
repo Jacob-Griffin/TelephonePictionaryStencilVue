@@ -31,9 +31,9 @@ export default {
       if(!gameid){
         return;
       }
-      window.name = this.username;
-      document.cookie = `username=${this.username} path=/`;
-      window.open(`/game/${gameid}`, "_self");
+      
+      window.sessionStorage.setItem('username',this.username);
+      window.open(`/lobby/${gameid}`, "_self");
       return;
     },
     async createGame() {

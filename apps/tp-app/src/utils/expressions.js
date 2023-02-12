@@ -7,7 +7,7 @@ export function validUsername(input){
     return exp.test(input)
 }
 
-const invalidCharacters = /[?=\-/%#><+]/g;
+const invalidCharacters = /[?=\-/%#><+;]/g;
 
 export function invalidCharactersList(input,{raw}={raw:false}){
     const badCharactersUsed = [...input.matchAll(invalidCharacters)];

@@ -1,5 +1,5 @@
 import { rtdb } from "../../Firebase";
-import { ref, push, get, set } from "firebase/database";
+import { ref, get, set } from "firebase/database";
 
 function generatePriority(taken=undefined){
   let priority = Math.floor(Math.random()*1000);
@@ -26,28 +26,33 @@ export async function addPlayerToLobby(gameid, username) {
   }
   const playersRef = ref(rtdb,`players/${gameid}`);
   const players = await get(playersRef).then((result) => result.val());
-  const playerSet = new Set(Object.values(players));
 
-  if(playerSet.has(username)){
-    return 'That name is already taken in this game';
+  for(let existingUser of Object.values(players)){
+    if(existingUser.username === username){
+      return 'That name is already taken in this game';
+    }
   }
 
   //If there are no issues, push in the new player
-  const newPlayerRef = ref(rtdb,`players/${gameid}/${generatePriority(new Set(Object.values(players)))}`);
-  set(newPlayerRef,username);
+  const newPlayerRef = ref(rtdb,`players/${gameid}/${generatePriority(new Set(Object.keys(players)))}`);
+  set(newPlayerRef,{username,status:'pending'});
 
   return true;
 }
 
-
-
-export async function createLobby(gameid,username){
+export function createLobby(gameid,username){
   set(ref(rtdb,`game-statuses/${gameid}`),{started:false,finished:false});
   const newPlayerRef = ref(rtdb,`players/${gameid}/${generatePriority()}`);
-  set(newPlayerRef,username);
+  set(newPlayerRef,{username,status:'pending'});
 }
 
 export async function listGameStatus(){
   const statusesRef = ref(rtdb,'game-statuses');
   return get(statusesRef).then((statusList)=>statusList.val());
+}
+
+export function submitReady(usernumber,gameid,readyStatus){
+  const statusRef = ref(rtdb,`players/${gameid}/${usernumber}/status`);
+  const newStatus = readyStatus ? "ready" : "pending";
+  set(statusRef,newStatus);
 }

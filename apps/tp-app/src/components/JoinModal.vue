@@ -63,8 +63,8 @@ export default {
         return;
       }
       //If we're all good, navigate to the lobby
-      document.cookie = `username=${this.username} path=/`;
-      window.open(`/game/${this.gameid}`, "_self");
+      window.sessionStorage.setItem('username',this.username);
+      window.open(`/lobby/${this.gameid}`, "_self");
       return;
     },
   },
