@@ -46,6 +46,11 @@ export function createLobby(gameid,username){
   set(newPlayerRef,{username,status:'pending'});
 }
 
+export async function getGameStatus(gameid){
+  const statusRef = ref(rtdb,`game-statuses/${gameid}`);
+  return get(statusRef).then(status => status.val());
+}
+
 export async function listGameStatus(){
   const statusesRef = ref(rtdb,'game-statuses');
   return get(statusesRef).then((statusList)=>statusList.val());
@@ -55,4 +60,38 @@ export function submitReady(usernumber,gameid,readyStatus){
   const statusRef = ref(rtdb,`players/${gameid}/${usernumber}/status`);
   const newStatus = readyStatus ? "ready" : "pending";
   set(statusRef,newStatus);
+}
+
+export async function beginGame(gameid){
+  //List of outstanding promises, that way we can let them all run in parallel and only block for them at the end
+  const promises = [];
+
+  //Set up the round variable at 0
+  const roundRef = ref(rtdb,`game/${gameid}/round`);
+  set(roundRef,0);
+
+  //Get the players
+  const playerList = Object.values(await get(ref(rtdb,`players/${gameid}`)).then(players => players.val()));
+  
+  for(let i = 0; i < playerList.length; i++){
+    const name = playerList[i].username;
+
+    //Set up the player-to-from list
+    const fromIdx = i-1 < 0 ? playerList.length-1 : i-1;
+    const from = playerList[fromIdx].username;
+    const to =   playerList[(i+1)%playerList.length].username;
+    const newRef = ref(rtdb,`game/${gameid}/players/${name}`);
+    promises.push(set(newRef,{to,from}));
+
+    //Set up the stacks
+    const stackRef = ref(rtdb,`game/${gameid}/stacks/${name}`);
+    promises.push(set(stackRef,{}));
+  }
+
+  //Set the game status started to true
+  const startedRef = ref(rtdb,`game-statuses/${gameid}/started`);
+  promises.push(set(startedRef,true));
+
+  await Promise.all(promises);
+  return;
 }

@@ -3,6 +3,7 @@
 import "byfo-components/dist/components/tp-content";
 import "byfo-components/dist/components/tp-timer";
 import "byfo-components/dist/components/tp-input-zone";
+import { getGameStatus } from "../firebase/rtdb";
 
 export default {
   data() {
@@ -43,6 +44,12 @@ export default {
       };
       this.waiting = false;
     },
+  },
+  async beforeMount(){
+    const status = await getGameStatus(this.$route.params.gameid);
+    if(!status.started || status.finished){
+      window.open(`/lobby/${this.$route.params.gameid}`,'_self');
+    }
   },
   mounted() {
     //Add global (document) event listeners here
