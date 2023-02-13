@@ -78,14 +78,15 @@ export async function beginGame(gameid){
 
     //Set up the player-to-from list
     const fromIdx = i-1 < 0 ? playerList.length-1 : i-1;
+    const toIdx = (i+1)%playerList.length;
     const from = playerList[fromIdx].username;
-    const to =   playerList[(i+1)%playerList.length].username;
+    const to =   playerList[toIdx].username;
     const newRef = ref(rtdb,`game/${gameid}/players/${name}`);
     promises.push(set(newRef,{to,from}));
 
-    //Set up the stacks
-    const stackRef = ref(rtdb,`game/${gameid}/stacks/${name}`);
-    promises.push(set(stackRef,{}));
+    //Set up the "which round have they finished" status
+    const finishedRef = ref(rtdb,`game/${gameid}/finished/${name}`);
+    promises.push(set(finishedRef,-1));
   }
 
   //Set the game status started to true

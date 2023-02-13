@@ -2,7 +2,7 @@
 import { rtdb } from "../../Firebase";
 import { ref, get, onValue } from "firebase/database";
 import { submitReady, beginGame } from '../firebase/rtdb';
-
+import { toRaw } from "vue";
 export default {
   data() {
     return {
@@ -17,6 +17,13 @@ export default {
   computed:{
     gameid(){
       return this.$route.params.gameid;
+    },
+    //Players by default are sorted by there priority. That is, the player order is generated as they join
+    //This realphabetizes the players for displaying in the lobby's list
+    sortedPlayers(){
+      let newList = Object.values(toRaw(this.players));
+      newList.sort((a,b) => a.username && b.username && a.username.localeCompare(b.username,'en',{sensitivity:'base'}));
+      return newList;
     }
   },
   methods: {
@@ -63,12 +70,15 @@ export default {
 
     const gameStatusRef = ref(rtdb,`game-statuses/${this.gameid}`);
 
+    //Subscribe to the game's status to see if it started
     onValue(gameStatusRef,(snapshot) =>{
       const status = snapshot.val();
+      //On the off chance that you jumped into a lobby of a finished game, redirect to the results
       if(status.finished){
         window.open(`/results/${this.gameid}`,'_self');
         return;
       }
+      //If the game started, go to the gameplay page
       if(status.started){
         window.open(`/game/${this.gameid}`,'_self');
         return;
@@ -82,7 +92,7 @@ export default {
   <main class="page-wrapper">
     <h2>Game {{ gameid }}</h2>
     <section>
-      <div v-for="player in players">
+      <div v-for="player in sortedPlayers">
         <p>{{ player.username }}</p>
         <span :class="player.status">{{ player.status === 'ready' ? '✓' : '•' }}</span>
       </div>
