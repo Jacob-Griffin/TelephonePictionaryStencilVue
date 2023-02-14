@@ -148,6 +148,7 @@ export default {
 
 <style>
 section {
+  width:100%;
   max-width: 1280px;
   padding: 2rem;
   box-sizing: border-box;

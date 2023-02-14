@@ -1,11 +1,19 @@
-<script setup>
+<script>
 import Logo from "./components/Logo.vue";
 import { RouterView } from "vue-router";
+
+export default {
+  methods:{
+    goHome(){
+      window.open('/','_self');
+    }
+  }
+}
 </script>
 
 <template>
   <header>
-    <Logo></Logo>
+    <Logo @click="goHome"></Logo>
   </header>
 
   <RouterView />
@@ -20,7 +28,12 @@ header {
   max-height: 100vh;
   width: 100%;
   padding: 1rem 2rem;
+  margin-bottom: 2rem;
   box-sizing: border-box;
   background-color: var(--color-brand);
+}
+
+header > *{
+  cursor:pointer;
 }
 </style>

@@ -1,4 +1,6 @@
 <script>
+import { getGameStatus } from '../firebase/rtdb';
+
 export default {
   data() {
     return {
@@ -7,22 +9,18 @@ export default {
     };
   },
   methods: {
-    reviewGame() {
-      /*
-      if(game is not finished){
-        this.findError = `Game ${this.gameid} has not yet finished`;
+    async reviewGame() {
+      const status = await getGameStatus(this.gameid)
+      if(!status){
+        this.findError = "Game does not exist";
         return;
       }
-
-      if(game does not exist){
-        this.findError = `Game ${this.gameid} does not exist`;
+      if(!status.finished){
+        this.findError = "Game not finished";
         return;
       }
-      */
       // If we made it past all the checks, navigate to the results
-      //window.open(`/results/${this.gameid}`,'_self');
-      //This is disabled until we have results to look at
-      this.findError = "Results not yet supported";
+      window.open(`/review/${this.gameid}`,'_self');
       return;
     },
   },

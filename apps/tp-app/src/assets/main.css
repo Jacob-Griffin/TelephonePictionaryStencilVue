@@ -34,7 +34,7 @@ button {
   border-radius: 1rem;
 }
 
-button:hover {
+button:hover,.selected {
   background-color: var(--color-button-hover);
   cursor: pointer;
 }

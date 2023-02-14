@@ -22,6 +22,12 @@ const router = createRouter({
       name: "lobby",
       component: () => import("../views/Lobby.vue"),
     },
+    {
+      path:"/review/:gameid",
+      name:"review",
+      component: () => import("../views/Review.vue")
+    },
+    //TODO: ADD 404 ROUTE
   ],
 });
 
