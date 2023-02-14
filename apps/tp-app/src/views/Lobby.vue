@@ -11,7 +11,8 @@ export default {
       priority: undefined,
       hosting: window.sessionStorage.getItem('hosting'),
       ready: false,
-      canStart: false
+      canStart: false,
+      roundLengthInput: '3:00'
     };
   },
   computed:{
@@ -24,6 +25,19 @@ export default {
       let newList = Object.values(toRaw(this.players));
       newList.sort((a,b) => a.username && b.username && a.username.localeCompare(b.username,'en',{sensitivity:'base'}));
       return newList;
+    },
+    roundLength(){
+      const input = this.roundLengthInput;
+      const matches = input.match(/^([0-9]+):?([0-9]*)$/);
+      if(matches === null){
+        return false;
+      }
+      let seconds = parseInt(matches[1]);
+      if(matches[2]){
+        let minutes = seconds;
+        seconds = parseInt(matches[2]) + minutes*60;
+      }
+      return seconds*1000; //Unix timestamps, like we use are in ms
     }
   },
   methods: {
@@ -33,9 +47,13 @@ export default {
         submitReady(this.priority,this.gameid,this.ready);
       }
     },
+    timerInputHandler(event){
+      this.roundLengthInput = event.target.value;
+
+    },
     async startGame(){
-      await beginGame(this.gameid);
-      //window.open(`/game/${this.gameid}`)
+      await beginGame(this.gameid,this.roundLength);
+      window.open(`/game/${this.gameid}`,"_self");
     }
 
   },
@@ -91,14 +109,18 @@ export default {
 <template>
   <main class="page-wrapper">
     <h2>Game {{ gameid }}</h2>
-    <section>
+    <section class="playerlist">
       <div v-for="player in sortedPlayers">
         <p>{{ player.username }}</p>
         <span :class="player.status">{{ player.status === 'ready' ? '✓' : '•' }}</span>
       </div>
       <button class="small" @click="readyClicked">{{ ready ? 'Set Not Ready' : 'Set Ready' }}</button>
     </section>
-    <button v-if="hosting == gameid" :disabled="!canStart" @click="startGame">Start Game</button>
+    <div class="flex-col" v-if="hosting == gameid">
+      <p>Round length: (seconds or minutes:seconds)</p>
+      <input type="text" @input="timerInputHandler" value="3:00"/>
+      <button :disabled="!canStart || !roundLength" @click="startGame">Start Game</button>
+    </div>
   </main>
 </template>
 
@@ -107,22 +129,5 @@ export default {
     justify-content: center;
     gap: 2rem;
   }
-  section{
-    width: 100%;
-    max-width: 30rem;
-    height: fit-content;
-    background-color: rgba(220,220,220,.6);
-    padding:2rem;
-    display:flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-    border-radius: 1rem;
-  }
-  section > div{
-    display:flex;
-    gap:2rem;
-    width:100%;
-    max-width: 15rem;
-  }
+
 </style>

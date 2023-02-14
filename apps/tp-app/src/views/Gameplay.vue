@@ -3,53 +3,106 @@
 import "byfo-components/dist/components/tp-content";
 import "byfo-components/dist/components/tp-timer";
 import "byfo-components/dist/components/tp-input-zone";
-import { getGameStatus } from "../firebase/rtdb";
+import { getGameStatus, submitRound, fetchCard,getToAndFrom, getStaticRoundInfo } from "../firebase/rtdb";
+import { onValue, ref } from "firebase/database";
+import { rtdb } from "../../Firebase";
 
 export default {
   data() {
     return {
       roundData: {
-        round: 1,
-        from: "me",
-        to: "you",
-        content: "You got this prompt",
-        contentType: "text",
+        roundnumber: 0,
         endTime: Date.now() + 180000,
       },
+      content:{
+        content:'',
+        contentType:'text'
+      },
+      people:{
+        from: '',
+        to: ''
+      },
+      staticRoundInfo:{
+        lastRound:1000,
+        roundLength:180000
+      },
       waiting: false,
+      name: window.sessionStorage.getItem('username'),
       globalListeners: {
         "tp-submitted": this.onSendHandler,
-        "round-progressed": this.getNextRound,
       },
+      finished:[],
+      unsubscribes:[]
     };
   },
   methods: {
     onSendHandler({ detail }) {
-      //TEMPORARY: send back own data to self to test round-progression data updates
-      const loopBackEvent = new CustomEvent("round-progressed", { detail });
-      setTimeout(() => {
-        document.dispatchEvent(loopBackEvent);
-      }, Math.floor(Math.random() * 5000));
+      const contentObject = {
+        content:detail,
+        contentType:this.roundData.roundnumber%2==0 ? 'text' : 'image'
+      }
+      submitRound(this.gameid,this.name,this.roundData.roundnumber,contentObject,this.staticRoundInfo);
       this.waiting = true;
+      //Stopping the waiting will come from a round listener
     },
-    getNextRound({ detail }) {
-      //
-      this.roundData = {
-        round: this.roundData.round + 1,
-        from: "me",
-        to: "you",
-        content: detail,
-        contentType: this.roundData.round % 2 === 0 ? "text" : "image",
-        endTime: Date.now() + 180000,
-      };
-      this.waiting = false;
+  },
+  computed:{
+    gameid(){
+      return this.$route.params.gameid;
     },
   },
   async beforeMount(){
     const status = await getGameStatus(this.$route.params.gameid);
-    if(!status.started || status.finished){
+    if(!status.started){
       window.open(`/lobby/${this.$route.params.gameid}`,'_self');
     }
+    if(status.finished){
+      window.open(`/review/${this.$route.params.gameid}`,'_self');
+    }
+    //Grab who you're sending to and recieving from (only need it once)
+    this.people = await getToAndFrom(this.gameid,this.name);
+    this.staticRoundInfo = await getStaticRoundInfo(this.gameid);
+
+    //Subscribe to changes in roundnumber
+    const roundRef = ref(rtdb,`game/${this.gameid}/round`);
+    const roundSubscription = onValue(roundRef, async snapshot =>{
+      const newRound = snapshot.val();
+      if(newRound === null){
+        //If the data no longer exists, go to the review page
+        window.open(`/review/${this.$route.params.gameid}`,'_self');
+        return;
+      }
+      if(newRound.roundnumber === 0){
+        this.roundData = newRound;
+        return
+      }
+
+      this.waiting = true;
+
+      //Adjust changes to the round
+      this.roundData = newRound;
+
+      //Grab the data of your "from" player using pre-updated round#
+      this.content = await fetchCard(this.gameid,this.people.from,this.roundData.roundnumber-1);
+      console.log(this.content);
+      this.waiting = false;
+    });
+
+    const finishedRef = ref(rtdb,`game/${this.gameid}/finished`);
+    const finishedSubscription = onValue(finishedRef,snapshot =>{ 
+      let result = [];
+      let pulledData = snapshot.val();
+      for(let name in pulledData){
+        result.push({
+          name,
+          lastRound: pulledData[name]
+        })
+      }
+      this.finished = result;
+    });
+
+    this.unsubscribes.push(roundSubscription);
+    this.unsubscribes.push(finishedSubscription);
   },
   mounted() {
     //Add global (document) event listeners here
@@ -62,23 +115,34 @@ export default {
     for (let event in this.globalListeners) {
       document.removeEventListener(event, this.globalListeners[event]);
     }
+    this.unsubscribes.forEach((unsub)=>unsub());
   },
 };
 </script>
 
 <template>
-  <h1 v-if="waiting">Waiting for next round</h1>
+  <section v-if="waiting">
+    <h1>Waiting for next round</h1>
+    <section class="playerlist">
+      <div v-for="player in finished">
+        <p>{{ player.name }}</p>
+        <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
+      </div>
+    </section>
+  </section>
   <section v-else>
-    <p v-if="roundData.round != 0">
-      <strong>From:</strong> {{ roundData.from }}
+    <h3>Round {{ roundData.roundnumber }}</h3>
+    <p v-if="roundData.roundnumber != 0">
+      <strong>From:</strong> {{ people.from }}
     </p>
     <tp-content
-      v-if="roundData.round != 0"
-      :content="roundData.content"
-      :type="roundData.contentType"
+      v-if="roundData.roundnumber != 0"
+      :content="content.content"
+      :type="content.contentType"
     />
     <tp-timer :endtime="roundData.endTime"></tp-timer>
-    <tp-input-zone :round="roundData.round" />
+    <p><strong>To:</strong> {{ people.to }}</p>
+    <tp-input-zone :round="roundData.roundnumber" />
   </section>
 </template>
 

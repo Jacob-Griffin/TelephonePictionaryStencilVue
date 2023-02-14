@@ -214,7 +214,7 @@ export class TpCanvas {
 
   @Method() exportDrawing() {
     return new Promise(callback => {
-      callback(this.canvasElement.toDataURL('image/png'));
+      this.canvasElement.toBlob(callback,'image/png');
     });
   }
 
