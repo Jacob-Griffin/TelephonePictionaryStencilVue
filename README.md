@@ -24,6 +24,6 @@ root (turbo)
 All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
-Vue: The app has a home menu that links to a fully functional lobby via host and join. The game page exists and has what should be complete functionality. The review page exists and can view all data in a given game
-Solid: The app has a home menu that is set up to display the appropriate modals for Join/Host/View game
-    - The Solid version is canceled for now, due to stencil component typings not fitting right into solid
+Vue: The app has a home menu that links to a fully functional lobby via host and join. The game page exists and has complete functionality. The review page exists and can view all data in a given game. Styles are manageable, but need a bit of extra care for color choices. No Logo.
+
+I would consider this "MVP imminent"
