@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element } from '@stencil/core';
+import { Component, h, Prop, Element, State } from '@stencil/core';
 
 @Component({
   tag: 'tp-input-zone',
@@ -8,6 +8,7 @@ import { Component, h, Prop, Element } from '@stencil/core';
 export class TpInputZone {
   @Prop() round: number;
   @Element() el: HTMLElement;
+  @State() canSend: boolean = false;
   textEl: HTMLTextAreaElement;
   canvasEl: HTMLTpCanvasElement;
 
@@ -26,10 +27,16 @@ export class TpInputZone {
 
   connectedCallback(){
     document.addEventListener('tp-timer-finished',this.sendRound);
+    document.addEventListener('keyup',this.verifyCanSend);
   }
 
   disconnectedCallback(){
     document.removeEventListener('tp-timer-finished',this.sendRound);
+    document.removeEventListener('keyup',this.verifyCanSend);
+  }
+
+  verifyCanSend = () =>{
+    this.canSend = !(this.isTextRound && this.textEl && this.textEl.value.length == 0);
   }
 
   sendRound = async () => {
@@ -67,8 +74,9 @@ export class TpInputZone {
         )}
         <button
           class="mt-4 rounded-md w-32 h-16 text-white text-lg font-medium 
-                      border-none shadow-md shadow-gray-400 bg-blue-500"
+                      border-none shadow-md shadow-gray-400 bg-blue-600 hover:bg-green-500 disabled:bg-gray-500"
           onClick={this.sendRound}
+          disabled={!this.canSend}
         >
           Send
         </button>
