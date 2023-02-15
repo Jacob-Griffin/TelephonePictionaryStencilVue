@@ -53,7 +53,7 @@ export class TpInputZone {
       <div class="flex flex-col items-center w-full">
         {this.isTextRound ? (
           <textarea
-            class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg
+            class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg selectable
                   text-black text-3xl text-center font-medium p-4 w-full bg-white aspect-[5/3]"
             ref={el => (this.textEl = el)}
             placeholder={this.placeholderText}

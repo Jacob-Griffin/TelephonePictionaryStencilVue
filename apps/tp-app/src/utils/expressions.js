@@ -25,3 +25,7 @@ export function invalidCharactersList(input,{raw}={raw:false}){
     let stringList = rawList.join(", ");
     return stringList.replace(/, ([^,]+)$/,", or $1");
 }
+
+export function inGame(url){
+    return /\/game\/[0-9]{1,6}\/?$/.test(url);
+}

@@ -7,7 +7,8 @@ export default {
             stacks:{},
             selected: false,
             currentIndex: 0,
-            contentElement: undefined
+            contentElement: undefined,
+            imagesCached:new Set()
         }
     },
     computed:{
@@ -33,6 +34,10 @@ export default {
         clickPlayer(username){
             this.selected = username;
             this.currentIndex = 0;
+            for(let i = 1; i < Object.keys(this.stacks).length; i+=2){
+                //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
+                this.cacheImage(username,i);
+            }
         },
         increment(){
             if(this.currentIndex >= this.indices.length) return;
@@ -41,6 +46,17 @@ export default {
         decrement(){
             if(this.currentIndex <= 0) return;
             this.currentIndex -=1;
+        },
+        cacheImage(player,idx){
+            const imgURL = this.stacks[player][idx].content;
+            //If we already cached this image, move on
+            if(this.imagesCached.has(imgURL)) return;
+
+            //Otherwise, grab it
+            fetch(imgURL); 
+            //We don't actually need to do anything with the fetched data, 
+            //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
+            this.imagesCached.add(imgURL);
         }
     },
     async beforeMount(){

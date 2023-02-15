@@ -146,7 +146,7 @@ export default {
   </section>
 </template>
 
-<style>
+<style scoped>
 section {
   width:100%;
   max-width: 1280px;
@@ -156,5 +156,9 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+*{
+  user-select: none;
 }
 </style>

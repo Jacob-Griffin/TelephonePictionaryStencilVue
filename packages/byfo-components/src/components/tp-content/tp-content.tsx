@@ -18,7 +18,7 @@ export class TpContent {
           ?
           <img class='w-full h-full' src={this.content}></img>
           :
-          <p>{this.content}</p>
+          <p class="selectable">{this.content}</p>
         }
       </div>
     );

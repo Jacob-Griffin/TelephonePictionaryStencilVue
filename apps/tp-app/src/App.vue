@@ -1,10 +1,17 @@
 <script>
 import Logo from "./components/Logo.vue";
 import { RouterView } from "vue-router";
+import { inGame } from "./utils/expressions";
 
 export default {
+  data(){
+    return {
+      inGame: inGame(window.location)
+    }
+  },
   methods:{
     goHome(){
+      if(this.inGame) return;
       window.open('/','_self');
     }
   }
@@ -13,7 +20,7 @@ export default {
 
 <template>
   <header>
-    <Logo @click="goHome"></Logo>
+    <Logo @click="goHome" :class="!inGame?'pointer':''"></Logo>
   </header>
 
   <RouterView />
@@ -31,9 +38,10 @@ header {
   margin-bottom: 2rem;
   box-sizing: border-box;
   background-color: var(--color-brand);
+  user-select: none;
 }
 
-header > *{
+header > *.pointer{
   cursor:pointer;
 }
 </style>
