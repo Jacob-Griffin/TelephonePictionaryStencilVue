@@ -26,6 +26,12 @@ export function invalidCharactersList(input,{raw}={raw:false}){
     return stringList.replace(/, ([^,]+)$/,", or $1");
 }
 
-export function inGame(url){
-    return /\/game\/[0-9]{1,6}\/?$/.test(url);
+export function inGame(location){
+    return /\/game\/[0-9]{1,6}\/?$/.test(location.href);
+}
+
+export function inHome(location){
+    const pattern = new RegExp(location.origin + '\/?$');
+    console.log(pattern);
+    return pattern.test(location.href);
 }

@@ -71,6 +71,8 @@ export default {
         for (let event in this.globalListeners) {
             document.addEventListener(event, this.globalListeners[event]);
         }
+        const self = window.sessionStorage.getItem('username');
+        if(self) this.clickPlayer(self);
     },
     beforeUnmount(){
         for (let event in this.globalListeners) {
@@ -117,12 +119,20 @@ export default {
         gap:.5rem
     }
 
-    .main-row p{
+    .arrow{
         cursor: pointer;
-        color:#ccc;
+        color:var(--feature-selected-color);
         flex-grow: 1;
         width:4%;
         user-select: none;
+        text-align:center;
+        background-color: var(--selector-backdrop);
+        padding-bottom: .25rem;
+        border-radius: .5rem;
+    }
+
+    .arrow:empty{
+        background-color: rgba(0,0,0,0);
     }
 
     .main-row tp-content{
@@ -130,11 +140,11 @@ export default {
     }
 
     .dot{
-        color:#444
+        color:var(--feature-unselected-color);
     }
 
     .dot-selected{
-        color:#ccc
+        color:var(--feature-selected-color);
     }
 
     .carousel-dots{
@@ -147,6 +157,9 @@ export default {
         user-select: none;
         font-size: xx-large;
         font-weight: 700;
+        background-color: var(--selector-backdrop);
+        padding: 0 1rem;
+        border-radius: .5rem;
     }
 
     section{
@@ -156,6 +169,15 @@ export default {
         width:100%;
         max-width:1280px;
         gap:1rem;
+    }
+
+    h4{
+        font-size:large;
+        font-weight: 500;
+    }
+
+    strong{
+        font-weight: 700;
     }
 
 </style>
