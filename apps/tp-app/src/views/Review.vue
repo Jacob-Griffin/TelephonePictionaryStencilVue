@@ -8,7 +8,10 @@ export default {
             selected: false,
             currentIndex: 0,
             contentElement: undefined,
-            imagesCached:new Set()
+            imagesCached:new Set(),
+            globalListeners:{
+                "keydown":this.keyHandler
+            }
         }
     },
     computed:{
@@ -57,10 +60,22 @@ export default {
             //We don't actually need to do anything with the fetched data, 
             //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
             this.imagesCached.add(imgURL);
+        },
+        keyHandler(event){
+            if(event.key === "ArrowRight") return this.increment();
+            if(event.key === "ArrowLeft") return this.decrement();
         }
     },
     async beforeMount(){
         this.stacks = await getGameData(this.gameid);
+        for (let event in this.globalListeners) {
+            document.addEventListener(event, this.globalListeners[event]);
+        }
+    },
+    beforeUnmount(){
+        for (let event in this.globalListeners) {
+            document.removeEventListener(event, this.globalListeners[event]);
+        }
     }
 }
 </script>

@@ -30,6 +30,7 @@ export default {
       name: window.sessionStorage.getItem('username'),
       globalListeners: {
         "tp-submitted": this.onSendHandler,
+        "keydown": this.keyHandler
       },
       finished:[],
       unsubscribes:[]
@@ -45,6 +46,21 @@ export default {
       this.waiting = true;
       //Stopping the waiting will come from a round listener
     },
+    keyHandler(event){
+      const isOddRound = !!(this.roundData.roundnumber%2);
+      if(event.ctrlKey && event.key === 122 && isOddRound){
+        //ctrl+z during a drawing round will send an undo input
+        const undoEvent = new CustomEvent("undo-input");
+        this.$refs.inputZone.dispatchEvent(undoEvent);
+        return;
+      }
+      if(isOddRound && event.ctrlKey && event.key === 90){
+        //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
+        const redoEvent = new CustomEvent("redo-input");
+        this.$refs.inputZone.dispatchEvent(redoEvent);
+        return;
+      }
+    }
   },
   computed:{
     gameid(){
@@ -142,7 +158,7 @@ export default {
     />
     <tp-timer :endtime="roundData.endTime"></tp-timer>
     <p><strong>To:</strong> {{ people.to }}</p>
-    <tp-input-zone :round="roundData.roundnumber" />
+    <tp-input-zone :round="roundData.roundnumber" ref="inputZone" />
   </section>
 </template>
 
