@@ -48,16 +48,16 @@ export default {
     },
     keyHandler(event){
       const isOddRound = !!(this.roundData.roundnumber%2);
-      if(event.ctrlKey && event.key === 122 && isOddRound){
+      if(event.ctrlKey && event.key === "z" && isOddRound){
         //ctrl+z during a drawing round will send an undo input
         const undoEvent = new CustomEvent("undo-input");
-        this.$refs.inputZone.dispatchEvent(undoEvent);
+        this.$refs.inputzone.dispatchEvent(undoEvent);
         return;
       }
-      if(isOddRound && event.ctrlKey && event.key === 90){
+      if(isOddRound && event.ctrlKey && event.key === "Z"){
         //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
         const redoEvent = new CustomEvent("redo-input");
-        this.$refs.inputZone.dispatchEvent(redoEvent);
+        this.$refs.inputzone.dispatchEvent(redoEvent);
         return;
       }
     }
@@ -158,7 +158,7 @@ export default {
     />
     <tp-timer :endtime="roundData.endTime"></tp-timer>
     <p><strong>To:</strong> {{ people.to }}</p>
-    <tp-input-zone :round="roundData.roundnumber" ref="inputZone" />
+    <tp-input-zone :round="roundData.roundnumber" ref="inputzone" />
   </section>
 </template>
 

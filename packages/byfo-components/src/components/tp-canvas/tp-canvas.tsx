@@ -9,6 +9,7 @@ export class TpCanvas {
   //Configurable Properties
   @Prop() height = 600;
   @Prop() width = 1000;
+  @Prop() hostEl:HTMLElement;
 
   //Static Properties (elements and such)
   @Element() el: HTMLElement;
@@ -43,12 +44,12 @@ export class TpCanvas {
     this.setupContext();
     
     //Listen for the controller buttons to say anything (Should have shared parent)
-    this.el.parentElement.addEventListener('undo-input', this.undo);
-    this.el.parentElement.addEventListener('redo-input', this.redo);
-    this.el.parentElement.addEventListener('size-input', this.changeLine);
-    this.el.parentElement.addEventListener('clear-input', this.clearCanvas);
-    this.el.parentElement.addEventListener('pen-input', () => this.setDrawMode('#000'));
-    this.el.parentElement.addEventListener('eraser-input', () => this.setDrawMode('#FFF'));
+    this.hostEl.addEventListener('undo-input', this.undo);
+    this.hostEl.addEventListener('redo-input', this.redo);
+    this.hostEl.addEventListener('size-input', this.changeLine);
+    this.hostEl.addEventListener('clear-input', this.clearCanvas);
+    this.hostEl.addEventListener('pen-input', () => this.setDrawMode('#000'));
+    this.hostEl.addEventListener('eraser-input', () => this.setDrawMode('#FFF'));
 
     //Listen for drawing-related events (Listen to full document for finishes):
 
@@ -66,12 +67,12 @@ export class TpCanvas {
   }
 
   disconnectedCallback(){
-    this.el.parentElement.removeEventListener('redo-input', this.redo);
-    this.el.parentElement.removeEventListener('size-input', this.changeLine);
-    this.el.parentElement.removeEventListener('undo-input', this.undo);
-    this.el.parentElement.removeEventListener('clear-input', this.clearCanvas);
-    this.el.parentElement.removeEventListener('pen-input', () => this.setDrawMode('#000'));
-    this.el.parentElement.removeEventListener('eraser-input', () => this.setDrawMode('#FFF'));
+    this.hostEl.removeEventListener('redo-input', this.redo);
+    this.hostEl.removeEventListener('size-input', this.changeLine);
+    this.hostEl.removeEventListener('undo-input', this.undo);
+    this.hostEl.removeEventListener('clear-input', this.clearCanvas);
+    this.hostEl.removeEventListener('pen-input', () => this.setDrawMode('#000'));
+    this.hostEl.removeEventListener('eraser-input', () => this.setDrawMode('#FFF'));
     document.removeEventListener('pointermove', this.draw);
     document.removeEventListener('pointercancel', this.finishLine);
     document.removeEventListener('pointerup', this.finishLine);

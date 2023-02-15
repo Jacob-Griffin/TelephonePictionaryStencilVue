@@ -137,6 +137,7 @@ export async function submitRound(gameid,name,round,content,staticRoundInfo){
   if(round == staticRoundInfo.lastRound){
     //If this was the last round, finalize the game
     await finalizeGame(gameid);
+    return;
   }
   //Set the round number and end time forward
   const roundRef = ref(rtdb,`game/${gameid}/round/`);

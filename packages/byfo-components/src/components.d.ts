@@ -9,9 +9,11 @@ export namespace Components {
     interface TpCanvas {
         "exportDrawing": () => Promise<unknown>;
         "height": number;
+        "hostEl": HTMLElement;
         "width": number;
     }
     interface TpCanvasControls {
+        "hostEl": HTMLElement;
     }
     interface TpContent {
         "content": string;
@@ -66,9 +68,11 @@ declare global {
 declare namespace LocalJSX {
     interface TpCanvas {
         "height"?: number;
+        "hostEl"?: HTMLElement;
         "width"?: number;
     }
     interface TpCanvasControls {
+        "hostEl"?: HTMLElement;
     }
     interface TpContent {
         "content"?: string;

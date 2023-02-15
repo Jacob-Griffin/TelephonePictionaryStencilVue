@@ -43,7 +43,7 @@ export default {
             }
         },
         increment(){
-            if(this.currentIndex >= this.indices.length) return;
+            if(this.currentIndex >= this.indices.length - 1) return;
             this.currentIndex += 1;
         },
         decrement(){
@@ -56,7 +56,7 @@ export default {
             if(this.imagesCached.has(imgURL)) return;
 
             //Otherwise, grab it
-            fetch(imgURL); 
+            fetch(imgURL,{mode:"no-cors"}); 
             //We don't actually need to do anything with the fetched data, 
             //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
             this.imagesCached.add(imgURL);

@@ -7,10 +7,11 @@
 
 ## Properties
 
-| Property | Attribute | Description | Type     | Default |
-| -------- | --------- | ----------- | -------- | ------- |
-| `height` | `height`  |             | `number` | `600`   |
-| `width`  | `width`   |             | `number` | `1000`  |
+| Property | Attribute | Description | Type          | Default     |
+| -------- | --------- | ----------- | ------------- | ----------- |
+| `height` | `height`  |             | `number`      | `600`       |
+| `hostEl` | --        |             | `HTMLElement` | `undefined` |
+| `width`  | `width`   |             | `number`      | `1000`      |
 
 
 ## Methods
