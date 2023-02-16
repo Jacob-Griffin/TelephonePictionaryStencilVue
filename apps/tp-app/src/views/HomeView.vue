@@ -14,24 +14,24 @@ export default {
     switchModal(event) {
       this.openModal = event?.target.getAttribute("modal") ?? "";
     },
-    keyHandler(event){
-      console.log('Key pressed');
-      if(event.key !==  "Enter") return;
-      console.log('it was enter')
-      const target = document.querySelector('.main-action');
-      console.log('clicking',target);
-      console.log(!target?'it didn\'t exist':'Moving on');
-      if(!target) return;
+    keyHandler(event) {
+      console.log("Key pressed");
+      if (event.key !== "Enter") return;
+      console.log("it was enter");
+      const target = document.querySelector(".main-action");
+      console.log("clicking", target);
+      console.log(!target ? "it didn't exist" : "Moving on");
+      if (!target) return;
 
       target.click();
-    }
+    },
   },
-  beforeMount(){
-    document.addEventListener("keydown",this.keyHandler);
+  beforeMount() {
+    document.addEventListener("keydown", this.keyHandler);
   },
-  beforeUnmount(){
-    document.removeEventListener("keydown",this.keyHandler);
-  }
+  beforeUnmount() {
+    document.removeEventListener("keydown", this.keyHandler);
+  },
 };
 </script>
 

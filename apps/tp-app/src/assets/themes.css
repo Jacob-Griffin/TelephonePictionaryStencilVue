@@ -28,7 +28,8 @@
   --color-background: var(--vt-c-white-mute);
 
   --color-backdrop: rgba(210, 210, 210, 0.85);
-  --color-backdrop-text: var(--vt-c-black-soft); /* This is the color used when text is put right on a backdrop */
+  --color-backdrop-text: var(--vt-c-black-soft);
+  /* This is the color used when text is put right on a backdrop */
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
@@ -36,24 +37,24 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --color-button: rgb(60,90,190);
-  --color-button-hover: rgb(47, 155, 72); 
+  --color-button: rgb(60, 90, 190);
+  --color-button-hover: rgb(47, 155, 72);
   /* hover also applies to the selected state of toggled buttons*/
   --color-button-disabled: #889;
 
-  --color-important: #F28705;
+  --color-important: #f28705;
 
-  --icon: url('/byfo-logo.png');
-  --small-icon: url('/byfo-logo.png');
+  --icon: url("/byfo-logo.png");
+  --small-icon: url("/byfo-logo.png");
 
-  --selector-backdrop:var(--color-backdrop);
-  --feature-selected-color:var(--color-button);
-  --feature-unselected-color:#888;
-  --scroll-color:#544;
+  --selector-backdrop: var(--color-backdrop);
+  --feature-selected-color: var(--color-button);
+  --feature-unselected-color: #888;
+  --scroll-color: #544;
 }
 
 /* other themes only need overrides from "light" theme */
-.dark{
+.dark {
   --color-background: var(--vt-c-black);
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
@@ -64,34 +65,34 @@
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
 
-  --icon: url('/byfo-logo.png');
+  --icon: url("/byfo-logo.png");
 
-  --selector-backdrop:#151522CC;
-  --feature-selected-color:#CCC;
-  --feature-unselected-color:#444;
-  --scroll-color:#999;
+  --selector-backdrop: #151522cc;
+  --feature-selected-color: #ccc;
+  --feature-unselected-color: #444;
+  --scroll-color: #999;
 }
 
-.classic{
-  --color-brand: #2C33BF;
+.classic {
+  --color-brand: #2c33bf;
   --color-button: var(--color-brand);
-  --color-button-hover: #8CC63F;
-  --image-background: url('/basic-bkgd.jpg');
-  --icon: url('/byfo-logo.png');
+  --color-button-hover: #8cc63f;
+  --image-background: url("/basic-bkgd.jpg");
+  --icon: url("/byfo-logo.png");
 }
 
-.candy{
-  --color-brand: #F42F65;
+.candy {
+  --color-brand: #f42f65;
   --color-button: var(--color-brand);
-  --color-button-hover: #8A43DB;
-  --color-important: #8A43DB;
-  --image-background: url('/candyCarnival-bkgd.jpg');
-  --icon: url('/byfo-logo2.png');
+  --color-button-hover: #8a43db;
+  --color-important: #8a43db;
+  --image-background: url("/candyCarnival-bkgd.jpg");
+  --icon: url("/byfo-logo2.png");
 
-  --feature-selected-color: var(--color-button)
+  --feature-selected-color: var(--color-button);
 }
 
-tp-inputzone{
+tp-inputzone {
   --color-button: var(--color-button);
   --color-button-hover: var(--color-button-hover);
   --color-button-disabled: var(--color-button-disabled);

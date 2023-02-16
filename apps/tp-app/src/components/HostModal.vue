@@ -12,14 +12,14 @@ export default {
     isDisabled() {
       const isValidName = validUsername(this.username);
       if (!isValidName) {
-        if(this.username.length !== 0){
+        if (this.username.length !== 0) {
           //If the username exists and is invalid for other reasons, say why
           this.hostError = `Names cannot contain ${invalidCharactersList(
             this.username
           )}`;
         }
         return true;
-      } else if(typeof isValidName === 'string'){
+      } else if (typeof isValidName === "string") {
         this.hostError = isValidName;
       } else if (this.hostError && this.hostError.startsWith("Names cannot")) {
         //If the name was valid and that was the current error, clear it
@@ -31,11 +31,11 @@ export default {
   methods: {
     async joinGame() {
       const gameid = await this.createGame();
-      if(!gameid){
+      if (!gameid) {
         return;
       }
-      window.sessionStorage.setItem('hosting',gameid);
-      window.sessionStorage.setItem('username',this.username);
+      window.sessionStorage.setItem("hosting", gameid);
+      window.sessionStorage.setItem("username", this.username);
       window.open(`/lobby/${gameid}`, "_self");
       return;
     },
@@ -46,9 +46,7 @@ export default {
 
       const gameStatuses = await listGameStatus();
       // Check which gameIds were/are in use via firestore, then generate one that's not there
-      const usedIds = new Set(
-        Object.keys(gameStatuses)
-      );
+      const usedIds = new Set(Object.keys(gameStatuses));
 
       // Try a random old game id
       let newId = Math.floor(Math.random() * 999999 + 1);
@@ -65,7 +63,7 @@ export default {
       }
 
       //Send the request for this game to firestore
-      await createLobby(newId,this.username);
+      await createLobby(newId, this.username);
 
       //Pass this id back so we can route the player to the lobby
       return newId;

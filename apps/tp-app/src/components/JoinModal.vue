@@ -25,7 +25,7 @@ export default {
           )}`;
           return true;
         }
-      } else if (typeof isValidName === 'string'){
+      } else if (typeof isValidName === "string") {
         this.joinError = isValidName;
         return true;
       } else if (this.joinError && this.joinError.startsWith("Names cannot")) {
@@ -67,7 +67,7 @@ export default {
         return;
       }
       //If we're all good, navigate to the lobby
-      window.sessionStorage.setItem('username',this.username);
+      window.sessionStorage.setItem("username", this.username);
       window.open(`/lobby/${this.gameid}`, "_self");
       return;
     },

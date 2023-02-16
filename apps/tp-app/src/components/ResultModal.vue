@@ -1,5 +1,5 @@
 <script>
-import { getGameStatus } from '../firebase/rtdb';
+import { getGameStatus } from "../firebase/rtdb";
 
 export default {
   data() {
@@ -10,17 +10,17 @@ export default {
   },
   methods: {
     async reviewGame() {
-      const status = await getGameStatus(this.gameid)
-      if(!status){
+      const status = await getGameStatus(this.gameid);
+      if (!status) {
         this.findError = "Game does not exist";
         return;
       }
-      if(!status.finished){
+      if (!status.finished) {
         this.findError = "Game not finished";
         return;
       }
       // If we made it past all the checks, navigate to the results
-      window.open(`/review/${this.gameid}`,'_self');
+      window.open(`/review/${this.gameid}`, "_self");
       return;
     },
   },
