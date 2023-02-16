@@ -222,7 +222,7 @@ export class TpCanvas {
   render() {
     return (
       <canvas
-        class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg w-full"
+        class="border border-slate-500 rounded-lg w-full"
         height={this.height}
         width={this.width}
         ref={el => (this.canvasElement = el as HTMLElement)}

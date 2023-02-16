@@ -14,7 +14,7 @@ export class TpCanvasControls {
   eraseButton;
   lineButtons = {};
   lineWidths = ['small', 'medium', 'large', 'xlarge'];
-  buttonClasses = 'rounded-md w-16 h-16 text-white border-none shadow-md shadow-gray-400 bg-blue-600 selected:bg-green-500 hover:bg-green-500';
+  buttonClasses = 'rounded-md w-16 h-16 text-white border-none';
 
   @Prop() hostEl: HTMLElement;
   @Element() el: HTMLElement;

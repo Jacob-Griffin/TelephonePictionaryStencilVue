@@ -11,7 +11,7 @@ export class TpContent {
 
   render() {
     return (
-      <div class='shadow-md shadow-gray-400 border border-slate-500 rounded-lg
+      <div class='border border-slate-500 rounded-lg
       text-black text-3xl text-center font-medium p-4 w-full bg-white aspect-[5/3]'>
         {
           this.type==='image'

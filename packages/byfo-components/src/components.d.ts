@@ -20,7 +20,9 @@ export namespace Components {
         "type": string;
     }
     interface TpInputZone {
+        "buttonColor": string;
         "round": number;
+        "selectedColor": string;
     }
     interface TpTimer {
         "endtime": number;
@@ -79,7 +81,9 @@ declare namespace LocalJSX {
         "type"?: string;
     }
     interface TpInputZone {
+        "buttonColor"?: string;
         "round"?: number;
+        "selectedColor"?: string;
     }
     interface TpTimer {
         "endtime"?: number;

@@ -10,7 +10,8 @@ export default {
   },
   computed: {
     isDisabled() {
-      if (!validUsername(this.username)) {
+      const isValidName = validUsername(this.username);
+      if (!isValidName) {
         if(this.username.length !== 0){
           //If the username exists and is invalid for other reasons, say why
           this.hostError = `Names cannot contain ${invalidCharactersList(
@@ -18,6 +19,8 @@ export default {
           )}`;
         }
         return true;
+      } else if(typeof isValidName === 'string'){
+        this.hostError = isValidName;
       } else if (this.hostError && this.hostError.startsWith("Names cannot")) {
         //If the name was valid and that was the current error, clear it
         this.hostError = false;

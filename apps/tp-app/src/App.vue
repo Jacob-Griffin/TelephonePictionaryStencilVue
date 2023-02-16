@@ -57,10 +57,10 @@ export default {
 <template>
   <header :class="inHome ? 'invisible' : ''">
     <div>
-      <Logo @click="goHome" :class="!inGame?'pointer small':'small'" v-if="!inHome"></Logo>
+      <Logo @click="goHome" class="small" :class="{'pointer':!inGame}" v-if="!inHome"></Logo>
     </div>
     <div>
-      <button v-for="theme in themes" :class="currentTheme == theme.name ? 'themebutton selected' : 'themebutton'" @click="()=>setTheme(theme.name,theme.extends)">
+      <button v-for="theme in themes" class="themebutton" :class="{'selected':currentTheme == theme.name}" @click="()=>setTheme(theme.name,theme.extends)">
         {{ theme.icon }}&#xfe0e;
       </button>
     </div>
@@ -77,7 +77,7 @@ header {
   max-height: 100vh;
   width: 100%;
   padding: 1rem 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   box-sizing: border-box;
   background-color: var(--color-brand);
   user-select: none;
@@ -87,7 +87,7 @@ header.invisible{
   background-color: rgba(0,0,0,0);
 }
 
-header > *.pointer{
+header *.pointer{
   cursor:pointer;
 }
 

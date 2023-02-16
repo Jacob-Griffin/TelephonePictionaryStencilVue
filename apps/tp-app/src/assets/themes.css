@@ -27,6 +27,9 @@
 
   --color-background: var(--vt-c-white-mute);
 
+  --color-backdrop: rgba(210, 210, 210, 0.85);
+  --color-backdrop-text: var(--vt-c-black-soft); /* This is the color used when text is put right on a backdrop */
+
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
 
@@ -43,9 +46,10 @@
   --icon: url('/byfo-logo.png');
   --small-icon: url('/byfo-logo.png');
 
-  --selector-backdrop:#151522CC;
-  --feature-selected-color:#CCC;
-  --feature-unselected-color:#444;
+  --selector-backdrop:var(--color-backdrop);
+  --feature-selected-color:var(--color-button);
+  --feature-unselected-color:#888;
+  --scroll-color:#544;
 }
 
 /* other themes only need overrides from "light" theme */
@@ -61,6 +65,11 @@
   --color-text: var(--vt-c-text-dark-2);
 
   --icon: url('/byfo-logo.png');
+
+  --selector-backdrop:#151522CC;
+  --feature-selected-color:#CCC;
+  --feature-unselected-color:#444;
+  --scroll-color:#999;
 }
 
 .classic{
@@ -78,4 +87,12 @@
   --color-important: #8A43DB;
   --image-background: url('/candyCarnival-bkgd.jpg');
   --icon: url('/byfo-logo2.png');
+
+  --feature-selected-color: var(--color-button)
+}
+
+tp-inputzone{
+  --color-button: var(--color-button);
+  --color-button-hover: var(--color-button-hover);
+  --color-button-disabled: var(--color-button-disabled);
 }

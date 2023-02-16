@@ -2,6 +2,14 @@
   display: block;
 }
 
-[value="active"]{
-  @apply bg-green-400;
+button{
+  background-color: var(--color-button);
+}
+
+button:hover,button[value="active"]{
+  background-color: var(--color-button-hover);
+}
+
+button:disabled{
+  background-color: var(--color-button-disabled);
 }

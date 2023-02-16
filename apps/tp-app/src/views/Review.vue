@@ -62,8 +62,19 @@ export default {
             this.imagesCached.add(imgURL);
         },
         keyHandler(event){
-            if(event.key === "ArrowRight") return this.increment();
-            if(event.key === "ArrowLeft") return this.decrement();
+            if(event.key === "ArrowRight") {
+                event.preventDefault();
+                this.increment();
+                return;
+            }
+            if(event.key === "ArrowLeft") {
+                event.preventDefault();
+                this.decrement();
+                return;
+            }
+        },
+        goHome(){
+            window.open('/','_self');
         }
     },
     async beforeMount(){
@@ -84,7 +95,7 @@ export default {
 
 <template>
     <div class="playerSelector">
-        <button @click="()=>clickPlayer(player)" v-for="player in players" :class="player == selected ? 'small selected' : 'small'">{{ player }}</button>
+        <button @click="()=>clickPlayer(player)" v-for="player in players" class='small' :class="{'selected':player == selected}">{{ player }}</button>
     </div>
     <section v-if="selected">
         <h4><strong>From:</strong> {{ stacks[selected][currentIndex].from }}</h4>
@@ -97,18 +108,44 @@ export default {
             <p v-for="index in indices" :class="index == currentIndex ? 'dot dot-selected' : 'dot'" @click="()=>currentIndex = index">•</p>
         </div>
     </section>
+    <button @click="goHome">Return to home</button>
 </template>
 
 <style>
     .playerSelector{
-        width: 100%;
+        width: 92%;
         max-width: 1280px;
-        display:flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-bottom:2rem;
-        gap:.5rem;
+        height: 3.5rem;
+        overflow-x: scroll;
+        white-space: nowrap;
+        margin-bottom:1rem;
+        padding: .2rem;
+        user-select: none;
+    }
+
+    .playerSelector > button:not(:first-child){
+        margin:auto;
+        margin-left: .5rem;
+    }
+
+    ::-webkit-scrollbar{
+        height:4px;
+        background: none;
+    }
+
+    ::-webkit-scrollbar-track{
+        width:4px;
+        background: none;
+    }
+
+    ::-webkit-scrollbar-button{
+        display: none;
+    }
+
+    ::-webkit-scrollbar-thumb{
+        width:4px;
+        border-radius: 2px;
+        background-color: var(--scroll-color);
     }
 
     .main-row{
@@ -121,7 +158,6 @@ export default {
 
     .arrow{
         cursor: pointer;
-        color:var(--feature-selected-color);
         flex-grow: 1;
         width:4%;
         user-select: none;
@@ -155,8 +191,8 @@ export default {
         gap:.25rem;
         cursor: pointer;
         user-select: none;
-        font-size: xx-large;
-        font-weight: 700;
+        font-size: 2rem;
+        font-weight: 900;
         background-color: var(--selector-backdrop);
         padding: 0 1rem;
         border-radius: .5rem;
@@ -167,13 +203,21 @@ export default {
         flex-direction: column;
         align-items: center;
         width:100%;
-        max-width:1280px;
+        max-width:1150px;
         gap:1rem;
+        margin-bottom: 1.5rem;
     }
 
     h4{
         font-size:large;
         font-weight: 500;
+        background-color: var(--color-backdrop);
+        padding: .5rem 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .dark h4{
+        background-color: var(--selector-backdrop);
     }
 
     strong{

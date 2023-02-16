@@ -16,7 +16,8 @@ export default {
   },
   computed: {
     isDisabled() {
-      if (!validUsername(this.username)) {
+      const isValidName = validUsername(this.username);
+      if (!isValidName) {
         if (this.username.length !== 0) {
           //If the username exists and is invalid for other reasons, say why
           this.joinError = `Names cannot contain ${invalidCharactersList(
@@ -24,6 +25,9 @@ export default {
           )}`;
           return true;
         }
+      } else if (typeof isValidName === 'string'){
+        this.joinError = isValidName;
+        return true;
       } else if (this.joinError && this.joinError.startsWith("Names cannot")) {
         //If the name was valid and that was the current error, clear it
         this.joinError = false;

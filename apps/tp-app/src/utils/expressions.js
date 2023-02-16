@@ -3,6 +3,10 @@ export function validGameId(input){
     return exp.test(input);
 }
 export function validUsername(input){
+    const maxName = 32;
+    if(input.length > maxName){
+        return `Names cannot exceed ${maxName} characters. ${input.length}/${maxName}`;
+    }
     const exp = /^[^\/\\]+$/g;
     return exp.test(input)
 }

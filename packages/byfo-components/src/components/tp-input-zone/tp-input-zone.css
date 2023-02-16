@@ -9,3 +9,15 @@
 .selectable{
   user-select: text;
 }
+
+button{
+  background-color: var(--color-button);
+}
+
+button:hover{
+  background-color: var(--color-button-hover);
+}
+
+button:disabled{
+  background-color: var(--color-button-disabled);
+}

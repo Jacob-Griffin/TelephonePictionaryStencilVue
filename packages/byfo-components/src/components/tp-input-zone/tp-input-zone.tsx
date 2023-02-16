@@ -7,8 +7,10 @@ import { Component, h, Prop, Element, State } from '@stencil/core';
 })
 export class TpInputZone {
   @Prop() round: number;
+  @Prop() buttonColor: string;
+  @Prop() selectedColor: string;
   @Element() el: HTMLElement;
-  @State() canSend: boolean = false;
+  @State() canSend: boolean = !this.isTextRound;
   textEl: HTMLTextAreaElement;
   canvasEl: HTMLTpCanvasElement;
 
@@ -61,7 +63,7 @@ export class TpInputZone {
       <div class="flex flex-col items-center w-full">
         {this.isTextRound ? (
           <textarea
-            class="shadow-md shadow-gray-400 border border-slate-500 rounded-lg selectable
+            class="border border-slate-500 rounded-lg selectable
                   text-black text-3xl text-center font-medium p-4 w-full bg-white aspect-[5/3]"
             ref={el => (this.textEl = el)}
             placeholder={this.placeholderText}
@@ -74,7 +76,7 @@ export class TpInputZone {
         )}
         <button
           class="mt-4 rounded-md w-32 h-16 text-white text-lg font-medium 
-                      border-none shadow-md shadow-gray-400 bg-blue-600 hover:bg-green-500 disabled:bg-gray-500"
+                      border-none"
           onClick={this.sendRound}
           disabled={!this.canSend}
         >

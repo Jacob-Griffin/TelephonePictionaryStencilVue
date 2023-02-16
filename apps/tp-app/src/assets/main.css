@@ -44,10 +44,13 @@ button:disabled {
 }
 
 button.small {
-  max-width: 10rem;
+  white-space: nowrap;
+  width: fit-content;
   height: 2.5rem;
   line-height: 1.5rem;
+  padding: 0 1rem;
   font-size: 1rem;
+  box-sizing: content-box;
 }
 
 input[type="text"] {
@@ -84,7 +87,8 @@ a {
   width: 100%;
   max-width: 30rem;
   height: fit-content;
-  background-color: rgba(220,220,220,.6);
+  background-color: var(--color-backdrop);
+  color: var(--color-backdrop-text);
   padding:2rem;
   display:flex;
   flex-direction: column;
@@ -95,9 +99,9 @@ a {
 }
 .playerlist > div{
   display:flex;
+  justify-content: space-around;
   gap:2rem;
   width:100%;
-  max-width: 15rem;
 }
 .playerlist .ready{
   color: green;
