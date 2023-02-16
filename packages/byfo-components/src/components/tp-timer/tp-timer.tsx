@@ -6,45 +6,40 @@ import { Component, Host, h, Prop, State } from '@stencil/core';
   shadow: true,
 })
 export class TpTimer {
-  @Prop() endtime:number;
-  @State() currentTime:number = Date.now();
+  @Prop() endtime: number;
+  @State() currentTime: number = Date.now();
   timerLoop;
 
-  connectedCallback(){
-    this.timerLoop = setInterval(() =>{
+  connectedCallback() {
+    this.timerLoop = setInterval(() => {
       this.currentTime = Date.now();
-    },500);
+    }, 500);
   }
 
-  disconnectedCallback(){
-    if(this.timerLoop) clearInterval(this.timerLoop);
+  disconnectedCallback() {
+    if (this.timerLoop) clearInterval(this.timerLoop);
   }
 
-  timeoutRound(){
-    document.dispatchEvent(new CustomEvent('tp-timer-finished',{}));
+  timeoutRound() {
+    document.dispatchEvent(new CustomEvent('tp-timer-finished', {}));
   }
 
-  get secondsLeft():number{
-    return Math.floor((this.endtime-this.currentTime)/1000);
+  get secondsLeft(): number {
+    return Math.floor((this.endtime - this.currentTime) / 1000);
   }
 
-  get relativeTime(){
-    if(this.secondsLeft < 0){
+  get relativeTime() {
+    if (this.secondsLeft < 0) {
       this.timeoutRound();
-      return 'Out of time - Submitting'
+      return 'Out of time - Submitting';
     }
-    let seconds:string|number = this.secondsLeft % 60;
-    seconds = seconds < 10 ? "0"+seconds : seconds;
-    const minutes = Math.floor(this.secondsLeft/60);
+    let seconds: string | number = this.secondsLeft % 60;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    const minutes = Math.floor(this.secondsLeft / 60);
     return `${minutes}:${seconds}`;
   }
 
   render() {
-    return (
-      <Host>
-        {this.relativeTime}
-      </Host>
-    );
+    return <Host>{this.relativeTime}</Host>;
   }
-
 }

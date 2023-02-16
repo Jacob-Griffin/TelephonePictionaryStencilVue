@@ -9,7 +9,7 @@ export class TpCanvas {
   //Configurable Properties
   @Prop() height = 600;
   @Prop() width = 1000;
-  @Prop() hostEl:HTMLElement;
+  @Prop() hostEl: HTMLElement;
 
   //Static Properties (elements and such)
   @Element() el: HTMLElement;
@@ -39,10 +39,10 @@ export class TpCanvas {
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                           :(String)
 
-  componentDidRender(){
+  componentDidRender() {
     //Set up the canvas context now that the canvas exists
     this.setupContext();
-    
+
     //Listen for the controller buttons to say anything (Should have shared parent)
     this.hostEl.addEventListener('undo-input', this.undo);
     this.hostEl.addEventListener('redo-input', this.redo);
@@ -66,7 +66,7 @@ export class TpCanvas {
     //Note, leaving the canvas area DOES NOT stop the line.
   }
 
-  disconnectedCallback(){
+  disconnectedCallback() {
     this.hostEl.removeEventListener('redo-input', this.redo);
     this.hostEl.removeEventListener('size-input', this.changeLine);
     this.hostEl.removeEventListener('undo-input', this.undo);
@@ -215,18 +215,11 @@ export class TpCanvas {
 
   @Method() exportDrawing() {
     return new Promise(callback => {
-      this.canvasElement.toBlob(callback,'image/png');
+      this.canvasElement.toBlob(callback, 'image/png');
     });
   }
 
   render() {
-    return (
-      <canvas
-        class="border border-slate-500 rounded-lg w-full"
-        height={this.height}
-        width={this.width}
-        ref={el => (this.canvasElement = el as HTMLElement)}
-      ></canvas>
-    );
+    return <canvas class="border border-slate-500 rounded-lg w-full" height={this.height} width={this.width} ref={el => (this.canvasElement = el as HTMLElement)}></canvas>;
   }
 }

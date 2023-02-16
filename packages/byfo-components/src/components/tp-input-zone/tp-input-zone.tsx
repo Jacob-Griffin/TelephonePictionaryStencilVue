@@ -18,28 +18,27 @@ export class TpInputZone {
     return this.round % 2 === 0;
   }
 
-  get placeholderText(){
-    if(this.round === 0){
+  get placeholderText() {
+    if (this.round === 0) {
       return 'Type in a word, phrase, or sentence to be passed along';
-    }
-    else{
+    } else {
       return 'Describe the image your were sent';
     }
   }
 
-  connectedCallback(){
-    document.addEventListener('tp-timer-finished',this.sendRound);
-    document.addEventListener('keyup',this.verifyCanSend);
+  connectedCallback() {
+    document.addEventListener('tp-timer-finished', this.sendRound);
+    document.addEventListener('keyup', this.verifyCanSend);
   }
 
-  disconnectedCallback(){
-    document.removeEventListener('tp-timer-finished',this.sendRound);
-    document.removeEventListener('keyup',this.verifyCanSend);
+  disconnectedCallback() {
+    document.removeEventListener('tp-timer-finished', this.sendRound);
+    document.removeEventListener('keyup', this.verifyCanSend);
   }
 
-  verifyCanSend = () =>{
+  verifyCanSend = () => {
     this.canSend = !(this.isTextRound && this.textEl && this.textEl.value.length == 0);
-  }
+  };
 
   sendRound = async () => {
     let value;

@@ -39,15 +39,15 @@ export class TpCanvasControls {
 
   sendUndo = () => {
     this.hostEl.dispatchEvent(new CustomEvent('undo-input'));
-  }
+  };
 
   sendRedo = () => {
     this.hostEl.dispatchEvent(new CustomEvent('redo-input'));
-  }
+  };
 
-  sendClear = (color) => {
+  sendClear = color => {
     this.hostEl.dispatchEvent(new CustomEvent('clear-input', { detail: { color } }));
-  }
+  };
 
   sendDraw = () => {
     this.hostEl.dispatchEvent(new CustomEvent('pen-input'));
