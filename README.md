@@ -7,6 +7,7 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 ## Running
 
 Prerequisites: 
+
     - pnpm (`npm i -g pnpm`, if you need it)
     - A firebase config object
 
