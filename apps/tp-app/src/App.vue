@@ -33,6 +33,11 @@ export default {
       },
     };
   },
+  watch: {
+    "$route.meta.title"(newValue) {
+      document.title = newValue;
+    },
+  },
   methods: {
     goHome() {
       if (this.inGame) return;

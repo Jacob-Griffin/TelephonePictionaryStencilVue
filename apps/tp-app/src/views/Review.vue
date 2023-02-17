@@ -83,7 +83,9 @@ export default {
       document.addEventListener(event, this.globalListeners[event]);
     }
     const self = window.sessionStorage.getItem("username");
-    if (self) this.clickPlayer(self);
+    if (self && self in this.stacks) {
+      this.clickPlayer(self);
+    }
   },
   beforeUnmount() {
     for (let event in this.globalListeners) {
@@ -132,13 +134,14 @@ export default {
 <style>
 .playerSelector {
   width: 92%;
-  max-width: 1280px;
+  max-width: 1050px;
   height: 3.5rem;
   overflow-x: scroll;
   white-space: nowrap;
   margin-bottom: 1rem;
   padding: 0.2rem;
   user-select: none;
+  text-align: center;
 }
 
 .playerSelector > button:not(:first-child) {
@@ -236,9 +239,5 @@ h4 {
 
 .dark h4 {
   background-color: var(--selector-backdrop);
-}
-
-strong {
-  font-weight: 700;
 }
 </style>

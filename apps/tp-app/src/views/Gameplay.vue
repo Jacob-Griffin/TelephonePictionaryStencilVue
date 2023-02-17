@@ -116,7 +116,6 @@ export default {
         this.people.from,
         this.roundData.roundnumber - 1
       );
-      console.log(this.content);
       this.waiting = false;
     });
 

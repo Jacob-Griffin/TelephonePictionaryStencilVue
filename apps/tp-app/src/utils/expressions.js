@@ -36,6 +36,5 @@ export function inGame(location) {
 
 export function inHome(location) {
   const pattern = new RegExp(location.origin + "/?$");
-  console.log(pattern);
   return pattern.test(location.href);
 }

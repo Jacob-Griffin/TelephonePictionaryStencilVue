@@ -15,12 +15,8 @@ export default {
       this.openModal = event?.target.getAttribute("modal") ?? "";
     },
     keyHandler(event) {
-      console.log("Key pressed");
       if (event.key !== "Enter") return;
-      console.log("it was enter");
       const target = document.querySelector(".main-action");
-      console.log("clicking", target);
-      console.log(!target ? "it didn't exist" : "Moving on");
       if (!target) return;
 
       target.click();
