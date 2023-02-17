@@ -8,6 +8,7 @@
     "build": "vite build",
     "start": "vite build; vite --host",
     "start:local": "vite build; vite",
+    "deploy": "firebase deploy",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },

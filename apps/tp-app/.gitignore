@@ -27,5 +27,11 @@ coverage
 *.sln
 *.sw?
 
+#cache
+**/*.cache
+
+#personal (not necessarily secret)
+.firebaserc
+
 #secrets
 firebase.config.js
