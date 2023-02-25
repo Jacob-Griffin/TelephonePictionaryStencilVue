@@ -64,22 +64,18 @@ export async function listGameStatus() {
   return get(statusesRef).then((statusList) => statusList.val());
 }
 
-export function submitReady(usernumber, gameid, readyStatus) {
-  const statusRef = ref(rtdb, `players/${gameid}/${usernumber}/status`);
-  const newStatus = readyStatus ? "ready" : "pending";
-  set(statusRef, newStatus);
-}
-
 export async function beginGame(gameid, roundLength) {
   //List of outstanding promises, that way we can let them all run in parallel and only block for them at the end
   const promises = [];
 
   //Set up the round variable at 0
   const roundRef = ref(rtdb, `game/${gameid}/round`);
-  set(roundRef, {
+  const round0 = {
     roundnumber: 0,
     endTime: Date.now() + roundLength,
-  });
+  };
+  if (roundLength) round0.endTime = -1;
+  set(roundRef, round0);
 
   //Get the players
   const playerList = Object.values(
@@ -145,6 +141,7 @@ export async function submitRound(
   //Check every player. If someone's not done, leave now
   for (let player in finished) {
     if (finished[player] < round) {
+      console.log(finished, player, round);
       return;
     }
   }
@@ -161,6 +158,7 @@ export async function submitRound(
     roundnumber: round + 1,
     endTime: Date.now() + staticRoundInfo.roundLength,
   };
+  if (staticRoundInfo.roundLength === -1) newRoundData.endTime = -1;
   await set(roundRef, newRoundData);
 
   return;

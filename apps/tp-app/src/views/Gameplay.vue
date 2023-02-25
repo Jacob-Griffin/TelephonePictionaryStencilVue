@@ -176,7 +176,10 @@ export default {
       :content="content.content"
       :type="content.contentType"
     />
-    <tp-timer :endtime="roundData.endTime"></tp-timer>
+    <tp-timer
+      v-if="roundData.endTime !== -1"
+      :endtime="roundData.endTime"
+    ></tp-timer>
     <p><strong>To:</strong> {{ people.to }}</p>
     <tp-input-zone :round="roundData.roundnumber" ref="inputzone" />
   </section>

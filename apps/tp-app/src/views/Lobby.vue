@@ -3,6 +3,10 @@ import { rtdb } from "../../Firebase";
 import { ref, get, onValue } from "firebase/database";
 import { beginGame } from "../firebase/rtdb";
 import { toRaw } from "vue";
+
+//Rounds cannot be set to more than 20 minutes (unless unlimited)
+const maxRoundLength = 1200;
+
 export default {
   data() {
     return {
@@ -11,6 +15,7 @@ export default {
       priority: undefined,
       hosting: window.localStorage.getItem("hosting"),
       roundLengthInput: "3:00",
+      timeError: "",
     };
   },
   computed: {
@@ -31,14 +36,30 @@ export default {
     },
     roundLength() {
       const input = this.roundLengthInput;
+      if (input.length === 0) {
+        this.timeError = "";
+        return -1;
+      }
       const matches = input.match(/^([0-9]+):?([0-9]*)$/);
       if (matches === null) {
+        this.timeError = "Improper format. Must be ss or mm:ss";
         return false;
       }
       let seconds = parseInt(matches[1]);
       if (matches[2]) {
         let minutes = seconds;
         seconds = parseInt(matches[2]) + minutes * 60;
+      }
+      if (seconds > maxRoundLength) {
+        this.timeError = `Round time must be less than ${maxRoundLength} seconds or ${
+          maxRoundLength / 60
+        } minutes, if any`;
+        return false;
+      } else if (seconds < 5) {
+        this.timeError = "Round time must be at least 5 seconds";
+        return false;
+      } else {
+        this.timeError = "";
       }
       return seconds * 1000; //Unix timestamps, like we use are in ms
     },
@@ -105,7 +126,13 @@ export default {
     </section>
     <div class="flex-col" v-if="hosting == gameid">
       <p>Round length:</p>
-      <input type="text" @input="timerInputHandler" value="3:00" />
+      <input
+        type="text"
+        @input="timerInputHandler"
+        value="3:00"
+        placeholder="∞"
+      />
+      <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength" @click="startGame">Start Game</button>
     </div>
     <div class="flex-col" v-else>
