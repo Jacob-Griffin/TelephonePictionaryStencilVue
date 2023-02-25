@@ -40,7 +40,7 @@ export async function addPlayerToLobby(gameid, username) {
     rtdb,
     `players/${gameid}/${generatePriority(new Set(Object.keys(players)))}`
   );
-  set(newPlayerRef, { username, status: "pending" });
+  set(newPlayerRef, { username, status: "ready" });
 
   return true;
 }
@@ -51,7 +51,7 @@ export function createLobby(gameid, username) {
     finished: false,
   });
   const newPlayerRef = ref(rtdb, `players/${gameid}/${generatePriority()}`);
-  set(newPlayerRef, { username, status: "pending" });
+  set(newPlayerRef, { username, status: "ready" });
 }
 
 export async function getGameStatus(gameid) {

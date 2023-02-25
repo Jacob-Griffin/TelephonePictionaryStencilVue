@@ -10,7 +10,7 @@ export default {
       self: window.sessionStorage.getItem("username"),
       priority: undefined,
       hosting: window.sessionStorage.getItem("hosting"),
-      ready: false,
+      ready: true,
       canStart: false,
       roundLengthInput: "3:00",
     };

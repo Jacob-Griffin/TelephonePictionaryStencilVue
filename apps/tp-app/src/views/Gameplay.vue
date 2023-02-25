@@ -194,6 +194,10 @@ section {
   gap: 1rem;
 }
 
+tp-input-zone {
+  touch-action: none;
+}
+
 * {
   user-select: none;
 }

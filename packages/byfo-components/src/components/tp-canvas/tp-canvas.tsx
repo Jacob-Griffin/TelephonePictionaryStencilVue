@@ -95,23 +95,23 @@ export class TpCanvas {
   startDraw = event => {
     //We only want to start a line if there already isn't a line
     if (this.currentPath == undefined) {
+      const point = this.transformCoordinates(event);
       this.currentPath = new Path2D();
-      this.currentPath.moveTo(...this.transformCoordinates(event));
-
-      //this.el.setPointerCapture(event.pointerid);
+      this.currentPath.moveTo(...point);
     }
   };
 
   draw = event => {
     //We only want to continue drawing if we've already started a line
     if (this.currentPath != undefined) {
-      this.currentPath.lineTo(...this.transformCoordinates(event));
+      const point = this.transformCoordinates(event);
+      this.currentPath.lineTo(...point);
       this.ctx.stroke(this.currentPath);
     }
+    return true;
   };
 
   finishLine = event => {
-    //this.el.releasePointerCapture(event.pointerid);
     //Only add the path if there is one
     if (this.currentPath != undefined) {
       this.draw(event);
@@ -207,7 +207,7 @@ export class TpCanvas {
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
   };
 
-  transformCoordinates(event) {
+  transformCoordinates(event): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
     let box = this.canvasElement.getBoundingClientRect();
     return [((event.clientX - box.left) * this.width) / box.width, ((event.clientY - box.top) * this.height) / box.height];
