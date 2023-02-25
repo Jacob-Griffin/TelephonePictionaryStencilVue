@@ -1,17 +1,15 @@
 <script>
 import { rtdb } from "../../Firebase";
 import { ref, get, onValue } from "firebase/database";
-import { submitReady, beginGame } from "../firebase/rtdb";
+import { beginGame } from "../firebase/rtdb";
 import { toRaw } from "vue";
 export default {
   data() {
     return {
       players: [],
-      self: window.sessionStorage.getItem("username"),
+      self: window.localStorage.getItem("username"),
       priority: undefined,
-      hosting: window.sessionStorage.getItem("hosting"),
-      ready: true,
-      canStart: false,
+      hosting: window.localStorage.getItem("hosting"),
       roundLengthInput: "3:00",
     };
   },
@@ -46,12 +44,6 @@ export default {
     },
   },
   methods: {
-    readyClicked() {
-      this.ready = !this.ready;
-      if (this.priority) {
-        submitReady(this.priority, this.gameid, this.ready);
-      }
-    },
     timerInputHandler(event) {
       this.roundLengthInput = event.target.value;
     },
@@ -69,13 +61,9 @@ export default {
       const playerList = snapshot.val();
       this.players = playerList;
 
-      let allReady = true;
       let isInGame = false;
 
       for (let playerNumber in this.players) {
-        if (this.players[playerNumber].status == "pending") {
-          allReady = false;
-        }
         if (this.players[playerNumber].username == this.self) {
           this.priority = playerNumber;
           isInGame = true;
@@ -85,8 +73,8 @@ export default {
       if (!isInGame) {
         //If we discover that we're not supposed to be in this game, kick back to the home screen
         window.open("/", "_self");
+        return;
       }
-      this.canStart = allReady;
     });
 
     const gameStatusRef = ref(rtdb, `game-statuses/${this.gameid}`);
@@ -113,22 +101,15 @@ export default {
   <main class="page-wrapper">
     <h2>Game {{ gameid }}</h2>
     <section class="playerlist">
-      <div v-for="player in sortedPlayers">
-        <p>{{ player.username }}</p>
-        <span :class="player.status">{{
-          player.status === "ready" ? "✓" : "•"
-        }}</span>
-      </div>
-      <button class="small" @click="readyClicked">
-        {{ ready ? "Set Not Ready" : "Set Ready" }}
-      </button>
+      <p v-for="player in sortedPlayers">{{ player.username }}</p>
     </section>
     <div class="flex-col" v-if="hosting == gameid">
-      <p>Round length: (seconds or minutes:seconds)</p>
+      <p>Round length:</p>
       <input type="text" @input="timerInputHandler" value="3:00" />
-      <button :disabled="!canStart || !roundLength" @click="startGame">
-        Start Game
-      </button>
+      <button :disabled="!roundLength" @click="startGame">Start Game</button>
+    </div>
+    <div class="flex-col" v-else>
+      <p>Waiting for host</p>
     </div>
   </main>
 </template>

@@ -33,7 +33,7 @@ export default {
         roundLength: 180000,
       },
       waiting: false,
-      name: window.sessionStorage.getItem("username"),
+      name: window.localStorage.getItem("username"),
       globalListeners: {
         "tp-submitted": this.onSendHandler,
         keydown: this.keyHandler,

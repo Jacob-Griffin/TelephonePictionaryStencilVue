@@ -34,8 +34,8 @@ export default {
       if (!gameid) {
         return;
       }
-      window.sessionStorage.setItem("hosting", gameid);
-      window.sessionStorage.setItem("username", this.username);
+      window.localStorage.setItem("hosting", gameid);
+      window.localStorage.setItem("username", this.username);
       window.open(`/lobby/${gameid}`, "_self");
       return;
     },

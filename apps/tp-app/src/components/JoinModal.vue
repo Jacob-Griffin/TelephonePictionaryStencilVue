@@ -67,7 +67,7 @@ export default {
         return;
       }
       //If we're all good, navigate to the lobby
-      window.sessionStorage.setItem("username", this.username);
+      window.localStorage.setItem("username", this.username);
       window.open(`/lobby/${this.gameid}`, "_self");
       return;
     },

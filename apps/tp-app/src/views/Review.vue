@@ -82,10 +82,13 @@ export default {
     for (let event in this.globalListeners) {
       document.addEventListener(event, this.globalListeners[event]);
     }
-    const self = window.sessionStorage.getItem("username");
+    const self = window.localStorage.getItem("username");
     if (self && self in this.stacks) {
       this.clickPlayer(self);
     }
+    //Once the page knows who you are, you are officially done with the game
+    //Get rid of this so things behave as expected afterwards (anonymously)
+    window.localStorage.removeItem("username");
   },
   beforeUnmount() {
     for (let event in this.globalListeners) {
