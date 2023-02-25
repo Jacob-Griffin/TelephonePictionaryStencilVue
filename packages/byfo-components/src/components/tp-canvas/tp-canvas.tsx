@@ -64,6 +64,9 @@ export class TpCanvas {
     document.addEventListener('pointercancel', this.finishLine);
 
     //Note, leaving the canvas area DOES NOT stop the line.
+
+    //Stop right click menu
+    this.el.addEventListener('contextmenu', e => e.preventDefault());
   }
 
   disconnectedCallback() {
