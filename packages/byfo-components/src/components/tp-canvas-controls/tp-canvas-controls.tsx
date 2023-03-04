@@ -1,5 +1,26 @@
 import { Component, h, Element, Prop } from '@stencil/core';
 
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { faPencil, faRotateLeft, faRotateRight, faEraser, faFill, faCircle } from '@fortawesome/free-solid-svg-icons';
+
+// We are only using the user-astronaut icon
+library.add(faPencil);
+library.add(faEraser);
+library.add(faRotateLeft);
+library.add(faRotateRight);
+library.add(faFill);
+library.add(faCircle);
+
+const icons = {
+  pencil: <i class="fa-sharp fa-solid fa-pencil"></i>,
+  eraser: <i class="fa-solid fa-eraser"></i>,
+  undo: <i class="fa-solid fa-rotate-left"></i>,
+  redo: <i class="fa-solid fa-rotate-right"></i>,
+  fillWhite: <i class="fa-solid fa-fill"></i>,
+  fillBlack: <i class="fa-solid fa-fill"></i>,
+  lines: width => <i class={`fa-solid fa-circle line-${width}`}></i>,
+};
+
 @Component({
   tag: 'tp-canvas-controls',
   styleUrl: 'tp-canvas-controls.css',
@@ -35,6 +56,9 @@ export class TpCanvasControls {
         this.sendSize(width);
       });
     });
+    // Replace any existing <i> tags with <svg> and set up a MutationObserver to
+    // continue doing this as the DOM changes.
+    dom.watch();
   }
 
   sendUndo = () => {
@@ -76,22 +100,22 @@ export class TpCanvasControls {
     return (
       <section class="flex flex-wrap justify-center gap-4 m-2 p-4 rounded-sm">
         <button class={this.buttonClasses} ref={el => (this.undoButton = el)}>
-          Undo
+          {icons.undo}
         </button>
         <button class={this.buttonClasses} ref={el => (this.redoButton = el)}>
-          Redo
+          {icons.redo}
         </button>
         <button class={this.buttonClasses} ref={el => (this.whiteButton = el)}>
-          Clear (White)
+          {icons.fillWhite}
         </button>
         <button class={this.buttonClasses} ref={el => (this.blackButton = el)}>
-          Clear (black)
+          {icons.fillBlack}
         </button>
         <button class={this.buttonClasses} ref={el => (this.drawButton = el)} value="active">
-          Draw
+          {icons.pencil}
         </button>
         <button class={this.buttonClasses} ref={el => (this.eraseButton = el)} value="inactive">
-          Erase
+          {icons.eraser}
         </button>
         <section class="flex gap-4 m-0 p-0">
           {this.lineWidths.map(width => {
@@ -104,7 +128,7 @@ export class TpCanvasControls {
                   }}
                   value="active"
                 >
-                  {width}
+                  {icons.lines[width]}
                 </button>
               );
             } else {
@@ -116,7 +140,7 @@ export class TpCanvasControls {
                   }}
                   value="inactive"
                 >
-                  {width}
+                  {icons.lines[width]}
                 </button>
               );
             }

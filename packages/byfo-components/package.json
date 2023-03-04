@@ -25,6 +25,9 @@
     "generate": "stencil generate"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-regular-svg-icons": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@stencil/core": "^3.0.0"
   },
   "devDependencies": {
