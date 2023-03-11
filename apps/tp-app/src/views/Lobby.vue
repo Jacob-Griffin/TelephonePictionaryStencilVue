@@ -3,9 +3,7 @@ import { rtdb } from "../../Firebase";
 import { ref, get, onValue } from "firebase/database";
 import { beginGame } from "../firebase/rtdb";
 import { toRaw } from "vue";
-
-//Rounds cannot be set to more than 20 minutes (unless unlimited)
-const maxRoundLength = 1200;
+import globalLimits from "../globalLimits";
 
 export default {
   data() {
@@ -50,10 +48,10 @@ export default {
         let minutes = seconds;
         seconds = parseInt(matches[2]) + minutes * 60;
       }
-      if (seconds > maxRoundLength) {
-        this.timeError = `Round time must be less than ${maxRoundLength} seconds or ${
-          maxRoundLength / 60
-        } minutes, if any`;
+      if (seconds > globalLimits.maxRoundLength) {
+        this.timeError = `Round time must be less than ${
+          globalLimits.maxRoundLength
+        } seconds or ${globlLimits.maxRoundLength / 60} minutes, if any`;
         return false;
       } else if (seconds < 5) {
         this.timeError = "Round time must be at least 5 seconds";

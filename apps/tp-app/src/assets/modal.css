@@ -36,6 +36,7 @@
 
 .modal .close {
   position: absolute;
+  color: var(--color-text);
   top: 1rem;
   right: 2rem;
   width: 1rem;

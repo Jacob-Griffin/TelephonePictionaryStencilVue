@@ -2,6 +2,7 @@ import { rtdb } from "../../Firebase";
 import { ref, get, set, onValue, remove } from "firebase/database";
 import { storeGame } from "./firestore";
 import { uploadImage } from "./storage";
+import globalLimits from "../globalLimits";
 
 function generatePriority(taken = undefined) {
   let priority = Math.floor(Math.random() * 1000);
@@ -29,6 +30,9 @@ export async function addPlayerToLobby(gameid, username) {
   const playersRef = ref(rtdb, `players/${gameid}`);
   const players = await get(playersRef).then((result) => result.val());
 
+  if (players.length > globalLimits.maxPlayers) {
+    return `This game is full (${globalLimits.maxPlayers} max)`;
+  }
   for (let existingUser of Object.values(players)) {
     if (existingUser.username === username) {
       return "That name is already taken in this game";
