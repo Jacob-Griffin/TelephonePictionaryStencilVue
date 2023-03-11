@@ -4,6 +4,37 @@
 
 button {
   background-color: var(--color-button);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button.black {
+  color: black;
+}
+
+button > svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+button > svg.line-xlarge {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+button > svg.line-large {
+  width: 1.85rem;
+}
+
+button > svg.line-medium {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+button > svg.line-small {
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 button:hover,

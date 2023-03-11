@@ -1,20 +1,19 @@
-import { Component, h, Element, Prop } from '@stencil/core';
+import { Component, h, Element, Prop, State } from '@stencil/core';
 
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { faPencil, faRotateLeft, faRotateRight, faEraser, faFill, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faRotateRight, faEraser, faFill, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 // We are only using the user-astronaut icon
 library.add(faPencil);
 library.add(faEraser);
-library.add(faRotateLeft);
 library.add(faRotateRight);
 library.add(faFill);
 library.add(faCircle);
 
 const icons = {
-  pencil: <i class="fa-sharp fa-solid fa-pencil"></i>,
+  pencil: <i class="fa-solid fa-pencil"></i>,
   eraser: <i class="fa-solid fa-eraser"></i>,
-  undo: <i class="fa-solid fa-rotate-left"></i>,
+  undo: <i class="fa-solid fa-rotate-right" data-fa-transform="flip-h"></i>,
   redo: <i class="fa-solid fa-rotate-right"></i>,
   fillWhite: <i class="fa-solid fa-fill"></i>,
   fillBlack: <i class="fa-solid fa-fill"></i>,
@@ -39,6 +38,7 @@ export class TpCanvasControls {
 
   @Prop() hostEl: HTMLElement;
   @Element() el: HTMLElement;
+  @State() buttonContainer: HTMLElement;
 
   componentDidRender() {
     this.undoButton.addEventListener('click', this.sendUndo);
@@ -56,9 +56,7 @@ export class TpCanvasControls {
         this.sendSize(width);
       });
     });
-    // Replace any existing <i> tags with <svg> and set up a MutationObserver to
-    // continue doing this as the DOM changes.
-    dom.watch();
+    dom.i2svg({ node: this.buttonContainer });
   }
 
   sendUndo = () => {
@@ -98,7 +96,7 @@ export class TpCanvasControls {
 
   render() {
     return (
-      <section class="flex flex-wrap justify-center gap-4 m-2 p-4 rounded-sm">
+      <section class="flex flex-wrap justify-center gap-4 m-2 p-4 rounded-sm" ref={el => (this.buttonContainer = el)}>
         <button class={this.buttonClasses} ref={el => (this.undoButton = el)}>
           {icons.undo}
         </button>
@@ -108,7 +106,7 @@ export class TpCanvasControls {
         <button class={this.buttonClasses} ref={el => (this.whiteButton = el)}>
           {icons.fillWhite}
         </button>
-        <button class={this.buttonClasses} ref={el => (this.blackButton = el)}>
+        <button class={`${this.buttonClasses} black`} ref={el => (this.blackButton = el)}>
           {icons.fillBlack}
         </button>
         <button class={this.buttonClasses} ref={el => (this.drawButton = el)} value="active">
@@ -128,7 +126,7 @@ export class TpCanvasControls {
                   }}
                   value="active"
                 >
-                  {icons.lines[width]}
+                  {icons.lines(width)}
                 </button>
               );
             } else {
@@ -140,7 +138,7 @@ export class TpCanvasControls {
                   }}
                   value="inactive"
                 >
-                  {icons.lines[width]}
+                  {icons.lines(width)}
                 </button>
               );
             }
