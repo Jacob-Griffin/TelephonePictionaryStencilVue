@@ -110,7 +110,9 @@ export default {
     </button>
   </div>
   <section v-if="selected">
-    <h4><strong>From:</strong> {{ stacks[selected][currentIndex].from }}</h4>
+    <h4 class="needs-backdrop">
+      <strong>From:</strong> {{ stacks[selected][currentIndex].from }}
+    </h4>
     <div class="main-row">
       <p @click="decrement" class="arrow">{{ currentIndex > 0 ? "<" : "" }}</p>
       <tp-content

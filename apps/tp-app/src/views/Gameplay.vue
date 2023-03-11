@@ -153,7 +153,7 @@ export default {
 
 <template>
   <section v-if="waiting">
-    <h1>Waiting for next round</h1>
+    <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
       <div v-for="player in finished">
         <p>{{ player.name }}</p>
@@ -167,8 +167,8 @@ export default {
     </section>
   </section>
   <section v-else>
-    <h3>Round {{ roundData.roundnumber }}</h3>
-    <p v-if="roundData.roundnumber != 0">
+    <h3 class="needs-backdrop">Round {{ roundData.roundnumber }}</h3>
+    <p v-if="roundData.roundnumber != 0" class="needs-backdrop">
       <strong>From:</strong> {{ people.from }}
     </p>
     <tp-content
@@ -180,7 +180,7 @@ export default {
       v-if="roundData.endTime !== -1"
       :endtime="roundData.endTime"
     ></tp-timer>
-    <p><strong>To:</strong> {{ people.to }}</p>
+    <p class="needs-backdrop"><strong>To:</strong> {{ people.to }}</p>
     <tp-input-zone :round="roundData.roundnumber" ref="inputzone" />
   </section>
 </template>
@@ -189,7 +189,7 @@ export default {
 section {
   width: 100%;
   max-width: 1280px;
-  padding: 2rem;
+  padding: 1rem 2rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

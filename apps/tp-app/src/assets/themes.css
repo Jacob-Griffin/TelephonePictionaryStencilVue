@@ -24,6 +24,7 @@
 /* semantic color variables for this project, defaults to "light mode" */
 :root {
   --color-brand: rgb(50, 78, 163); /* Header */
+  --color-button-text: white; /* The color that goes on top of the brand color*/
 
   --color-background: var(--vt-c-white-mute);
 
@@ -90,6 +91,8 @@
   --icon: url("/byfo-logo2.png");
 
   --feature-selected-color: var(--color-button);
+
+  --optional-text-backdrop: var(--color-backdrop);
 }
 
 tp-inputzone {

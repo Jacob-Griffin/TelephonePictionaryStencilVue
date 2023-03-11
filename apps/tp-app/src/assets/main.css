@@ -116,6 +116,13 @@ strong {
   color: rgb(218, 129, 28);
 }
 
+.needs-backdrop {
+  background-color: var(--optional-text-backdrop);
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin: -0.25rem;
+}
+
 *,
 *::before,
 *::after {

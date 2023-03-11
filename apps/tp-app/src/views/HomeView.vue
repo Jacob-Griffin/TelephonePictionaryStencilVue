@@ -1,9 +1,4 @@
 <script>
-import Logo from "../components/Logo.vue";
-import HostModal from "../components/HostModal.vue";
-import JoinModal from "../components/JoinModal.vue";
-import ResultModal from "../components/ResultModal.vue";
-
 export default {
   data() {
     return {
@@ -52,6 +47,7 @@ export default {
       @modal-closed="switchModal"
     ></ResultModal>
   </main>
+  <BYFOFooter></BYFOFooter>
 </template>
 
 <style>

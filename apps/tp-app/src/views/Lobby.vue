@@ -118,12 +118,12 @@ export default {
 
 <template>
   <main class="page-wrapper">
-    <h2>Game {{ gameid }}</h2>
+    <h2 class="needs-backdrop">Game {{ gameid }}</h2>
     <section class="playerlist">
       <p v-for="player in sortedPlayers">{{ player.username }}</p>
     </section>
     <div class="flex-col" v-if="hosting == gameid">
-      <p>Round length:</p>
+      <p class="needs-backdrop">Round length:</p>
       <input
         type="text"
         @input="timerInputHandler"
@@ -133,7 +133,7 @@ export default {
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength" @click="startGame">Start Game</button>
     </div>
-    <div class="flex-col" v-else>
+    <div class="flex-col needs-backdrop" v-else>
       <p>Waiting for host</p>
     </div>
   </main>
