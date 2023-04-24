@@ -19,6 +19,8 @@ export namespace Components {
         "content": string;
         "type": string;
     }
+    interface TpIconFillSquiggle {
+    }
     interface TpInputZone {
         "buttonColor": string;
         "round": number;
@@ -47,6 +49,12 @@ declare global {
         prototype: HTMLTpContentElement;
         new (): HTMLTpContentElement;
     };
+    interface HTMLTpIconFillSquiggleElement extends Components.TpIconFillSquiggle, HTMLStencilElement {
+    }
+    var HTMLTpIconFillSquiggleElement: {
+        prototype: HTMLTpIconFillSquiggleElement;
+        new (): HTMLTpIconFillSquiggleElement;
+    };
     interface HTMLTpInputZoneElement extends Components.TpInputZone, HTMLStencilElement {
     }
     var HTMLTpInputZoneElement: {
@@ -63,6 +71,7 @@ declare global {
         "tp-canvas": HTMLTpCanvasElement;
         "tp-canvas-controls": HTMLTpCanvasControlsElement;
         "tp-content": HTMLTpContentElement;
+        "tp-icon-fill-squiggle": HTMLTpIconFillSquiggleElement;
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-timer": HTMLTpTimerElement;
     }
@@ -80,6 +89,8 @@ declare namespace LocalJSX {
         "content"?: string;
         "type"?: string;
     }
+    interface TpIconFillSquiggle {
+    }
     interface TpInputZone {
         "buttonColor"?: string;
         "round"?: number;
@@ -92,6 +103,7 @@ declare namespace LocalJSX {
         "tp-canvas": TpCanvas;
         "tp-canvas-controls": TpCanvasControls;
         "tp-content": TpContent;
+        "tp-icon-fill-squiggle": TpIconFillSquiggle;
         "tp-input-zone": TpInputZone;
         "tp-timer": TpTimer;
     }
@@ -103,6 +115,7 @@ declare module "@stencil/core" {
             "tp-canvas": LocalJSX.TpCanvas & JSXBase.HTMLAttributes<HTMLTpCanvasElement>;
             "tp-canvas-controls": LocalJSX.TpCanvasControls & JSXBase.HTMLAttributes<HTMLTpCanvasControlsElement>;
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
+            "tp-icon-fill-squiggle": LocalJSX.TpIconFillSquiggle & JSXBase.HTMLAttributes<HTMLTpIconFillSquiggleElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
         }
