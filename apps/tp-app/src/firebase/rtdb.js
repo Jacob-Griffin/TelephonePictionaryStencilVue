@@ -12,6 +12,17 @@ function generatePriority(taken = undefined) {
   return priority;
 }
 
+function defaultImage(){
+  //As it stands, a "false" image will prompt the content to point to a single existing "no image" image
+  //If we had a dynamic image generation, it would go here
+  return false;
+}
+
+function defaultText(){
+  //If we had an API call for generating or suggesting these sorts of things, it would go here
+  return "Whoops, I forgot to submit something :(";
+}
+
 export async function addPlayerToLobby(gameid, username) {
   //Grab the game status
   const gameRef = ref(rtdb, `game-statuses/${gameid}`);
@@ -118,19 +129,28 @@ export async function submitRound(
   gameid,
   name,
   round,
-  content,
+  roundData,
   staticRoundInfo
 ) {
-  let savedContent = { contentType: content.contentType };
-  if (content.contentType == "image") {
+  let {contentType,content} = roundData;
+  let savedContent = { contentType };
+  if(!content){
+    //Blank images will be tested *before* generating a url and will be passed as ""
+    if(contentType === "image"){
+      content = defaultImage();
+    } else {
+      content = defaultText();
+    }
+  }
+  if (contentType === "image") {
     savedContent.content = await uploadImage(
       gameid,
       name,
       round,
-      content.content
+      content
     );
   } else {
-    savedContent.content = content.content;
+    savedContent.content = content;
   }
 
   const stackRef = ref(rtdb, `game/${gameid}/stacks/${name}/${round}`);

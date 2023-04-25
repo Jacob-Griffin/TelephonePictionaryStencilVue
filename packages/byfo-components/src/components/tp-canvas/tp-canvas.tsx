@@ -216,7 +216,39 @@ export class TpCanvas {
     return [((event.clientX - box.left) * this.width) / box.width, ((event.clientY - box.top) * this.height) / box.height];
   }
 
+  isBlankCanvas(){
+    let foundColor = undefined;
+    //It's *not* blank if we can find more than one color on it
+    const notBlank = this.ctx.getImageData(0,0,this.canvasElement.width,this.canvasElement.height).data.some(color => {
+      if(foundColor && color != foundColor){
+        return true;
+      }
+      foundColor = color;
+      return false;
+    });
+
+    return !notBlank;
+  }
+
   @Method() exportDrawing() {
+    const blankPromise = new Promise(callback => callback(""));
+    //If there are no paths, guaranteed blank
+    if(!(this.paths?.length > 0)){
+      return blankPromise;
+    }
+    
+    const lastPath = this.paths.pop();
+    this.paths.push(lastPath);
+
+    if(lastPath.clear){
+      //If the last thing was a clear action, guaranteed blank
+      return blankPromise;
+    }
+
+    //If we haven't shortcutted the blank status, double check if it's blank or not on color data
+    if(this.isBlankCanvas()){
+      return blankPromise;
+    }
     return new Promise(callback => {
       this.canvasElement.toBlob(callback, 'image/png');
     });

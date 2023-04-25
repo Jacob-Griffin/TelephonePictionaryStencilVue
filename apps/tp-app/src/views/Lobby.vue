@@ -38,20 +38,21 @@ export default {
         this.timeError = "";
         return -1;
       }
-      const matches = input.match(/^([0-9]+):?([0-9]*)$/);
+      const matches = input.match(/^([0-9]+)(:[0-5][0-9])?$/);
       if (matches === null) {
         this.timeError = "Improper format. Must be ss or mm:ss";
         return false;
       }
       let seconds = parseInt(matches[1]);
       if (matches[2]) {
+        const secondString = matches[2].replace(/:/,'');
         let minutes = seconds;
-        seconds = parseInt(matches[2]) + minutes * 60;
+        seconds = parseInt(secondString) + minutes * 60;
       }
-      if (seconds > globalLimits.maxRoundLength) {
+      if (seconds > globalLimits.maxRoundLength*60) {
         this.timeError = `Round time must be less than ${
           globalLimits.maxRoundLength
-        } seconds or ${globlLimits.maxRoundLength / 60} minutes, if any`;
+        } minutes or ${globalLimits.maxRoundLength * 60} seconds, if any`;
         return false;
       } else if (seconds < 5) {
         this.timeError = "Round time must be at least 5 seconds";
