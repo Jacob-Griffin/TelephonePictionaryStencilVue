@@ -26,6 +26,8 @@ export namespace Components {
         "round": number;
         "selectedColor": string;
     }
+    interface TpReviewChat {
+    }
     interface TpTimer {
         "endtime": number;
     }
@@ -61,6 +63,12 @@ declare global {
         prototype: HTMLTpInputZoneElement;
         new (): HTMLTpInputZoneElement;
     };
+    interface HTMLTpReviewChatElement extends Components.TpReviewChat, HTMLStencilElement {
+    }
+    var HTMLTpReviewChatElement: {
+        prototype: HTMLTpReviewChatElement;
+        new (): HTMLTpReviewChatElement;
+    };
     interface HTMLTpTimerElement extends Components.TpTimer, HTMLStencilElement {
     }
     var HTMLTpTimerElement: {
@@ -73,6 +81,7 @@ declare global {
         "tp-content": HTMLTpContentElement;
         "tp-icon-fill-squiggle": HTMLTpIconFillSquiggleElement;
         "tp-input-zone": HTMLTpInputZoneElement;
+        "tp-review-chat": HTMLTpReviewChatElement;
         "tp-timer": HTMLTpTimerElement;
     }
 }
@@ -96,6 +105,8 @@ declare namespace LocalJSX {
         "round"?: number;
         "selectedColor"?: string;
     }
+    interface TpReviewChat {
+    }
     interface TpTimer {
         "endtime"?: number;
     }
@@ -105,6 +116,7 @@ declare namespace LocalJSX {
         "tp-content": TpContent;
         "tp-icon-fill-squiggle": TpIconFillSquiggle;
         "tp-input-zone": TpInputZone;
+        "tp-review-chat": TpReviewChat;
         "tp-timer": TpTimer;
     }
 }
@@ -117,6 +129,7 @@ declare module "@stencil/core" {
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-icon-fill-squiggle": LocalJSX.TpIconFillSquiggle & JSXBase.HTMLAttributes<HTMLTpIconFillSquiggleElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
+            "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
         }
     }

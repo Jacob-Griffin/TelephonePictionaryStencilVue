@@ -35,3 +35,6 @@ coverage
 
 #secrets
 firebase.config.js
+
+#notes
+**/*.note.txt
