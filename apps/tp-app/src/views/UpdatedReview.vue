@@ -1,5 +1,6 @@
 <script>
 import "byfo-components/dist/components/tp-content";
+import "byfo-components/dist/components/tp-review-chat";
 import { getGameData } from "../firebase/firestore";
 export default {
   data() {
@@ -100,13 +101,28 @@ export default {
     </button>
   </div>
   <section v-if="selected">
-    <tp-review-chat :index="currentIndex" :stack="stacks[selected]"></tp-review-chat>
+    <tp-review-chat :index="currentIndex" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
-  <button @click="increment">Next</button><button @click="showAll">Show All</button><br />
-  <button @click="goHome">Return to home</button>
+  <div class="chatNavigator">
+    <button class='small' v-if="selected" @click="increment">Next</button>
+    <button class='small' v-if="selected" @click="showAll">Show All</button><br />
+  </div>
+  <button id="homeButton" @click="goHome">Return to home</button>
 </template>
 
 <style>
+.chatNavigator {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  max-width: 30rem;
+  width:fit-content;
+  margin:1rem;
+}
+#homeButton {
+  margin-bottom: .5rem;
+}
 .playerSelector {
   width: 92%;
   max-width: 1050px;
@@ -197,6 +213,7 @@ export default {
 section {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   align-items: center;
   width: 100%;
   max-width: 1150px;

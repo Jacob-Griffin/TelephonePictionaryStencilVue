@@ -27,6 +27,8 @@ export namespace Components {
         "selectedColor": string;
     }
     interface TpReviewChat {
+        "index": any;
+        "stackProxy": any;
     }
     interface TpTimer {
         "endtime": number;
@@ -106,6 +108,8 @@ declare namespace LocalJSX {
         "selectedColor"?: string;
     }
     interface TpReviewChat {
+        "index"?: any;
+        "stackProxy"?: any;
     }
     interface TpTimer {
         "endtime"?: number;
