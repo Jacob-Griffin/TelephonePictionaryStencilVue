@@ -111,6 +111,12 @@ export default {
 </template>
 
 <style>
+
+#app {
+  overflow: hidden;
+  height: 100vh;
+}
+
 .chatNavigator {
   display:flex;
   justify-content: center;
@@ -119,15 +125,20 @@ export default {
   max-width: 30rem;
   width:fit-content;
   margin:1rem;
+  flex:none;
 }
+
 #homeButton {
+  flex:none;
   margin-bottom: .5rem;
 }
+
 .playerSelector {
   width: 92%;
   max-width: 1050px;
   height: 3.5rem;
-  overflow-x: scroll;
+  flex: none;
+  overflow: hidden;
   white-space: nowrap;
   margin-bottom: 1rem;
   padding: 0.2rem;
@@ -160,63 +171,15 @@ export default {
   background-color: var(--scroll-color);
 }
 
-.main-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-size: xx-large;
-  gap: 0.5rem;
-}
-
-.arrow {
-  cursor: pointer;
-  flex-grow: 1;
-  width: 4%;
-  user-select: none;
-  text-align: center;
-  background-color: var(--selector-backdrop);
-  padding-bottom: 0.25rem;
-  border-radius: 0.5rem;
-}
-
-.arrow:empty {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-.main-row tp-content {
-  flex-grow: 48;
-}
-
-.dot {
-  color: var(--feature-unselected-color);
-}
-
-.dot-selected {
-  color: var(--feature-selected-color);
-}
-
-.carousel-dots {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  width: fit-content;
-  gap: 0.25rem;
-  cursor: pointer;
-  user-select: none;
-  font-size: 2rem;
-  font-weight: 900;
-  background-color: var(--selector-backdrop);
-  padding: 0 1rem;
-  border-radius: 0.5rem;
-}
-
 section {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex-shrink: 1;
+  height: 100vh;
+  min-height: 0;
   align-items: center;
   width: 100%;
-  max-width: 1150px;
+  max-width: 900px;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
