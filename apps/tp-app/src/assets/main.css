@@ -22,6 +22,10 @@ main {
   align-items: center;
 }
 
+main .icon{
+  margin-top: -1.5rem;
+}
+
 button {
   width: 100%;
   max-width: 24rem;

@@ -1,4 +1,4 @@
-import { Component, Element, Host, Prop, Watch, h } from '@stencil/core';
+import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
 
 interface Content {
   from:string;
@@ -16,6 +16,8 @@ export class TpReviewChat {
   @Prop() stackProxy;
   @Prop() index;
 
+  @State() lightboxedImgUrl: string;
+
   @Element() el;
 
   @Watch('index')
@@ -27,6 +29,14 @@ export class TpReviewChat {
     }
   }
 
+  imgClicked = (e:PointerEvent) => {
+    this.lightboxedImgUrl = (e.currentTarget as HTMLImageElement).src;
+  }
+
+  closeLightbox = () => {
+    this.lightboxedImgUrl = undefined;
+  }
+
   stack:Content[];
 
   chatBubbles = () => {
@@ -36,7 +46,7 @@ export class TpReviewChat {
       const {from,content,contentType} = this.stack[i];
       const bubble = contentType === 'text' ?
         <div class='content-bubble bubble-text'><p>{content}</p><span class='from'>{from}</span></div> :
-        <div class='content-bubble bubble-img'><img src={content}/><span class='from'>{from}</span></div>;
+        <div class='content-bubble bubble-img'><img src={content} onClick={this.imgClicked}/><span class='from'>{from}</span></div>;
       bubbles.push(bubble);
     }
     return bubbles;
@@ -49,6 +59,11 @@ export class TpReviewChat {
       <article>
         {this.chatBubbles()}
       </article>
+      { this.lightboxedImgUrl ?
+      <div class='lightbox' onClick={this.closeLightbox}>
+        <img src={this.lightboxedImgUrl}></img>
+      </div>
+      : <div>{this.lightboxedImgUrl}</div> }
       </Host>
     );
   }
