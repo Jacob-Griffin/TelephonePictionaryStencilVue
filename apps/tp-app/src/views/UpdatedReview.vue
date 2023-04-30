@@ -22,10 +22,7 @@ export default {
     players() {
       let newList = Object.keys(this.stacks);
       newList.sort(
-        (a, b) =>
-          a.username &&
-          b.username &&
-          a.username.localeCompare(b.username, "en", { sensitivity: "base" })
+        (a, b) => a.localeCompare(b, "en", { sensitivity: "base" })
       );
       return newList;
     },
@@ -152,12 +149,10 @@ export default {
 }
 
 ::-webkit-scrollbar {
-  height: 4px;
   background: none;
 }
 
 ::-webkit-scrollbar-track {
-  width: 4px;
   background: none;
 }
 
@@ -166,8 +161,7 @@ export default {
 }
 
 ::-webkit-scrollbar-thumb {
-  width: 4px;
-  border-radius: 2px;
+  border-radius: .5rem;
   background-color: var(--scroll-color);
 }
 

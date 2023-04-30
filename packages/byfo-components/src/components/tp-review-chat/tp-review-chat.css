@@ -3,6 +3,8 @@
   width:100%;
   height:100%;
   overflow-y: scroll;
+  background-color: var(--chat-background,none);
+  border-radius:.5rem;
 }
 
 article {
@@ -10,17 +12,16 @@ article {
   flex-direction: column;
   flex-grow: 1;
   width: 100%;
-  height: 100%;
+  height:fit-content;
+  margin: 2rem 1rem 3rem 2rem;
   gap: 1rem;
-  color: var(--color-backdrop-text);
+  color: var(--chat-text,inherit);
 }
 
 .content-bubble {
-  background-color: var(--color-backdrop);
+  background-color: var(--chat-bubble);
   padding:1rem;
   border-radius: 1rem;
-  margin-left:1.5rem;
-  margin-left:1.5rem;
   width:fit-content;
 }
 
@@ -39,7 +40,8 @@ article {
 .content-bubble > .from {
   position: relative;
   bottom: -1.5rem;
-  background-color: #AAA;
+  background-color: var(--chat-from-backdrop);
+  color: var(--chat-from-text, inherit);
   border-radius: 1em;
   padding: .5em;
   margin-block: -1em;

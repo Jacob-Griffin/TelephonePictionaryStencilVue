@@ -29,6 +29,7 @@
   --color-background: var(--vt-c-white-mute);
 
   --color-backdrop: rgba(210, 210, 210, 0.85);
+  --color-darker-backdrop: #A4A4A4;
   --color-backdrop-text: var(--vt-c-black-soft);
   /* This is the color used when text is put right on a backdrop */
 
@@ -48,10 +49,7 @@
   --icon: url("/byfo-logo.png");
   --small-icon: url("/byfo-logo.png");
 
-  --selector-backdrop: var(--color-backdrop);
-  --feature-selected-color: var(--color-button);
-  --feature-unselected-color: #888;
-  --scroll-color: #544;
+  --scroll-color: var(--color-text);
 }
 
 /* other themes only need overrides from "light" theme */
@@ -68,9 +66,6 @@
 
   --icon: url("/byfo-logo.png");
 
-  --selector-backdrop: #151522cc;
-  --feature-selected-color: #ccc;
-  --feature-unselected-color: #444;
   --scroll-color: #999;
 }
 
@@ -90,8 +85,6 @@
   --image-background: url("/candyCarnival-bkgd.jpg");
   --icon: url("/byfo-logo2.png");
 
-  --feature-selected-color: var(--color-button);
-
   --optional-text-backdrop: var(--color-backdrop);
 }
 
@@ -99,4 +92,12 @@ tp-inputzone {
   --color-button: var(--color-button);
   --color-button-hover: var(--color-button-hover);
   --color-button-disabled: var(--color-button-disabled);
+}
+
+tp-review-chat {
+  --chat-background: var(--color-background);
+  --chat-bubble: var(--color-backdrop);
+  --chat-text: var(--color-backdrop-text);
+  --chat-from-backdrop: var(--color-darker-backdrop);
+  --chat-from-text: var(--color-backdrop-text);
 }

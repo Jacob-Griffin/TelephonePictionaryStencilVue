@@ -1,4 +1,4 @@
-import { Component, Host, Prop, h } from '@stencil/core';
+import { Component, Element, Host, Prop, Watch, h } from '@stencil/core';
 
 interface Content {
   from:string;
@@ -16,11 +16,21 @@ export class TpReviewChat {
   @Prop() stackProxy;
   @Prop() index;
 
+  @Element() el;
+
+  @Watch('index')
+  indexHandler(newValue,oldValue){
+    //If we specifically did a "next" action
+    if(newValue - oldValue === 1){
+      //Wait 100ms then autoscroll. This gives a natural slight pause, and allows potential images to paint
+      setTimeout(() => this.el.scroll({behavior:'smooth',top:20000}),100);
+    }
+  }
+
   stack:Content[];
 
   chatBubbles = () => {
     const bubbles = [];
-    console.log('starting bubbles');
     //Iterate until the one we're looking at (this.index check) or the end
     for(let i = 0; i <= this.index && i < this.stack.length; i++){
       const {from,content,contentType} = this.stack[i];
@@ -28,8 +38,6 @@ export class TpReviewChat {
         <div class='content-bubble bubble-text'><p>{content}</p><span class='from'>{from}</span></div> :
         <div class='content-bubble bubble-img'><img src={content}/><span class='from'>{from}</span></div>;
       bubbles.push(bubble);
-      console.log(`${i}:`,bubble);
-      console.log('bubbles:',bubbles);
     }
     return bubbles;
   }
