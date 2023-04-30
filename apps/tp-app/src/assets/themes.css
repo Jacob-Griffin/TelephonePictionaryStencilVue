@@ -101,3 +101,11 @@ tp-review-chat {
   --chat-from-backdrop: var(--color-darker-backdrop);
   --chat-from-text: var(--color-backdrop-text);
 }
+
+.candy tp-review-chat {
+  --chat-background: #888B;
+}
+
+.classic tp-review-chat {
+  --chat-background: #888B;
+}
