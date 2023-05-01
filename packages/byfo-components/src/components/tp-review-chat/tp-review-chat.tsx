@@ -23,9 +23,24 @@ export class TpReviewChat {
   @Watch('index')
   indexHandler(newValue,oldValue){
     //If we specifically did a "next" action
-    if(newValue - oldValue === 1){
+    if(newValue - oldValue === 1 && !this.stackChanging){
       //Wait 100ms then autoscroll. This gives a natural slight pause, and allows potential images to paint
-      setTimeout(() => this.el.scroll({behavior:'smooth',top:20000}),100);
+      this.scrollDelay = setTimeout(() => {
+        this.el.scroll({behavior:'smooth',top:20000});
+        this.scrollDelay = undefined;
+      },100);
+    }
+  }
+
+  @Watch('stackProxy')
+  stackChangeHandler(){
+    if(this.scrollDelay){
+      clearTimeout(this.scrollDelay);
+      this.scrollDelay = undefined;
+    }
+    else{
+      this.stackChanging = true;
+      setTimeout(() => this.stackChanging = false, 200);
     }
   }
 
@@ -38,6 +53,8 @@ export class TpReviewChat {
   }
 
   stack:Content[];
+  scrollDelay; //We want to hold onto the scroll timeout so we can cancel it if there is a stack change
+  stackChanging = false; //Likewise, if we find out that the timeout hasn't started yet, make sure the autoscroll knows
 
   chatBubbles = () => {
     const bubbles = [];

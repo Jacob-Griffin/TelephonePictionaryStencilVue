@@ -7,12 +7,10 @@ export default {
     return {
       stacks: {},
       selected: false,
-      currentIndex: 0,
-      contentElement: undefined,
+      showAllFlag: false,
       imagesCached: new Set(),
-      globalListeners: {
-        keydown: this.keyHandler,
-      },
+      viewedIndices: {},
+      _playerAmount: undefined
     };
   },
   computed: {
@@ -26,29 +24,27 @@ export default {
       );
       return newList;
     },
-    indices() {
-      let array = [];
-      for (let i = 0; i < Object.keys(this.stacks).length; i++) {
-        array.push(i);
+    playerAmount(){
+      if(!this._playerAmount){
+        this._playerAmount = Object.keys(this.stacks).length;
       }
-      return array;
+      return this._playerAmount;
     },
   },
   methods: {
     clickPlayer(username) {
       this.selected = username;
-      this.currentIndex = 0;
-      for (let i = 1; i < Object.keys(this.stacks).length; i += 2) {
+      for (let i = 1; i < this.playerAmount; i += 2) {
         //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
         this.cacheImage(username, i);
       }
     },
     increment() {
-      if (this.currentIndex >= Object.keys(this.stacks).length - 1) return;
-      this.currentIndex += 1;
+      if (this.viewedIndices[this.selected] >= this.playerAmount - 1) return;
+      this.viewedIndices[this.selected] += 1;
     },
     showAll(){
-      this.currentIndex = Object.keys(this.stacks).length - 1;
+      this.viewedIndices[this.selected] = this.playerAmount - 1;
     },
     cacheImage(player, idx) {
       const imgURL = this.stacks[player][idx].content;
@@ -67,9 +63,6 @@ export default {
   },
   async beforeMount() {
     this.stacks = await getGameData(this.gameid);
-    for (let event in this.globalListeners) {
-      document.addEventListener(event, this.globalListeners[event]);
-    }
     const self = window.localStorage.getItem("username");
     if (self && self in this.stacks) {
       this.clickPlayer(self);
@@ -77,12 +70,27 @@ export default {
     //Once the page knows who you are, you are officially done with the game
     //Get rid of this so things behave as expected afterwards (anonymously)
     window.localStorage.removeItem("username");
-  },
-  beforeUnmount() {
-    for (let event in this.globalListeners) {
-      document.removeEventListener(event, this.globalListeners[event]);
+
+    //Check "Show All" cases
+
+    //Origin: search
+    const target = window.localStorage.getItem("fromSearch");
+    if(target && target in this.stacks){
+      this.showAllFlag = true;
+      this.clickPlayer(target);
     }
-  },
+    window.localStorage.removeItem("fromSearch");
+
+    //Flag set (Not yet implemented)
+    if(window.localStorage.getItem("alwaysShowAll")){
+      this.showAllFlag = true;
+    }
+
+    //Set the "viewed indices to all or none based on show all flag"
+    for(let player in this.stacks){
+      this.viewedIndices[player] = this.showAllFlag ? this.playerAmount : 0
+    }
+  }
 };
 </script>
 
@@ -98,11 +106,11 @@ export default {
     </button>
   </div>
   <section v-if="selected">
-    <tp-review-chat :index="currentIndex" :stackProxy.prop="stacks[selected]"></tp-review-chat>
+    <tp-review-chat :index="viewedIndices[selected]" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
-  <div class="chatNavigator">
-    <button class='small' v-if="selected" @click="increment">Next</button>
-    <button class='small' v-if="selected" @click="showAll">Show All</button><br />
+  <div class="chatNavigator" v-if="selected && !showAllFlag">
+    <button class='small' @click="increment">Next</button>
+    <button class='small' @click="showAll">Show All</button><br />
   </div>
   <button id="homeButton" @click="goHome">Return to home</button>
 </template>
