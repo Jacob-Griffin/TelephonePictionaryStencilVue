@@ -1,0 +1,7 @@
+{
+  "projects": {
+    // This is your dasherized firebase project name
+    // If you're trying to use this, delete the comments and rename to just '.firebaserc'
+    "default": ""
+  }
+}
