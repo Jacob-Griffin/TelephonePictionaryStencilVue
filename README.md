@@ -7,6 +7,7 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 ## Running
 
 #### Prerequisites: 
+- Node JS
 - pnpm (`npm i -g pnpm`, if you need it)
 - A firebase config object
 
@@ -14,7 +15,8 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 
 1. After cloning the repo, run `pnpm install` at the project root
 2. In /apps/tp-app, create a firebase.config.js and export your config object as default
-3. Run `turbo build`, then `turbo dev`. 
+    - There are template files for firebase config things 
+3. Run `pnpm build`, then `pnpm dev` at the root. 
 
 The game will then be hosted at localhost:5173, and available to your local network at the same port (vite will tell you the address)
 
