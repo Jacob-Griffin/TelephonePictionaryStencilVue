@@ -12,6 +12,7 @@ import {
 } from "../firebase/rtdb";
 import { onValue, ref } from "firebase/database";
 import { rtdb } from "../../Firebase";
+import { sortNames } from "../utils/strings";
 
 export default {
   data() {
@@ -129,7 +130,7 @@ export default {
           lastRound: pulledData[name],
         });
       }
-      this.finished = result;
+      this.finished = sortNames(result,'name');
     });
 
     this.unsubscribes.push(roundSubscription);
@@ -155,6 +156,10 @@ export default {
   <section v-if="waiting">
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
+        <tp-timer
+          v-if="roundData.endTime !== -1"
+          :endtime="roundData.endTime"
+        ></tp-timer>
       <div v-for="player in finished">
         <p>{{ player.name }}</p>
         <span
@@ -195,6 +200,18 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+.playerlist > div {
+  max-width: 600px;
+}
+.playerlist > div > p{
+  flex: 1;
+  text-align: left;
+}
+.playerlist > div > span{
+  flex: 1;
+  text-align: right;
 }
 
 tp-input-zone {

@@ -4,6 +4,7 @@ import { ref, get, onValue } from "firebase/database";
 import { beginGame } from "../firebase/rtdb";
 import { toRaw } from "vue";
 import globalLimits from "../globalLimits";
+import { sortNames } from "../utils/strings";
 
 export default {
   data() {
@@ -20,17 +21,11 @@ export default {
     gameid() {
       return this.$route.params.gameid;
     },
-    //Players by default are sorted by there priority. That is, the player order is generated as they join
+    //Players by default are sorted by their priority. That is, the player order is generated as they join
     //This realphabetizes the players for displaying in the lobby's list
     sortedPlayers() {
       let newList = Object.values(toRaw(this.players));
-      newList.sort(
-        (a, b) =>
-          a.username &&
-          b.username &&
-          a.username.localeCompare(b.username, "en", { sensitivity: "base" })
-      );
-      return newList;
+      return sortNames(newList,'username');
     },
     roundLength() {
       const input = this.roundLengthInput;

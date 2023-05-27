@@ -14,23 +14,12 @@ interface Content {
 export class TpReviewChat {
 
   @Prop() stackProxy;
-  @Prop() index;
+  @Prop() showAll;
+  @State() index = 0;
 
   @State() lightboxedImgUrl: string;
 
   @Element() el;
-
-  @Watch('index')
-  indexHandler(newValue,oldValue){
-    //If we specifically did a "next" action
-    if(newValue - oldValue === 1 && !this.stackChanging){
-      //Wait 100ms then autoscroll. This gives a natural slight pause, and allows potential images to paint
-      this.scrollDelay = setTimeout(() => {
-        this.el.scroll({behavior:'smooth',top:20000});
-        this.scrollDelay = undefined;
-      },100);
-    }
-  }
 
   @Watch('stackProxy')
   stackChangeHandler(){
@@ -40,6 +29,7 @@ export class TpReviewChat {
     }
     else{
       this.stackChanging = true;
+      this.index = 0;
       setTimeout(() => this.stackChanging = false, 200);
     }
   }
@@ -52,6 +42,20 @@ export class TpReviewChat {
     this.lightboxedImgUrl = undefined;
   }
 
+  doNext = () => {
+    this.index += 1;
+    //If we specifically did a "next" action
+    //Wait 100ms then autoscroll. This gives a natural slight pause, and allows potential images to paint
+    this.scrollDelay = setTimeout(() => {
+      this.el.scroll({behavior:'smooth',top:20000});
+      this.scrollDelay = undefined;
+    },100);
+  }
+
+  doShowAll = () => {
+    this.index = this.stack?.length || this.index;
+  }
+
   stack:Content[];
   scrollDelay; //We want to hold onto the scroll timeout so we can cancel it if there is a stack change
   stackChanging = false; //Likewise, if we find out that the timeout hasn't started yet, make sure the autoscroll knows
@@ -59,7 +63,7 @@ export class TpReviewChat {
   chatBubbles = () => {
     const bubbles = [];
     //Iterate until the one we're looking at (this.index check) or the end
-    for(let i = 0; i <= this.index && i < this.stack.length; i++){
+    for(let i = 0; (this.showAll || i <= this.index) && i < this.stack.length; i++){
       const {from,content,contentType} = this.stack[i];
       const bubble = contentType === 'text' ?
         <div class='content-bubble bubble-text'><p>{content}</p><span class='from'>{from}</span></div> :
@@ -75,6 +79,16 @@ export class TpReviewChat {
       <Host>
       <article>
         {this.chatBubbles()}
+        {
+        this.index < this.stack?.length - 1
+        ?
+        <div class="chatNavigator">
+          <button class='small' onClick={this.doNext}>Next</button>
+          <button class='small' onClick={this.doShowAll}>Show All</button><br />
+        </div>
+        :
+        null
+        }
       </article>
       { this.lightboxedImgUrl ?
       <div class='lightbox' onClick={this.closeLightbox}>

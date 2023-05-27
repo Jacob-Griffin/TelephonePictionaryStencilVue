@@ -2,6 +2,7 @@
 import "byfo-components/dist/components/tp-content";
 import "byfo-components/dist/components/tp-review-chat";
 import { getGameData } from "../firebase/firestore";
+import { sortNames } from "../utils/strings";
 export default {
   data() {
     return {
@@ -9,7 +10,6 @@ export default {
       selected: false,
       showAllFlag: false,
       imagesCached: new Set(),
-      viewedIndices: {},
       _playerAmount: undefined
     };
   },
@@ -19,10 +19,7 @@ export default {
     },
     players() {
       let newList = Object.keys(this.stacks);
-      newList.sort(
-        (a, b) => a.localeCompare(b, "en", { sensitivity: "base" })
-      );
-      return newList;
+      return sortNames(newList);
     },
     playerAmount(){
       if(!this._playerAmount){
@@ -38,13 +35,6 @@ export default {
         //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
         this.cacheImage(username, i);
       }
-    },
-    increment() {
-      if (this.viewedIndices[this.selected] >= this.playerAmount - 1) return;
-      this.viewedIndices[this.selected] += 1;
-    },
-    showAll(){
-      this.viewedIndices[this.selected] = this.playerAmount - 1;
     },
     cacheImage(player, idx) {
       const imgURL = this.stacks[player][idx].content;
@@ -85,11 +75,6 @@ export default {
     if(window.localStorage.getItem("alwaysShowAll")){
       this.showAllFlag = true;
     }
-
-    //Set the "viewed indices to all or none based on show all flag"
-    for(let player in this.stacks){
-      this.viewedIndices[player] = this.showAllFlag ? this.playerAmount : 0
-    }
   }
 };
 </script>
@@ -106,12 +91,8 @@ export default {
     </button>
   </div>
   <section v-if="selected">
-    <tp-review-chat :index="viewedIndices[selected]" :stackProxy.prop="stacks[selected]"></tp-review-chat>
+    <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
-  <div class="chatNavigator" v-if="selected && !showAllFlag">
-    <button class='small' @click="increment">Next</button>
-    <button class='small' @click="showAll">Show All</button><br />
-  </div>
   <button id="homeButton" @click="goHome">Return to home</button>
 </template>
 
@@ -141,12 +122,9 @@ export default {
 .playerSelector {
   width: 92%;
   max-width: 1050px;
-  height: 3.5rem;
+  line-height: 3rem;
   flex: none;
-  overflow: hidden;
-  white-space: nowrap;
   margin-bottom: 1rem;
-  padding: 0.2rem;
   user-select: none;
   text-align: center;
 }
