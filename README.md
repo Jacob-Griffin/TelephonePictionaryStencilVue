@@ -30,6 +30,4 @@ root (turbo)
 All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
-The app has a home menu that links to a fully functional lobby via host and join. The game page exists and has complete functionality. The review page exists and can view all data in a given game. Styles and Themes are fully implemented. Logo exists, might need adjusting
-
-I would hesitantly consider this an MVP for the project.
+The app is pretty close to what I would consider "Minimum shippable" but still has glaring issues to take care of. Demo/Test builds are available at https://byfo.jacob-g.dev
