@@ -1,9 +1,11 @@
+import globalLimits from "../globalLimits";
+
 export function validGameId(input) {
   const exp = /^[0-9]{1,6}$/;
   return exp.test(input);
 }
 export function validUsername(input) {
-  const maxName = 32;
+  const maxName = globalLimits.usernameMaxCharacters;
   if (input.length > maxName) {
     return `Names cannot exceed ${maxName} characters. ${input.length}/${maxName}`;
   }

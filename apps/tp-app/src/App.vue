@@ -61,15 +61,18 @@ export default {
 
 <template>
   <header :class="inHome ? 'invisible' : ''">
+    <div class="same-size">
+      <div class="home" @click="goHome" v-if="!inHome">
+        🏠&#xfe0e;
+      </div>
+    </div>
     <div>
       <Logo
-        @click="goHome"
-        class="small"
-        :class="{ pointer: !inGame }"
+        class="small logo"
         v-if="!inHome"
       ></Logo>
     </div>
-    <div>
+    <div class="same-size theme-picker">
       <button
         v-for="theme in themes"
         class="themebutton"
@@ -91,8 +94,8 @@ header {
   line-height: 1.5;
   max-height: 100vh;
   width: 100%;
-  padding: 1rem 2rem;
-  margin-bottom: 1.5rem;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1.25rem;
   box-sizing: border-box;
   background-color: var(--color-brand);
   user-select: none;
@@ -111,27 +114,43 @@ header > div {
   flex-direction: row;
 }
 
+header .logo{
+  align-self: center;
+  justify-self: center;
+}
+
+.home {
+  cursor: pointer;
+  color: var(--color-button-text);
+  height: 3rem;
+  width: 3rem;
+  font-size: xx-large;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+div.same-size {
+  width: 40%;
+  display: flex;
+}
+
+.theme-picker {
+  justify-content: right;
+}
+
 .themebutton {
+  justify-self: right;
   width: 3rem;
   height: 3rem;
   border-radius: 0;
-  border-left: 1px solid white;
-}
-
-.candy .themebutton,
-.classic .themebutton {
-  border: 1px solid white;
-  border-left: none;
-}
-
-.candy .themebutton:first-child,
-.classic .themebutton:first-child {
-  border-left: 1px solid white;
+  border-block: 1px solid white;
+  border-right: 1px solid white;
 }
 
 .themebutton:first-child {
   border-radius: 1rem 0 0 1rem;
-  border-left: none;
+  border-left: 1px solid white;
 }
 
 .themebutton:last-child {

@@ -47,9 +47,6 @@ export default {
       //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
       this.imagesCached.add(imgURL);
     },
-    goHome() {
-      window.open("/", "_self");
-    },
   },
   async beforeMount() {
     this.stacks = await getGameData(this.gameid);
@@ -93,7 +90,9 @@ export default {
   <section v-if="selected">
     <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
-  <button id="homeButton" @click="goHome">Return to home</button>
+  <section v-else>
+    <h4>Select a stack to begin viewing</h4>
+  </section>
 </template>
 
 <style>

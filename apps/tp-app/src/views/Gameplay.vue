@@ -10,6 +10,7 @@ import {
   getToAndFrom,
   getStaticRoundInfo,
 } from "../firebase/rtdb";
+import globalLimits from "../globalLimits";
 import { onValue, ref } from "firebase/database";
 import { rtdb } from "../../Firebase";
 import { sortNames } from "../utils/strings";
@@ -39,6 +40,7 @@ export default {
         "tp-submitted": this.onSendHandler,
         keydown: this.keyHandler,
       },
+      globalLimits,
       finished: [],
       unsubscribes: [],
     };
@@ -61,13 +63,13 @@ export default {
     },
     keyHandler(event) {
       const isOddRound = !!(this.roundData.roundnumber % 2);
-      if (event.ctrlKey && event.key === "z" && isOddRound) {
+      if (event.metaKey && event.key === "z" && isOddRound) {
         //ctrl+z during a drawing round will send an undo input
         const undoEvent = new CustomEvent("undo-input");
         this.$refs.inputzone.dispatchEvent(undoEvent);
         return;
       }
-      if (isOddRound && event.ctrlKey && event.key === "Z") {
+      if (isOddRound && event.metaKey && event.key === "Z") {
         //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
         const redoEvent = new CustomEvent("redo-input");
         this.$refs.inputzone.dispatchEvent(redoEvent);
@@ -186,7 +188,7 @@ export default {
       :endtime="roundData.endTime"
     ></tp-timer>
     <p class="needs-backdrop"><strong>To:</strong> {{ people.to }}</p>
-    <tp-input-zone :round="roundData.roundnumber" ref="inputzone" />
+    <tp-input-zone :round="roundData.roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters"/>
   </section>
 </template>
 

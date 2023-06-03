@@ -21,3 +21,7 @@ button:hover {
 button:disabled {
   background-color: var(--color-button-disabled);
 }
+
+textarea{
+  resize: none;
+}

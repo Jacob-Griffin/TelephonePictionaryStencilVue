@@ -23,6 +23,7 @@ export namespace Components {
     }
     interface TpInputZone {
         "buttonColor": string;
+        "characterLimit": string;
         "round": number;
         "selectedColor": string;
     }
@@ -104,6 +105,7 @@ declare namespace LocalJSX {
     }
     interface TpInputZone {
         "buttonColor"?: string;
+        "characterLimit"?: string;
         "round"?: number;
         "selectedColor"?: string;
     }

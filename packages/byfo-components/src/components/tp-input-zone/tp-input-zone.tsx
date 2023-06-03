@@ -9,6 +9,7 @@ export class TpInputZone {
   @Prop() round: number;
   @Prop() buttonColor: string;
   @Prop() selectedColor: string;
+  @Prop() characterLimit: string;
   @Element() el: HTMLElement;
   @State() canSend: boolean = !this.isTextRound;
   textEl: HTMLTextAreaElement;
@@ -66,6 +67,7 @@ export class TpInputZone {
                   text-black text-3xl text-center font-medium p-4 w-full bg-white aspect-[5/3]"
             ref={el => (this.textEl = el)}
             placeholder={this.placeholderText}
+            maxlength={this.characterLimit}
           ></textarea>
         ) : (
           <div class="w-full">
