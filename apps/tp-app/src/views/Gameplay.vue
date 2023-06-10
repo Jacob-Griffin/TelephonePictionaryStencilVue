@@ -97,7 +97,6 @@ export default {
 
     let playerNumber = localStorage.getItem('rejoinNumber');
     if(playerNumber){
-      localStorage.setItem('rejoinNumber',undefined);
       const rejoined = turnInMissing(this.$route.params.gameid,playerNumber);
       if(!rejoined){
         window.open(`/`, "_self");
@@ -105,7 +104,6 @@ export default {
     }
 
     playerNumber ||= await getPlayerNumber(gameid,username);
-
 
     const statusref = playerNumber && ref(rtdb, `players/${this.gameid}/${playerNumber}/status`);
     onDisconnect(statusref).set('missing');
@@ -121,6 +119,7 @@ export default {
       if (newRound === null) {
         //If the data no longer exists, go to the review page
         onDisconnect(statusref).cancel() // This is an expected navigation, don't give "missing"
+        localStorage.setItem('rejoinNumber',undefined); //The user has nothing to rejoin
         window.open(`/review/${this.$route.params.gameid}`, "_self");
         return;
       }

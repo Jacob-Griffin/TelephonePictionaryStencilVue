@@ -56,7 +56,7 @@ export async function addPlayerToLobby(gameid, username) {
       if (player.status === "missing") {
         return {
           action: "join",
-          playerNumber,
+          detail: playerNumber,
         };
       }
       if (!gameStatus.started) {
