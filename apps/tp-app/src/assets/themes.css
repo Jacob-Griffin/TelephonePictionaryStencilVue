@@ -39,6 +39,9 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
+  --color-link: rgb(64,64,175);
+  --color-link-hover: rgb(70,70,200);
+
   --color-button: rgb(60, 90, 190);
   --color-button-hover: rgb(47, 155, 72);
   /* hover also applies to the selected state of toggled buttons*/

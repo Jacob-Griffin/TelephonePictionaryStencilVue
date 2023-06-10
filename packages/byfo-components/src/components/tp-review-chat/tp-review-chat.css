@@ -131,3 +131,20 @@ button.small {
   font-size: 1rem;
   box-sizing: content-box;
 }
+
+.end-text {
+  text-align: center;
+}
+
+.end-text a {
+  color: var(--color-link);
+  cursor: pointer;
+}
+
+.end-text a:hover {
+  color: var(--color-link-hover);
+}
+
+.end-text p {
+  color: var(--color-text);
+}
