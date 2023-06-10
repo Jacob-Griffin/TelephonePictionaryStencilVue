@@ -4,6 +4,10 @@ import { storeGame } from "./firestore";
 import { uploadImage } from "./storage";
 import globalLimits from "../globalLimits";
 
+const devGames = new Set([
+  674765, //Test Drawing Round
+]);
+
 function generatePriority(taken = undefined) {
   let priority = Math.floor(Math.random() * 1000);
   while (taken && taken.has(priority)) {
@@ -28,26 +32,41 @@ export async function addPlayerToLobby(gameid, username) {
   const gameRef = ref(rtdb, `game-statuses/${gameid}`);
 
   const gameStatus = await get(gameRef).then((result) => result.val());
+  const result = {
+    action: "error",
+  };
   //If the game exists, read the data
   if (!gameStatus) {
-    return "Game does not exist";
-  }
-  if (gameStatus.started) {
-    return "Game has already started";
+    result.detail = "Game does not exist";
+    return result;
   }
   if (gameStatus.finished) {
-    return "Game has already finished";
+    result.detail = "Game has already finished";
+    return result;
   }
+
+  //Check the players list
   const playersRef = ref(rtdb, `players/${gameid}`);
   const players = await get(playersRef).then((result) => result.val());
 
-  if (players.length > globalLimits.maxPlayers) {
-    return `This game is full (${globalLimits.maxPlayers} max)`;
-  }
-  for (let existingUser of Object.values(players)) {
-    if (existingUser.username === username) {
-      return "That name is already taken in this game";
+  // Check to make sure there isn't a rejoin or duplicate name
+  for (let playerNumber in players) {
+    const player = players[playerNumber];
+    if (player.username === username) {
+      if (player.status === "missing") {
+        return {
+          action: "join",
+          playerNumber,
+        };
+      }
+      result.detail = "Username already taken in game";
+      return result;
     }
+  }
+
+  if (gameStatus.started) {
+    result.detail = "Game has already started";
+    return result;
   }
 
   //If there are no issues, push in the new player
@@ -57,7 +76,7 @@ export async function addPlayerToLobby(gameid, username) {
   );
   set(newPlayerRef, { username, status: "ready" });
 
-  return true;
+  return { action: "lobby" };
 }
 
 export function createLobby(gameid, username) {
@@ -198,6 +217,21 @@ export async function fetchCard(gameid, target, round) {
 
   //value is a promise that will resolve to the eventual card
   return value;
+}
+
+export async function turnInMissing(gameid, number) {
+  if (devGames.has(gameid)) {
+    //If this is a debug game, just assume it was a rejoin
+    localStorage.setItem("username", "Jacob");
+    return true;
+  }
+  const statusref = ref(rtdb, `players/${gameid}/${number}/status`);
+  const status = await get(statusref).then((result) => result.val());
+  if (status === "missing") {
+    set(statusref, "ready");
+    return true;
+  }
+  return false;
 }
 
 export async function getToAndFrom(gameid, name) {

@@ -40,7 +40,7 @@ export class TpCanvasControls {
   @Element() el: HTMLElement;
   @State() buttonContainer: HTMLElement;
 
-  componentDidRender() {
+  componentDidLoad() {
     this.undoButton.addEventListener('click', this.sendUndo);
     this.redoButton.addEventListener('click', this.sendRedo);
     this.whiteButton.addEventListener('click', () => {

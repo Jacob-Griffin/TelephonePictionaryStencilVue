@@ -9,6 +9,7 @@ import {
   fetchCard,
   getToAndFrom,
   getStaticRoundInfo,
+  turnInMissing,
 } from "../firebase/rtdb";
 import globalLimits from "../globalLimits";
 import { onValue, ref } from "firebase/database";
@@ -86,10 +87,22 @@ export default {
     const status = await getGameStatus(this.$route.params.gameid);
     if (!status.started) {
       window.open(`/lobby/${this.$route.params.gameid}`, "_self");
+      return;
     }
     if (status.finished) {
       window.open(`/review/${this.$route.params.gameid}`, "_self");
+      return;
     }
+
+    const playerNumber = localStorage.getItem('rejoinNumber');
+    if(playerNumber){
+      localStorage.setItem('rejoinNumber',undefined);
+      const rejoined = turnInMissing(this.$route.params.gameid,playerNumber);
+      if(!rejoined){
+        window.open(`/`, "_self");
+      }
+    }
+
     //Grab who you're sending to and recieving from (only need it once)
     this.people = await getToAndFrom(this.gameid, this.name);
     this.staticRoundInfo = await getStaticRoundInfo(this.gameid);
@@ -107,8 +120,6 @@ export default {
         this.roundData = newRound;
         return;
       }
-
-      this.waiting = true;
 
       //Adjust changes to the round
       this.roundData = newRound;

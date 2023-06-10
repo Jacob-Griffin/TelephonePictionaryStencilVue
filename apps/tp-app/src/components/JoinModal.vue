@@ -61,15 +61,23 @@ export default {
 
       //All other checks are handled by the db
       const result = await addPlayerToLobby(this.gameid, this.username);
-      if (typeof result == "string") {
-        //If there is an error, it will be a string, pass it to the error area
-        this.joinError = result;
-        return;
+      switch (result.action) {
+        case "error":
+          //If there is an error, it will be a string, pass it to the error area
+          this.joinError = result.detail;
+          //TODO: if game was finished, link to results, but don't redirect
+          return;
+        case 'join':
+          window.localStorage.setItem("username", this.username);
+          window.localStorage.setItem("rejoinNumber", result.detail);
+          window.open(`/game/${this.gameid}`, "_self");
+          return;
+        case 'lobby':
+          //If we're all good, navigate to the lobby
+          window.localStorage.setItem("username", this.username);
+          window.open(`/lobby/${this.gameid}`, "_self");
+          return;
       }
-      //If we're all good, navigate to the lobby
-      window.localStorage.setItem("username", this.username);
-      window.open(`/lobby/${this.gameid}`, "_self");
-      return;
     },
   },
 };
