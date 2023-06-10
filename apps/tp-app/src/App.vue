@@ -62,7 +62,7 @@ export default {
 <template>
   <header :class="inHome ? 'invisible' : ''">
     <div class="same-size">
-      <div class="home" @click="goHome" v-if="!inHome">
+      <div class="home" @click="goHome" v-if="!inHome && !inGame">
         🏠&#xfe0e;
       </div>
     </div>

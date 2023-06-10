@@ -158,6 +158,7 @@ export default {
   <section v-if="waiting">
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
+        Round {{ roundData.roundnumber }}
         <tp-timer
           v-if="roundData.endTime !== -1"
           :endtime="roundData.endTime"

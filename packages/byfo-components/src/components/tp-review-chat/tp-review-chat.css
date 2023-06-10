@@ -64,6 +64,7 @@ article {
 .content-bubble > img {
   width: 100%;
   max-width: 600px;
+  max-height: calc(100vh-16rem);
   aspect-ratio: 1.6;
 }
 

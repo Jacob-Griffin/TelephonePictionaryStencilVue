@@ -12,13 +12,13 @@ function generatePriority(taken = undefined) {
   return priority;
 }
 
-function defaultImage(){
+function defaultImage() {
   //As it stands, a "false" image will prompt the content to point to a single existing "no image" image
   //If we had a dynamic image generation, it would go here
   return false;
 }
 
-function defaultText(){
+function defaultText() {
   //If we had an API call for generating or suggesting these sorts of things, it would go here
   return "Whoops, I forgot to submit something :(";
 }
@@ -89,7 +89,7 @@ export async function beginGame(gameid, roundLength) {
     roundnumber: 0,
     endTime: Date.now() + roundLength,
   };
-  if (roundLength) round0.endTime = -1;
+  if (roundLength === -1) round0.endTime = -1;
   set(roundRef, round0);
 
   //Get the players
@@ -132,23 +132,18 @@ export async function submitRound(
   roundData,
   staticRoundInfo
 ) {
-  let {contentType,content} = roundData;
+  let { contentType, content } = roundData;
   let savedContent = { contentType };
-  if(!content){
+  if (!content) {
     //Blank images will be tested *before* generating a url and will be passed as ""
-    if(contentType === "image"){
+    if (contentType === "image") {
       content = defaultImage();
     } else {
       content = defaultText();
     }
   }
   if (contentType === "image") {
-    savedContent.content = await uploadImage(
-      gameid,
-      name,
-      round,
-      content
-    );
+    savedContent.content = await uploadImage(gameid, name, round, content);
   } else {
     savedContent.content = content;
   }
