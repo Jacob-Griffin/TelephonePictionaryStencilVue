@@ -59,8 +59,10 @@ export async function addPlayerToLobby(gameid, username) {
           playerNumber,
         };
       }
-      result.detail = "Username already taken in game";
-      return result;
+      if (!gameStatus.started) {
+        result.detail = "Username already taken in game";
+        return result;
+      }
     }
   }
 
@@ -237,6 +239,19 @@ export async function turnInMissing(gameid, number) {
 export async function getToAndFrom(gameid, name) {
   const playerref = ref(rtdb, `game/${gameid}/players/${name}`);
   return get(playerref).then((result) => result.val());
+}
+
+export async function getPlayerNumber(gameid, name) {
+  const players = await get(ref(rtdb, `players/${gameid}`)).then((result) =>
+    result.val()
+  );
+  console.log(players);
+  for (let num in players) {
+    if (players[num].username === name) {
+      return num;
+    }
+  }
+  return undefined;
 }
 
 export async function getStaticRoundInfo(gameid) {

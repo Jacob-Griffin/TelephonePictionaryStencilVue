@@ -10,9 +10,10 @@ import {
   getToAndFrom,
   getStaticRoundInfo,
   turnInMissing,
+  getPlayerNumber
 } from "../firebase/rtdb";
 import globalLimits from "../globalLimits";
-import { onValue, ref } from "firebase/database";
+import { onValue, onDisconnect, ref } from "firebase/database";
 import { rtdb } from "../../Firebase";
 import { sortNames } from "../utils/strings";
 
@@ -94,7 +95,7 @@ export default {
       return;
     }
 
-    const playerNumber = localStorage.getItem('rejoinNumber');
+    let playerNumber = localStorage.getItem('rejoinNumber');
     if(playerNumber){
       localStorage.setItem('rejoinNumber',undefined);
       const rejoined = turnInMissing(this.$route.params.gameid,playerNumber);
@@ -102,6 +103,12 @@ export default {
         window.open(`/`, "_self");
       }
     }
+
+    playerNumber ||= await getPlayerNumber(gameid,username);
+
+
+    const statusref = playerNumber && ref(rtdb, `players/${this.gameid}/${playerNumber}/status`);
+    onDisconnect(statusref).set('missing');
 
     //Grab who you're sending to and recieving from (only need it once)
     this.people = await getToAndFrom(this.gameid, this.name);
@@ -113,6 +120,7 @@ export default {
       const newRound = snapshot.val();
       if (newRound === null) {
         //If the data no longer exists, go to the review page
+        onDisconnect(statusref).cancel() // This is an expected navigation, don't give "missing"
         window.open(`/review/${this.$route.params.gameid}`, "_self");
         return;
       }
