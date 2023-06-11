@@ -20,6 +20,7 @@ export namespace Components {
         "type": string;
     }
     interface TpIconFillSquiggle {
+        "strokewidth": string;
     }
     interface TpInputZone {
         "buttonColor": string;
@@ -102,6 +103,7 @@ declare namespace LocalJSX {
         "type"?: string;
     }
     interface TpIconFillSquiggle {
+        "strokewidth"?: string;
     }
     interface TpInputZone {
         "buttonColor"?: string;
