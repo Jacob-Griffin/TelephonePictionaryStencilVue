@@ -36,7 +36,7 @@ export class TpIconFillSquiggle {
 
   render() {
     return (
-      <svg width="48" height="48" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">
         <g>
           <path
             class="squiggle"

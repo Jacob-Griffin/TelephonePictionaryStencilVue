@@ -1,4 +1,4 @@
-import { Component, h, Element, Prop } from '@stencil/core';
+import { Component, h, Element, Prop, State } from '@stencil/core';
 
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { faPencil, faRotateRight, faEraser, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -40,38 +40,40 @@ const icons = {
   shadow: true,
 })
 export class TpCanvasControls {
-  undoButton;
-  redoButton;
-  whiteButton;
-  blackButton;
-  drawButton;
-  eraseButton;
-  lineButtons = {};
   lineWidths = ['small', 'medium', 'large', 'xlarge'];
 
   @Prop() hostEl: HTMLElement;
   @Element() el: HTMLElement;
+  @State() drawing: boolean = true;
+  @State() activeWidth: string = this.lineWidths[0];
+
+  getElement = id => this.el.shadowRoot.getElementById(id);
 
   componentDidLoad() {
-    this.undoButton.addEventListener('click', this.sendUndo);
-    this.redoButton.addEventListener('click', this.sendRedo);
-    this.whiteButton.addEventListener('click', () => {
-      this.sendClear('#FFF');
-    });
-    this.blackButton.addEventListener('click', () => {
-      this.sendClear('#000');
-    });
-    this.drawButton.addEventListener('click', this.sendDraw);
-    this.eraseButton.addEventListener('click', this.sendErase);
-    Object.keys(this.lineButtons).forEach(width => {
-      this.lineButtons[width].addEventListener('click', () => {
+    this.getElement('draw').addEventListener('click', this.sendDraw);
+    this.getElement('erase').addEventListener('click', this.sendErase);
+
+    this.getElement('undo').addEventListener('click', this.sendUndo);
+    this.getElement('redo').addEventListener('click', this.sendRedo);
+
+    this.lineWidths.forEach(width => {
+      this.getElement(`line-${width}`).addEventListener('click', () => {
         this.sendSize(width);
       });
     });
-    const buttonContainer = this.el.shadowRoot.getElementById('button-container');
-    dom.i2svg({ node: buttonContainer });
+
+    this.getElement('white-clear').addEventListener('click', () => {
+      this.sendClear('#FFF');
+    });
+    this.getElement('black-clear').addEventListener('click', () => {
+      this.sendClear('#000');
+    });
+
+    //Watch for fontawsome svgs
+    dom.i2svg({ node: this.getElement('button-container') });
   }
 
+  //#region control events
   sendUndo = () => {
     this.hostEl.dispatchEvent(new CustomEvent('undo-input'));
   };
@@ -86,61 +88,55 @@ export class TpCanvasControls {
 
   sendDraw = () => {
     this.hostEl.dispatchEvent(new CustomEvent('pen-input'));
-    this.drawButton.setAttribute('value', 'active');
-    this.eraseButton.setAttribute('value', 'inactive');
+    this.drawing = true;
   };
 
   sendErase = () => {
     this.hostEl.dispatchEvent(new CustomEvent('eraser-input'));
-    this.drawButton.setAttribute('value', 'inactive');
-    this.eraseButton.setAttribute('value', 'active');
+    this.drawing = false;
   };
 
   sendSize = newSize => {
     this.hostEl.dispatchEvent(new CustomEvent('size-input', { detail: { newSize } }));
-    Object.keys(this.lineButtons).forEach(width => {
-      if (width == newSize) {
-        this.lineButtons[width].setAttribute('value', 'active');
-      } else {
-        this.lineButtons[width].setAttribute('value', 'inactive');
-      }
-    });
+    this.activeWidth = newSize;
   };
+
+  //#endregion
 
   render() {
     return (
       <section id="button-container">
+        {/* Draw/Erase */}
         <section>
-          <button ref={el => (this.drawButton = el)} value="active">
+          <button id="draw" data-active={this.drawing}>
             {icons.pencil}
           </button>
-          <button ref={el => (this.eraseButton = el)} value="inactive">
+          <button id="erase" data-active={!this.drawing}>
             {icons.eraser}
           </button>
         </section>
+
+        {/* Undo/Redo */}
         <section>
-          <button ref={el => (this.undoButton = el)}>{icons.undo}</button>
-          <button ref={el => (this.redoButton = el)}>{icons.redo}</button>
+          <button id="undo">{icons.undo}</button>
+          <button id="redo">{icons.redo}</button>
         </section>
-        <section>
-          <button ref={el => (this.whiteButton = el)}>{icons.fillWhite}</button>
-          <button ref={el => (this.blackButton = el)} class="black">
-            {icons.fillBlack}
-          </button>
-        </section>
-        <section>
+
+        {/* Line widths */}
+        <section id="line-widths">
           {this.lineWidths.map(width => {
             return (
-              <button
-                ref={el => {
-                  this.lineButtons[width] = el;
-                }}
-                value={width === 'small' ? 'active' : 'inactive'}
-              >
+              <button id={`line-${width}`} data-active={width === this.activeWidth}>
                 {icons.lines(width)}
               </button>
             );
           })}
+        </section>
+
+        {/* Clear */}
+        <section>
+          <button id="white-clear">{icons.fillWhite}</button>
+          <button id="black-clear">{icons.fillBlack}</button>
         </section>
       </section>
     );
