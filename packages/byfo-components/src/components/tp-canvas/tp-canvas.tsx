@@ -39,7 +39,7 @@ export class TpCanvas {
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                           :(String)
 
-  componentDidRender() {
+  componentDidLoad() {
     //Set up the canvas context now that the canvas exists
     this.setupContext();
 
@@ -216,11 +216,11 @@ export class TpCanvas {
     return [((event.clientX - box.left) * this.width) / box.width, ((event.clientY - box.top) * this.height) / box.height];
   }
 
-  isBlankCanvas(){
+  isBlankCanvas() {
     let foundColor = undefined;
     //It's *not* blank if we can find more than one color on it
-    const notBlank = this.ctx.getImageData(0,0,this.canvasElement.width,this.canvasElement.height).data.some(color => {
-      if(foundColor && color != foundColor){
+    const notBlank = this.ctx.getImageData(0, 0, this.canvasElement.width, this.canvasElement.height).data.some(color => {
+      if (foundColor && color != foundColor) {
         return true;
       }
       foundColor = color;
@@ -231,22 +231,22 @@ export class TpCanvas {
   }
 
   @Method() exportDrawing() {
-    const blankPromise = new Promise(callback => callback(""));
+    const blankPromise = new Promise(callback => callback(''));
     //If there are no paths, guaranteed blank
-    if(!(this.paths?.length > 0)){
+    if (!(this.paths?.length > 0)) {
       return blankPromise;
     }
-    
+
     const lastPath = this.paths.pop();
     this.paths.push(lastPath);
 
-    if(lastPath.clear){
+    if (lastPath.clear) {
       //If the last thing was a clear action, guaranteed blank
       return blankPromise;
     }
 
     //If we haven't shortcutted the blank status, double check if it's blank or not on color data
-    if(this.isBlankCanvas()){
+    if (this.isBlankCanvas()) {
       return blankPromise;
     }
     return new Promise(callback => {

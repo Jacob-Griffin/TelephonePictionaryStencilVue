@@ -49,7 +49,7 @@ export class TpCanvasControls {
 
   getElement = id => this.el.shadowRoot.getElementById(id);
 
-  componentDidRender() {
+  componentDidLoad() {
     this.getElement('draw').addEventListener('click', this.sendDraw);
     this.getElement('erase').addEventListener('click', this.sendErase);
 
