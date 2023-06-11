@@ -105,8 +105,6 @@ export default {
         return;
       }
 
-      this.waiting = true;
-
       //Adjust changes to the round
       this.roundData = newRound;
 
