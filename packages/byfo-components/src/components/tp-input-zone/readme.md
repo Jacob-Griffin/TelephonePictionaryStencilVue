@@ -9,10 +9,9 @@
 
 | Property         | Attribute         | Description | Type     | Default     |
 | ---------------- | ----------------- | ----------- | -------- | ----------- |
-| `buttonColor`    | `button-color`    |             | `string` | `undefined` |
-| `characterLimit` | `character-limit` |             | `string` | `undefined` |
+| `characterLimit` | `character-limit` |             | `number` | `undefined` |
 | `round`          | `round`           |             | `number` | `undefined` |
-| `selectedColor`  | `selected-color`  |             | `string` | `undefined` |
+| `sendingTo`      | `sending-to`      |             | `string` | `undefined` |
 
 
 ## Dependencies

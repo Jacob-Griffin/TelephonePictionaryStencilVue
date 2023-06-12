@@ -1,5 +1,4 @@
 import { Config } from '@stencil/core';
-import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 
 export const config: Config = {
   namespace: 'byfo-components',
@@ -12,9 +11,5 @@ export const config: Config = {
       customElementsExportBehavior:'auto-define-custom-elements',
       generateTypeDeclarations: true
     },
-  ],
-  plugins: [
-    tailwind(),
-    tailwindHMR()
   ]
 };

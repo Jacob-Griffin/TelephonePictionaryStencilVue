@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element, State } from '@stencil/core';
+import { Component, h, Prop, Element, State, Listen } from '@stencil/core';
 
 @Component({
   tag: 'tp-input-zone',
@@ -7,48 +7,52 @@ import { Component, h, Prop, Element, State } from '@stencil/core';
 })
 export class TpInputZone {
   @Prop() round: number;
-  @Prop() buttonColor: string;
-  @Prop() selectedColor: string;
-  @Prop() characterLimit: string;
+  @Prop() characterLimit: number;
+  @Prop() sendingTo: string;
   @Element() el: HTMLElement;
-  @State() canSend: boolean = !this.isTextRound;
-  textEl: HTMLTextAreaElement;
-  canvasEl: HTMLTpCanvasElement;
+  @State() text: string = '';
 
   get isTextRound() {
     return this.round % 2 === 0;
   }
 
   get placeholderText() {
-    if (this.round === 0) {
-      return 'Type in a word, phrase, or sentence to be passed along';
+    if (this.round > 0) {
+      return 'Describe the image you were sent NOW';
     } else {
-      return 'Describe the image your were sent';
+      return 'Type in a word, phrase, or sentence to be passed along';
     }
   }
 
-  connectedCallback() {
-    document.addEventListener('tp-timer-finished', this.sendRound);
-    document.addEventListener('keyup', this.verifyCanSend);
+  get canSend() {
+    return !(this.isTextRound && !this.text);
   }
 
-  disconnectedCallback() {
-    document.removeEventListener('tp-timer-finished', this.sendRound);
-    document.removeEventListener('keyup', this.verifyCanSend);
+  getElement = id => this.el.shadowRoot.getElementById(id);
+
+  @Listen('tp-timer-finished', { target: 'document' })
+  timerFinished() {
+    this.sendRound();
   }
 
-  verifyCanSend = () => {
-    this.canSend = !(this.isTextRound && this.textEl && this.textEl.value.length == 0);
+  handleInput = (e: InputEvent) => {
+    console.log('doing it');
+    const target = e.target as HTMLSpanElement;
+    const truncatedText = target.textContent.slice(0, this.characterLimit);
+    if (target.textContent !== truncatedText) {
+      target.textContent = truncatedText;
+      window.getSelection().setPosition(target, 1);
+    }
+    this.text = truncatedText;
   };
 
   sendRound = async () => {
     let value;
     if (this.isTextRound) {
-      const textarea = this.textEl;
-      value = textarea.value;
+      value = this.text;
     } else {
-      const canvas = this.canvasEl;
-      value = await canvas.exportDrawing();
+      const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
+      value = await canvas?.exportDrawing();
     }
 
     const submitEvent = new CustomEvent<string>('tp-submitted', {
@@ -60,30 +64,21 @@ export class TpInputZone {
 
   render() {
     return (
-      <div class="flex flex-col items-center w-full">
+      <section>
         {this.isTextRound ? (
-          <textarea
-            class="border border-slate-500 rounded-lg selectable
-                  text-black text-3xl text-center font-medium p-4 w-full bg-white aspect-[5/3]"
-            ref={el => (this.textEl = el)}
-            placeholder={this.placeholderText}
-            maxlength={this.characterLimit}
-          ></textarea>
+          <div id="text-input-wrapper">
+            <span contentEditable id="text-input" data-placeholder={this.placeholderText} onInputCapture={this.handleInput}></span>
+          </div>
         ) : (
-          <div class="w-full">
-            <tp-canvas ref={el => (this.canvasEl = el)} hostEl={this.el}></tp-canvas>
+          <div>
+            <tp-canvas id="canvas" hostEl={this.el}></tp-canvas>
             <tp-canvas-controls hostEl={this.el}></tp-canvas-controls>
           </div>
         )}
-        <button
-          class="mt-4 rounded-md w-32 h-16 text-white text-lg font-medium 
-                      border-none"
-          onClick={this.sendRound}
-          disabled={!this.canSend}
-        >
-          Send
+        <button onClick={this.sendRound} disabled={!this.canSend}>
+          Send to <strong>{this.sendingTo}</strong>
         </button>
-      </div>
+      </section>
     );
   }
 }

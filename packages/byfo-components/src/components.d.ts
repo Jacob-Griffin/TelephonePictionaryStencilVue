@@ -23,10 +23,9 @@ export namespace Components {
         "strokewidth": string;
     }
     interface TpInputZone {
-        "buttonColor": string;
-        "characterLimit": string;
+        "characterLimit": number;
         "round": number;
-        "selectedColor": string;
+        "sendingTo": string;
     }
     interface TpReviewChat {
         "showAll": any;
@@ -106,10 +105,9 @@ declare namespace LocalJSX {
         "strokewidth"?: string;
     }
     interface TpInputZone {
-        "buttonColor"?: string;
-        "characterLimit"?: string;
+        "characterLimit"?: number;
         "round"?: number;
-        "selectedColor"?: string;
+        "sendingTo"?: string;
     }
     interface TpReviewChat {
         "showAll"?: any;

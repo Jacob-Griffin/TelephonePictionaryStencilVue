@@ -14,9 +14,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint-config-custom": "workspace:*",
     "prettier": "^2.8.3",
-    "turbo": "^1.7.4"
+    "turbo": "^1.10.3"
   },
   "engines": {
     "node": ">=14.0.0"

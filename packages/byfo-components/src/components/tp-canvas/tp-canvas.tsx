@@ -39,6 +39,7 @@ export class TpCanvas {
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                           :(String)
 
+  //#region setup
   componentDidLoad() {
     //Set up the canvas context now that the canvas exists
     this.setupContext();
@@ -94,7 +95,9 @@ export class TpCanvas {
 
     this.ctx.fillRect(0, 0, this.width, this.height); //Background
   }
+  //#endregion setup
 
+  //#region drawing
   startDraw = event => {
     //We only want to start a line if there already isn't a line
     if (!this.currentPath) {
@@ -128,7 +131,9 @@ export class TpCanvas {
       }
     }
   };
+  //#endregion drawing
 
+  //#region undo-redo
   redo = () => {
     if (this.redoStack.length > 0) {
       let currentItem = this.redoStack.pop();
@@ -178,7 +183,9 @@ export class TpCanvas {
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
     this.ctx.strokeStyle = currentStroke;
   };
+  //#endregion undo-redo
 
+  //#region handle inputs
   clearCanvas = event => {
     this.ctx.fillStyle = event.detail.color;
     this.ctx.fillRect(0, 0, this.width, this.height);
@@ -209,6 +216,7 @@ export class TpCanvas {
     }
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
   };
+  //#endregion handle inputs
 
   transformCoordinates(event): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
@@ -255,6 +263,6 @@ export class TpCanvas {
   }
 
   render() {
-    return <canvas class="border border-slate-500 rounded-lg w-full" height={this.height} width={this.width} ref={el => (this.canvasElement = el as HTMLElement)}></canvas>;
+    return <canvas height={this.height} width={this.width} ref={el => (this.canvasElement = el as HTMLElement)}></canvas>;
   }
 }

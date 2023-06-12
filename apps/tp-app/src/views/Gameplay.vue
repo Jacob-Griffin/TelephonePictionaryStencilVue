@@ -192,35 +192,40 @@ export default {
       </div>
     </section>
   </section>
-  <section v-else>
-    <h3 class="needs-backdrop">Round {{ roundData.roundnumber }}</h3>
-    <p v-if="roundData.roundnumber != 0" class="needs-backdrop">
-      <strong>From:</strong> {{ people.from }}
-    </p>
-    <tp-content
-      v-if="roundData.roundnumber != 0"
-      :content="content.content"
-      :type="content.contentType"
-    />
-    <tp-timer
-      v-if="roundData.endTime !== -1"
-      :endtime="roundData.endTime"
-    ></tp-timer>
-    <p class="needs-backdrop"><strong>To:</strong> {{ people.to }}</p>
-    <tp-input-zone :round="roundData.roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters"/>
+  <section id="not-waiting" v-else>
+    <h2 class="needs-backdrop">Round {{ roundData.roundnumber }}</h2>
+    <section id="gameplay-elements">
+      <tp-content
+        v-if="roundData.roundnumber != 0"
+        :content="content.content"
+        :type="content.contentType"
+      />
+      <tp-timer
+        v-if="roundData.endTime !== -1"
+        :endtime="roundData.endTime"
+      ></tp-timer>
+      <tp-input-zone :round="roundData.roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
+    </section>
   </section>
 </template>
 
 <style scoped>
 section {
   width: 100%;
-  max-width: 1280px;
-  padding: 1rem 2rem;
+  padding-inline: 2rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+#gameplay-elements{
+  max-width: 1100px;
+}
+
+#player-to {
+  display: none;
 }
 
 .playerlist > div {
