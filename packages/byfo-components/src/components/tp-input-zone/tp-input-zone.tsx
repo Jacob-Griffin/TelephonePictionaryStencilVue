@@ -18,7 +18,7 @@ export class TpInputZone {
 
   get placeholderText() {
     if (this.round > 0) {
-      return 'Describe the image you were sent NOW';
+      return 'Describe the image you were sent';
     } else {
       return 'Type in a word, phrase, or sentence to be passed along';
     }

@@ -3,9 +3,21 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
+const watcherPlugin = {
+  name: "watch-node-modules",
+  configureServer: (server) => {
+    server.watcher.on("change", (file) => {
+      if (/byfo-components\/dist\/components\/.*/.test(file)) {
+        server.restart();
+      }
+    });
+  },
+};
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    watcherPlugin,
     vue({
       template: {
         compilerOptions: {
@@ -20,13 +32,10 @@ export default defineConfig({
     },
   },
   server: {
-    watch: {
-      ignored: ["!**/node_modules/byfo-components/dist/**"],
-    },
     port: 5150,
     strictPort: true,
   },
   optimizeDeps: {
-    exclude: ["byfo-components"],
+    exclude: ["byfo-components/dist/components/tp-input-zone"],
   },
 });
