@@ -16,13 +16,6 @@ jobs:
       - run: |
           chmod +x ./buildEnv.sh
           ./buildEnv.sh
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEW_TELEPHONE_PICTIONARY }}'
-          channelId: live
-          projectId: new-telephone-pictionary
-          entryPoint: './apps/tp-app'
         env:
           VITE_APIKEY: '${{ secrets.APIKEY }}'
           VITE_APPID: '${{ secrets.APPID }}'
@@ -32,3 +25,11 @@ jobs:
           VITE_MESSAGINGSENDERID: '${{ secrets.MESSAGINGSENDERID }}'
           VITE_MEASUREMENTID: '${{ secrets.MEASUREMENTID }}'
           VITE_DATABASEURL: '${{ secrets.DATABASEURL }}'
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEW_TELEPHONE_PICTIONARY }}'
+          channelId: live
+          projectId: new-telephone-pictionary
+          entryPoint: './apps/tp-app'
+          
