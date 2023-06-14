@@ -24,16 +24,16 @@ jobs:
           VITE_MEASUREMENTID: '${{ secrets.MEASUREMENTID }}'
           VITE_DATABASEURL: '${{ secrets.DATABASEURL }}'
         run: |
-          touch ./apps/tp-app/.env.local
-          echo $VITE_APIKEY > ./apps/tp-app/.env.local
-          echo $VITE_APPID > ./apps/tp-app/.env.local
-          echo $VITE_AUTHDOMAIN > ./apps/tp-app/.env.local
-          echo $VITE_PROJECTID > ./apps/tp-app/.env.local
-          echo $VITE_STORAGEBUCKET > ./apps/tp-app/.env.local
-          echo $VITE_MESSAGINGSENDERID > ./apps/tp-app/.env.local
-          echo $VITE_MEASUREMENTID > ./apps/tp-app/.env.local
-          echo $VITE_DATABASEURL > ./apps/tp-app/.env.local
-      - run: cat ./apps/tp-app/.env.local
+          touch ./apps/tp-app/firebase.secrets.js
+          echo export const apiKey = $VITE_APIKEY > ./apps/tp-app/.env.local
+          echo export const appId = $VITE_APPID > ./apps/tp-app/.env.local
+          echo export const authDomain = $VITE_AUTHDOMAIN > ./apps/tp-app/.env.local
+          echo export const projectId = $VITE_PROJECTID > ./apps/tp-app/.env.local
+          echo export const storageBucket = $VITE_STORAGEBUCKET > ./apps/tp-app/.env.local
+          echo export const messagingSenderId = $VITE_MESSAGINGSENDERID > ./apps/tp-app/.env.local
+          echo export const measurementId = $VITE_MEASUREMENTID > ./apps/tp-app/.env.local
+          echo export const databaseURL = $VITE_DATABASEURL > ./apps/tp-app/.env.local
+      - run: cat ./apps/tp-app/firebase.secrets.js
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
