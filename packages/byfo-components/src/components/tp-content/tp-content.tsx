@@ -1,5 +1,7 @@
 import { Component, h, Prop } from '@stencil/core';
 
+//This component was deprecated in favor of the byfo-content component, the native webcomponent version of the same thing
+
 @Component({
   tag: 'tp-content',
   styleUrl: 'tp-content.css',

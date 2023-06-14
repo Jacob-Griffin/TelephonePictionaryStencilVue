@@ -25,7 +25,7 @@ export class TpInputZone {
   }
 
   get canSend() {
-    return !(this.isTextRound && !this.text);
+    return !(this.isTextRound && (!this.text || this.text.length > this.characterLimit));
   }
 
   getElement = id => this.el.shadowRoot.getElementById(id);
@@ -36,14 +36,8 @@ export class TpInputZone {
   }
 
   handleInput = (e: InputEvent) => {
-    console.log('doing it');
-    const target = e.target as HTMLSpanElement;
-    const truncatedText = target.textContent.slice(0, this.characterLimit);
-    if (target.textContent !== truncatedText) {
-      target.textContent = truncatedText;
-      window.getSelection().setPosition(target, 1);
-    }
-    this.text = truncatedText;
+    const content = (e.target as HTMLSpanElement)?.textContent;
+    this.text = content;
   };
 
   sendRound = async () => {
@@ -67,7 +61,10 @@ export class TpInputZone {
       <section>
         {this.isTextRound ? (
           <div id="text-input-wrapper">
-            <span contentEditable id="text-input" data-placeholder={this.placeholderText} onInputCapture={this.handleInput}></span>
+            <span contentEditable id="text-input" data-placeholder={this.placeholderText} onInput={this.handleInput}></span>
+            <div id="character-limit-count" class={this.text.length > this.characterLimit ? 'danger' : ''}>
+              {this.text.length}/{this.characterLimit}
+            </div>
           </div>
         ) : (
           <div>

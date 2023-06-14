@@ -28,7 +28,7 @@ section > button {
   color: var(--color-button-text);
   font-size: large;
   font-weight: 500;
-  border:none;
+  border: none;
 }
 
 button:hover {
@@ -39,8 +39,8 @@ button:disabled {
   background-color: var(--color-button-disabled);
 }
 
-#text-input-wrapper{
-  border: 1px solid var(--color-light-border, rgb(100,116,139));
+#text-input-wrapper {
+  border: 1px solid var(--color-light-border, rgb(100, 116, 139));
   border-radius: 0.75rem;
   user-select: text;
   color: var(--color-input-text, black);
@@ -50,16 +50,29 @@ button:disabled {
   background-color: var(--color-input-background, white);
   overflow-wrap: break-word;
   word-wrap: break-word;
+  position: relative;
 }
 
-#text-input{
+#text-input {
   outline: none;
   width: 100%;
   cursor: text;
   display: block;
 }
 
-#text-input:empty::before{
+#text-input:empty::before {
   content: attr(data-placeholder);
   color: #888;
+}
+
+#character-limit-count {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0.125rem;
+  font-size: medium;
+  color: #999c;
+}
+
+#character-limit-count.danger {
+  color: #d33c;
 }

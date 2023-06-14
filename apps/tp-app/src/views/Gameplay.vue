@@ -1,8 +1,9 @@
 <script>
-//These are auto-imports for the stencil components
-import "byfo-components/dist/components/tp-content";
-import "byfo-components/dist/components/tp-timer";
+//These are auto-imports for the stencil/native components
+import "byfo-native-components/byfo-timer";
+import "byfo-native-components/byfo-content";
 import "byfo-components/dist/components/tp-input-zone";
+
 import {
   getGameStatus,
   submitRound,
@@ -195,15 +196,15 @@ export default {
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundData.roundnumber }}</h2>
     <section id="gameplay-elements">
-      <tp-content
+      <byfo-content
         v-if="roundData.roundnumber != 0"
         :content="content.content"
         :type="content.contentType"
-      />
-      <tp-timer
+      ></byfo-content>
+      <byfo-timer
         v-if="roundData.endTime !== -1"
         :endtime="roundData.endTime"
-      ></tp-timer>
+      ></byfo-timer>
       <tp-input-zone :round="roundData.roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
     </section>
   </section>

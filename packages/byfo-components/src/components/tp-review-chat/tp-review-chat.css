@@ -38,6 +38,7 @@ article {
 .bubble-text > p {
   font-size:x-large;
   font-weight: 500;
+  margin-top: 0;
   margin-bottom: -0.25rem;
 }
 

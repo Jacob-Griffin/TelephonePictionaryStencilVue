@@ -1,9 +1,6 @@
-# tp-timer
-
-
+# tp-timer (deprecated)
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -11,7 +8,6 @@
 | --------- | --------- | ----------- | -------- | ----------- |
 | `endtime` | `endtime` |             | `number` | `undefined` |
 
+---
 
-----------------------------------------------
-
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

@@ -1,9 +1,6 @@
-# tp-content
-
-
+# tp-content (deprecated)
 
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -12,7 +9,6 @@
 | `content` | `content` |             | `string` | `undefined` |
 | `type`    | `type`    |             | `string` | `undefined` |
 
+---
 
-----------------------------------------------
-
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

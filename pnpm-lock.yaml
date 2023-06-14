@@ -35,6 +35,9 @@ importers:
       byfo-components:
         specifier: workspace:^
         version: link:../../packages/byfo-components
+      byfo-native-components:
+        specifier: workspace:^
+        version: link:../../packages/byfo-native
       eslint:
         specifier: ^8.39.0
         version: 8.39.0
@@ -69,6 +72,8 @@ importers:
       typescript:
         specifier: ^4.7.4
         version: 4.7.4
+
+  packages/byfo-native: {}
 
 packages:
 
@@ -814,7 +819,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.7
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
     dev: false
 
   /@grpc/proto-loader@0.6.13:
@@ -941,6 +946,11 @@ packages:
 
   /@types/node@16.18.11:
     resolution: {integrity: sha512-3oJbGBUWuS6ahSnEq1eN2XrCyf4YsWI8OyCvo7c64zQJNplk3mO84t53o8lfTk+2ji59g5ycfc6qQ3fdHliHuA==}
+    dev: true
+
+  /@types/node@18.11.18:
+    resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
+    dev: false
 
   /@vitejs/plugin-vue@4.2.1(vite@4.3.9)(vue@3.2.47):
     resolution: {integrity: sha512-ZTZjzo7bmxTRTkb8GSTwkPOYDIP7pwuyV+RV53c9PYUouwcbkIZIvWvNWlX2b1dYZqtOv7D6iUAnJLVNGcLrSw==}
@@ -1781,7 +1791,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
       long: 4.0.0
     dev: false
 
@@ -1800,7 +1810,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
       long: 5.2.3
     dev: false
 

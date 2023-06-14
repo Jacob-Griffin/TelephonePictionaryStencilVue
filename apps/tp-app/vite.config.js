@@ -21,7 +21,8 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith("tp-"),
+          isCustomElement: (tag) =>
+            tag.startsWith("tp-") || tag.startsWith("byfo-"),
         },
       },
     }),
