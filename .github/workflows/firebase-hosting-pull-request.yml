@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2.2.4
       - run: pnpm install && pnpm build
-      - run: chmod +x ./buildEnv.sh && ./buildEnv.sh && cat << ./apps/tp-app/.env.local
+      - name: Create ENV
         env:
           VITE_APIKEY: '${{ secrets.APIKEY }}'
           VITE_APPID: '${{ secrets.APPID }}'
@@ -21,6 +21,17 @@ jobs:
           VITE_MESSAGINGSENDERID: '${{ secrets.MESSAGINGSENDERID }}'
           VITE_MEASUREMENTID: '${{ secrets.MEASUREMENTID }}'
           VITE_DATABASEURL: '${{ secrets.DATABASEURL }}'
+        run: |
+          touch ./apps/tp-app/.env.local
+          echo $VITE_APIKEY > ./apps/tp-app/.env.local
+          echo $VITE_APPID > ./apps/tp-app/.env.local
+          echo $VITE_AUTHDOMAIN > ./apps/tp-app/.env.local
+          echo $VITE_PROJECTID > ./apps/tp-app/.env.local
+          echo $VITE_STORAGEBUCKET > ./apps/tp-app/.env.local
+          echo $VITE_MESSAGINGSENDERID > ./apps/tp-app/.env.local
+          echo $VITE_MEASUREMENTID > ./apps/tp-app/.env.local
+          echo $VITE_DATABASEURL > ./apps/tp-app/.env.local
+      - run: cat ./apps/tp-app/.env.local
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
