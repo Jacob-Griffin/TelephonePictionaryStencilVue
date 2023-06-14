@@ -33,6 +33,7 @@ export default {
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
+      <button>Notice if Dev env</button>
     </div>
     <HostModal
       v-if="openModal == 'host'"
