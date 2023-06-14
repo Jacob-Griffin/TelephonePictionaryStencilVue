@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2.2.4
-      - run: pnpm install && pnpm build
       - name: Create ENV
         env:
           VITE_APIKEY: '${{ secrets.APIKEY }}'
@@ -34,6 +32,8 @@ jobs:
           echo export const measurementId = $VITE_MEASUREMENTID > ./apps/tp-app/.env.local
           echo export const databaseURL = $VITE_DATABASEURL > ./apps/tp-app/.env.local
       - run: cat ./apps/tp-app/firebase.secrets.js
+      - uses: pnpm/action-setup@v2.2.4
+      - run: pnpm install && pnpm build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
