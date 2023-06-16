@@ -265,9 +265,8 @@ export async function fetchCard(gameid, target, round) {
 }
 
 export async function turnInMissing(gameid, number) {
-  if (devGames.has(gameid)) {
+  if (gameid > 999999) {
     //If this is a debug game, just assume it was a rejoin
-    localStorage.setItem("username", "Jacob");
     return true;
   }
   const statusref = ref(rtdb, `players/${gameid}/${number}/status`);

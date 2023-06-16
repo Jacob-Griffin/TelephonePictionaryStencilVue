@@ -16,13 +16,33 @@
 
 ## Methods
 
-### `exportDrawing() => Promise<unknown>`
+### `backupPaths() => Promise<string>`
 
 
 
 #### Returns
 
-Type: `Promise<unknown>`
+Type: `Promise<string>`
+
+
+
+### `exportDrawing() => Promise<string>`
+
+
+
+#### Returns
+
+Type: `Promise<string>`
+
+
+
+### `restoreBackup(pathsString: any) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
 
 
 

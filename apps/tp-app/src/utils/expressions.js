@@ -1,7 +1,7 @@
 import globalLimits from "../globalLimits";
 
 export function validGameId(input) {
-  const exp = /^[0-9]{1,6}$/;
+  const exp = /^[0-9]{1,7}$/;
   return exp.test(input);
 }
 export function validUsername(input) {
@@ -33,7 +33,7 @@ export function invalidCharactersList(input, { raw } = { raw: false }) {
 }
 
 export function inGame(location) {
-  return /\/game\/[0-9]{1,6}\/?$/.test(location.href);
+  return /\/game\/[0-9]{1,7}\/?$/.test(location.href);
 }
 
 export function inHome(location) {

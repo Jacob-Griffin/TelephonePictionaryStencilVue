@@ -34,10 +34,11 @@ export class TpCanvas {
   lineWidths = this.lineWidthSets.draw;
 
   //Canvas State
-  currentPath; //The current line that's actively being drawn               :(Path2D)
-  paths = []; //List of paths drawn (support for undo/redo)                :(Path2D[])
+  currentPath; //The current line that's actively being drawn                  :(Path2D)
+  currentSaveablePath; //SVG string equivalent of current path                  :(String)
+  paths = []; //List of paths drawn (support for undo/redo)                    :(Path2D[])
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
-  currentWidth = 'small'; //Current Pen Size                                           :(String)
+  currentWidth = 'small'; //Current Pen Size                                   :(String)
 
   //#region setup
   componentDidLoad() {
@@ -94,6 +95,11 @@ export class TpCanvas {
     this.ctx.imageSmoothingQuality = 'high';
 
     this.ctx.fillRect(0, 0, this.width, this.height); //Background
+
+    if(this.paths?.length > 0){
+      // If there was a restore backup call but the ctx wasn't loaded yet, catch up
+      this.redraw();
+    }
   }
   //#endregion setup
 
@@ -103,6 +109,7 @@ export class TpCanvas {
     if (!this.currentPath) {
       const point = this.transformCoordinates(event);
       this.currentPath = new Path2D();
+      this.currentSaveablePath = `M ${point[0]} ${point[1]}`;
       this.currentPath.moveTo(...point);
     }
   };
@@ -112,6 +119,7 @@ export class TpCanvas {
     if (this.currentPath) {
       const point = this.transformCoordinates(event);
       this.currentPath.lineTo(...point);
+      this.currentSaveablePath = `${this.currentSaveablePath} L ${point[0]} ${point[1]}`;
       this.ctx.stroke(this.currentPath);
     }
     return true;
@@ -122,7 +130,7 @@ export class TpCanvas {
     if (this.currentPath) {
       this.draw(event);
       //Push the current Path to the path list and final drawing
-      this.paths.push({ path: this.currentPath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle });
+      this.paths.push({ path: this.currentSaveablePath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle });
 
       this.currentPath = undefined;
 
@@ -145,7 +153,7 @@ export class TpCanvas {
         let backupWidth = this.ctx.lineWidth;
         let backupColor = this.ctx.strokeStyle;
 
-        this.currentPath = currentItem.path;
+        this.currentPath = new Path2D(currentItem.path);
         this.ctx.lineWidth = currentItem.size;
         this.ctx.strokeStyle = currentItem.color;
         this.finishLine({ fromRedo: true });
@@ -162,6 +170,10 @@ export class TpCanvas {
     }
     this.redoStack.push(this.paths.pop());
 
+    this.redraw();
+  };
+
+  redraw = () => {
     let currentStroke = this.ctx.strokeStyle;
     let backupFill = this.ctx.fillStyle;
 
@@ -175,14 +187,14 @@ export class TpCanvas {
       } else {
         this.ctx.lineWidth = this.paths[i].size;
         this.ctx.strokeStyle = this.paths[i].color;
-        this.ctx.stroke(this.paths[i].path);
+        this.ctx.stroke(new Path2D(this.paths[i].path));
       }
     }
 
     this.ctx.fillStyle = backupFill;
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
     this.ctx.strokeStyle = currentStroke;
-  };
+  }
   //#endregion undo-redo
 
   //#region handle inputs
@@ -238,8 +250,8 @@ export class TpCanvas {
     return !notBlank;
   }
 
-  @Method() exportDrawing() {
-    const blankPromise = new Promise(callback => callback(''));
+  @Method() exportDrawing():Promise<string> {
+    const blankPromise = new Promise<string>(callback => callback(''));
     //If there are no paths, guaranteed blank
     if (!(this.paths?.length > 0)) {
       return blankPromise;
@@ -260,6 +272,18 @@ export class TpCanvas {
     return new Promise(callback => {
       this.canvasElement.toBlob(callback, 'image/png');
     });
+  }
+
+  @Method() backupPaths():Promise<string> {
+    return new Promise(resolve => resolve(JSON.stringify(this.paths)));
+  }
+
+  @Method() restoreBackup(pathsString):Promise<void> {
+    this.paths = JSON.parse(pathsString);
+    if(this.ctx){
+      this.redraw();
+    }
+    return new Promise(() => {});
   }
 
   render() {
