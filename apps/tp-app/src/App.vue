@@ -1,75 +1,69 @@
-<script>
+<script setup>
 import Logo from "./components/Logo.vue";
 import { RouterView } from "vue-router";
 import { inGame, inHome } from "./utils/expressions";
+import { ref, onBeforeMount } from 'vue';
 
-export default {
-  data() {
-    return {
-      inGame: inGame(window.location),
-      inHome: inHome(window.location),
-      currentTheme: window.localStorage.getItem("theme") ?? "classic",
-      themes: [
-        {
-          name: "light",
-          icon: "🔆",
-        },
-        {
-          name: "dark",
-          icon: "🌙",
-        },
-        {
-          name: "classic",
-          icon: "🕒",
-        },
-        {
-          name: "candy",
-          icon: "🍬",
-        },
-      ],
-      extends: {
-        candy: "light",
-        classic: "light",
-      },
-    };
+//#region const on page load/route
+const isInGame = inGame(window.location);
+const isInHome = inHome(window.location);
+const themes = [
+  {
+    name: "light",
+    icon: "🔆",
   },
-  watch: {
-    "$route.meta.title"(newValue) {
-      document.title = newValue;
-    },
+  {
+    name: "dark",
+    icon: "🌙",
   },
-  methods: {
-    goHome() {
-      if (this.inGame) return;
-      window.open("/", "_self");
-    },
-    setTheme(theme) {
-      document.body.setAttribute("class", "");
-      document.body.classList.add(theme);
-      if (this.extends[theme]) {
-        document.body.classList.add(this.extends[theme]);
-      }
-      this.currentTheme = theme;
-      window.localStorage.setItem("theme", theme);
-    },
+  {
+    name: "classic",
+    icon: "🕒",
   },
-  beforeMount() {
-    this.setTheme(this.currentTheme);
+  {
+    name: "candy",
+    icon: "🍬",
   },
+];
+const themeExtends = {
+  candy: "light",
+  classic: "light",
 };
+//#endregion
+
+//#region methods and states
+const currentTheme = ref(window.localStorage.getItem("theme") ?? "classic");
+
+const goHome = () => {
+  if (isInGame) return;
+  window.open("/", "_self");
+};
+
+const setTheme = (theme) => {
+  document.body.setAttribute("class", "");
+  document.body.classList.add(theme);
+  if (themeExtends[theme]) {
+    document.body.classList.add(themeExtends[theme]);
+  }
+  currentTheme.value = theme;
+  window.localStorage.setItem("theme", theme);
+}
+//#endregion
+
+onBeforeMount(() => setTheme(currentTheme.value));
 </script>
 
 <template>
-  <header :class="inHome ? 'invisible' : ''">
+  <header :class="isInHome ? 'invisible' : ''">
     <div class="same-size">
-      <div class="home" @click="goHome" v-if="!inHome && !inGame">
+      <div class="home" @click="goHome" v-if="!isInHome && !isInGame">
         🏠&#xfe0e;
       </div>
     </div>
     <div>
       <Logo
         class="small logo"
-        v-if="!inHome"
+        v-if="!isInHome"
       ></Logo>
     </div>
     <div class="same-size theme-picker">
@@ -83,8 +77,9 @@ export default {
       </button>
     </div>
   </header>
-
-  <RouterView />
+  <Suspense>
+    <RouterView />
+  </Suspense>
 </template>
 
 <style scoped>

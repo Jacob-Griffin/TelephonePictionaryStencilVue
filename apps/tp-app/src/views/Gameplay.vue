@@ -1,203 +1,185 @@
-<script>
-//These are auto-imports for the stencil/native components
-import "byfo-native-components/byfo-timer";
-import "byfo-native-components/byfo-content";
-import "byfo-components/dist/components/tp-input-zone";
+<script setup>
+  //These are auto-imports for the stencil/native components
+  import "byfo-native-components/byfo-timer";
+  import "byfo-native-components/byfo-content";
+  import "byfo-components/dist/components/tp-input-zone";
 
-import {
-  getGameStatus,
-  submitRound,
-  fetchCard,
-  getToAndFrom,
-  getStaticRoundInfo,
-  turnInMissing,
-  getPlayerNumber
-} from "../firebase/rtdb";
-import globalLimits from "../globalLimits";
-import { onValue, onDisconnect, ref } from "firebase/database";
-import { rtdb } from "../../Firebase";
-import { sortNames } from "../utils/strings";
+  import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
+  import { useRoute } from "vue-router";
 
-export default {
-  data() {
-    return {
-      roundData: {
-        roundnumber: 0,
-        endTime: Date.now() + 180000,
-      },
-      content: {
-        content: "",
-        contentType: "text",
-      },
-      people: {
-        from: "",
-        to: "",
-      },
-      staticRoundInfo: {
-        lastRound: 1000,
-        roundLength: 180000,
-      },
-      waiting: false,
-      name: window.localStorage.getItem("username"),
-      globalListeners: {
-        "tp-submitted": this.onSendHandler,
-        keydown: this.keyHandler,
-      },
-      globalLimits,
-      finished: [],
-      unsubscribes: [],
-    };
-  },
-  methods: {
-    onSendHandler({ detail }) {
+  import {
+    getGameStatus,
+    submitRound,
+    fetchCard,
+    getToAndFrom,
+    getStaticRoundInfo,
+    turnInMissing,
+    getPlayerNumber
+  } from "../firebase/rtdb";
+  import { onValue, onDisconnect, ref as dbRef} from "firebase/database";
+  import { rtdb } from "../../Firebase";
+
+  import { sortNames } from "../utils/strings";
+  import globalLimits from "../globalLimits";
+
+  const name = localStorage.getItem("username");
+  const gameid = useRoute().params.gameid;
+
+  const inputzone = ref(null);
+
+  const roundData = ref({
+    roundnumber: 0,
+    endTime: -1
+  });
+  const roundnumber = computed(()=>roundData.value.roundnumber);
+
+  const content = ref({
+    content: "",
+    contentType: "text"
+  });
+
+  //Toggles whether to show the actual gameplay or not
+  const finishedRound = ref(-1);
+  const waiting = computed(() => finishedRound.value >= roundnumber.value);
+  //Which players are done with the current round
+  const finishedPlayers = ref([]);
+
+  let redirect = false;
+  //Check the game status and redirect if necessary
+  const status = await getGameStatus(gameid);
+  if (!status.started && localStorage.getItem('hosting') !== gameid) {
+    location.href = redirect = `/lobby/${gameid}`;
+  } else if (status.finished) {
+    location.href = redirect = `/review/${gameid}`;
+  } else {
+    //Check if the current game was exited improperly
+    const rejoinNumber = localStorage.getItem('rejoinNumber');
+    if(rejoinNumber){
+      const rejoined = await turnInMissing(gameid,rejoinNumber);
+      if(!rejoined){
+        location.href = redirect = '/'
+      }
+    }
+  }
+
+  const playerNumber = !redirect && await getPlayerNumber(gameid,name);
+
+  const statusref = playerNumber && dbRef(rtdb, `players/${gameid}/${playerNumber}/status`);
+  if(statusref) onDisconnect(statusref).set('missing');
+
+  //Grab who you're sending to and recieving from (only need it once)
+  const people = !redirect && await getToAndFrom(gameid, name);
+  const staticRoundInfo = !redirect && await getStaticRoundInfo(gameid);
+
+  //Subscribe to changes in roundnumber
+  const roundRef = !redirect && dbRef(rtdb, `game/${gameid}/round`);
+  const roundSubscription = roundRef && onValue(roundRef, async (snapshot) => {
+    const newRound = snapshot.val();
+    if (newRound === null) {
+      //If the data no longer exists, go to the review page
+      onDisconnect(statusref).cancel() // This is an expected navigation, don't give "missing"
+      localStorage.setItem('rejoinNumber',undefined); //The user has nothing to rejoin
+      location.href = `/review/${gameid}`;
+      return;
+    }
+
+    //Adjust grab the current round data
+    roundData.value = newRound;
+
+    //If this is the first round, there is no "from" data to fetch
+    if (newRound.roundnumber === 0) return;
+
+    //Grab the data of your "from" player using pre-updated round#
+    content.value = await fetchCard(
+      gameid,
+      people?.from,
+      roundnumber.value - 1
+    );
+  });
+
+  //Subscribe to see when the game gets finished
+  const finishedRef = !redirect && dbRef(rtdb, `game/${gameid}/finished`);
+  const finishedSubscription = finishedRef && onValue(finishedRef, (snapshot) => {
+    const result = [];
+    const pulledData = snapshot.val();
+    for (let name in pulledData) {
+      result.push({
+        name,
+        lastRound: pulledData[name],
+      });
+    }
+    finishedPlayers.value = sortNames(result,'name');
+  });
+
+  //Add event listeners
+  onMounted(() => {
+    document.addEventListener("tp-submitted", ({ detail }) => {
       const contentObject = {
         content: detail,
-        contentType: this.roundData.roundnumber % 2 == 0 ? "text" : "image",
+        contentType: roundnumber.value % 2 == 0 ? "text" : "image",
       };
       submitRound(
-        this.gameid,
-        this.name,
-        this.roundData.roundnumber,
+        gameid,
+        name,
+        roundnumber.value,
         contentObject,
-        this.staticRoundInfo
+        staticRoundInfo
       );
-      this.waiting = true;
-      //Stopping the waiting will come from a round listener
-    },
-    keyHandler(event) {
-      const isOddRound = !!(this.roundData.roundnumber % 2);
+      console.log(detail);
+      finishedRound.value = roundnumber.value;
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const isOddRound = !!(roundnumber.value % 2);
       if (event.metaKey && event.key === "z" && isOddRound) {
         //ctrl+z during a drawing round will send an undo input
         const undoEvent = new CustomEvent("undo-input");
-        this.$refs.inputzone.dispatchEvent(undoEvent);
+        inputzone?.dispatchEvent(undoEvent);
         return;
       }
       if (isOddRound && event.metaKey && event.key === "Z") {
         //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
         const redoEvent = new CustomEvent("redo-input");
-        this.$refs.inputzone.dispatchEvent(redoEvent);
+        inputzone?.dispatchEvent(redoEvent);
         return;
       }
-    },
-  },
-  computed: {
-    gameid() {
-      return this.$route.params.gameid;
-    },
-  },
-  async beforeMount() {
-    const status = await getGameStatus(this.$route.params.gameid);
-    if (!status.started) {
-      window.open(`/lobby/${this.$route.params.gameid}`, "_self");
-      return;
-    }
-    if (status.finished) {
-      window.open(`/review/${this.$route.params.gameid}`, "_self");
-      return;
-    }
-
-    let playerNumber = localStorage.getItem('rejoinNumber');
-    if(playerNumber){
-      const rejoined = turnInMissing(this.$route.params.gameid,playerNumber);
-      if(!rejoined){
-        window.open(`/`, "_self");
-      }
-    }
-
-    playerNumber ||= await getPlayerNumber(gameid,username);
-
-    const statusref = playerNumber && ref(rtdb, `players/${this.gameid}/${playerNumber}/status`);
-    onDisconnect(statusref).set('missing');
-
-    //Grab who you're sending to and recieving from (only need it once)
-    this.people = await getToAndFrom(this.gameid, this.name);
-    this.staticRoundInfo = await getStaticRoundInfo(this.gameid);
-
-    //Subscribe to changes in roundnumber
-    const roundRef = ref(rtdb, `game/${this.gameid}/round`);
-    const roundSubscription = onValue(roundRef, async (snapshot) => {
-      const newRound = snapshot.val();
-      if (newRound === null) {
-        //If the data no longer exists, go to the review page
-        onDisconnect(statusref).cancel() // This is an expected navigation, don't give "missing"
-        localStorage.setItem('rejoinNumber',undefined); //The user has nothing to rejoin
-        window.open(`/review/${this.$route.params.gameid}`, "_self");
-        return;
-      }
-      if (newRound.roundnumber === 0) {
-        this.roundData = newRound;
-        return;
-      }
-
-      //Adjust changes to the round
-      this.roundData = newRound;
-
-      //Grab the data of your "from" player using pre-updated round#
-      this.content = await fetchCard(
-        this.gameid,
-        this.people.from,
-        this.roundData.roundnumber - 1
-      );
-      this.waiting = false;
     });
+  });
 
-    const finishedRef = ref(rtdb, `game/${this.gameid}/finished`);
-    const finishedSubscription = onValue(finishedRef, (snapshot) => {
-      let result = [];
-      let pulledData = snapshot.val();
-      for (let name in pulledData) {
-        result.push({
-          name,
-          lastRound: pulledData[name],
-        });
-      }
-      this.finished = sortNames(result,'name');
-    });
+  //Wrap up firebase subscriptions on unmount
+  onBeforeUnmount(()=>{
+    const unsub = (unsubFunction) => unsubFunction();
 
-    this.unsubscribes.push(roundSubscription);
-    this.unsubscribes.push(finishedSubscription);
-  },
-  mounted() {
-    //Add global (document) event listeners here
-    for (let event in this.globalListeners) {
-      document.addEventListener(event, this.globalListeners[event]);
-    }
-  },
-  beforeUnmount() {
-    //iterate through the saved event globalListeners and detach them
-    for (let event in this.globalListeners) {
-      document.removeEventListener(event, this.globalListeners[event]);
-    }
-    this.unsubscribes.forEach((unsub) => unsub());
-  },
-};
+    unsub(roundSubscription);
+    unsub(finishedSubscription);
+  });
 </script>
 
 <template>
   <section v-if="waiting">
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
-        Round {{ roundData.roundnumber }}
-        <tp-timer
+        Round {{ roundnumber }}
+        <byfo-timer
           v-if="roundData.endTime !== -1"
           :endtime="roundData.endTime"
-        ></tp-timer>
-      <div v-for="player in finished">
-        <p>{{ player.name }}</p>
-        <span
-          :class="
-            player.lastRound < roundData.roundnumber ? 'pending' : 'ready'
-          "
-          >{{ player.lastRound < roundData.roundnumber ? "•" : "✓" }}</span
-        >
-      </div>
+        ></byfo-timer>
+        <div v-for="player in finishedPlayers">
+          <p>{{ player.name }}</p>
+          <span
+            :class="
+              player.lastRound < roundData.roundnumber ? 'pending' : 'ready'
+            "
+            >{{ player.lastRound < roundData.roundnumber ? "•" : "✓" }}</span
+          >
+        </div>
     </section>
   </section>
   <section id="not-waiting" v-else>
-    <h2 class="needs-backdrop">Round {{ roundData.roundnumber }}</h2>
+    <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
     <section id="gameplay-elements">
       <byfo-content
-        v-if="roundData.roundnumber != 0"
+        v-if="roundnumber != 0"
         :content="content.content"
         :type="content.contentType"
       ></byfo-content>
@@ -205,7 +187,7 @@ export default {
         v-if="roundData.endTime !== -1"
         :endtime="roundData.endTime"
       ></byfo-timer>
-      <tp-input-zone :round="roundData.roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
     </section>
   </section>
 </template>

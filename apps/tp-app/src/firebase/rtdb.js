@@ -181,7 +181,6 @@ export async function submitRound(
   //Check every player. If someone's not done, leave now
   for (let player in finished) {
     if (finished[player] < round) {
-      console.log(finished, player, round);
       return;
     }
   }
@@ -245,7 +244,6 @@ export async function getPlayerNumber(gameid, name) {
   const players = await get(ref(rtdb, `players/${gameid}`)).then((result) =>
     result.val()
   );
-  console.log(players);
   for (let num in players) {
     if (players[num].username === name) {
       return num;
