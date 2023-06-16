@@ -125,7 +125,6 @@
         contentObject,
         staticRoundInfo
       );
-      console.log(detail);
       finishedRound.value = roundnumber.value;
     });
 
@@ -148,7 +147,7 @@
 
   //Wrap up firebase subscriptions on unmount
   onBeforeUnmount(()=>{
-    const unsub = (unsubFunction) => unsubFunction();
+    const unsub = (unsubFunction) => unsubFunction?.();
 
     unsub(roundSubscription);
     unsub(finishedSubscription);

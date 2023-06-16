@@ -8,8 +8,7 @@ import {
 
 export async function uploadImage(gameid, player, round, imgData) {
   if(!imgData){
-    const cleanOrigin = window.location.origin.replace(/\/*$/,'');
-    return `${cleanOrigin}/default.png`;
+    return '/default.png';
   }
   const imgref = ref(storage, `/games/${gameid}/${round}/${player}.png`);
   updateMetadata(imgref, { cacheControl: "public,max-age=86400" });
