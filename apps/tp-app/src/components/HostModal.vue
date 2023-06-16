@@ -1,6 +1,6 @@
 <script>
 import { validUsername, invalidCharactersList } from "../utils/expressions";
-import { listGameStatus, createLobby } from "../firebase/rtdb";
+import { listGameStatus, createLobby, createDevGame } from "../firebase/rtdb";
 export default {
   data() {
     return {
@@ -34,9 +34,13 @@ export default {
       if (!gameid) {
         return;
       }
-      window.localStorage.setItem("hosting", gameid);
-      window.localStorage.setItem("username", this.username);
-      window.open(`/lobby/${gameid}`, "_self");
+      localStorage.setItem("hosting", gameid);
+      localStorage.setItem("username", this.username);
+      if(gameid > 999999){
+        location.href = `/game/${gameid}`;
+      } else{
+        location.href = `/lobby/${gameid}`;
+      }
       return;
     },
     async createGame() {
@@ -48,6 +52,11 @@ export default {
       // Check which gameIds were/are in use via firestore, then generate one that's not there
       const usedIds = new Set(Object.keys(gameStatuses));
 
+      const devGame = this.username.match(/Jacob-dev-test-(draw|write)/i);
+      if(devGame){
+        const devGameId = createDevGame(devGame,Math.max(...usedIds)+1)
+        return devGameId;
+      }
       // Try a random old game id
       let newId = Math.floor(Math.random() * 999999 + 1);
 

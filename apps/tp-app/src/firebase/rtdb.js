@@ -4,10 +4,6 @@ import { storeGame } from "./firestore";
 import { uploadImage } from "./storage";
 import globalLimits from "../globalLimits";
 
-const devGames = new Set([
-  674765, //Test Drawing Round
-]);
-
 function generatePriority(taken = undefined) {
   let priority = Math.floor(Math.random() * 1000);
   while (taken && taken.has(priority)) {
@@ -71,6 +67,11 @@ export async function addPlayerToLobby(gameid, username) {
     return result;
   }
 
+  if (players.length > globalLimits.maxPlayers){
+    result.detail = "Too many players in game";
+    return result;
+  }
+
   //If there are no issues, push in the new player
   const newPlayerRef = ref(
     rtdb,
@@ -98,6 +99,49 @@ export async function getGameStatus(gameid) {
 export async function listGameStatus() {
   const statusesRef = ref(rtdb, "game-statuses");
   return get(statusesRef).then((statusList) => statusList.val());
+}
+
+export async function createDevGame([username,key],gameid){
+  if(!/^draw|write$/i.test(key)) return false;
+  const isDraw = /^draw$/i.test(key);
+
+  try {
+    const promises = [];
+
+    promises.push(set(ref(rtdb, `game-statuses/${gameid}`), {
+      started: true,
+      finished: false,
+    }));
+
+    const newPlayerRef = ref(rtdb, `players/${gameid}/${generatePriority()}`);
+    promises.push(set(newPlayerRef, { username, status: "missing" }));
+
+    const roundRef = ref(rtdb, `game/${gameid}/round`);
+    const round0 = {
+      roundnumber: isDraw ? 1 : 2,
+      endTime: -1,
+    };
+    promises.push(set(roundRef, round0));
+
+    const staticRoundInfoRef = ref(rtdb, `game/${gameid}/staticRoundInfo`);
+    promises.push(set(staticRoundInfoRef, {
+      lastRound: 1000,
+      roundLength: -1,
+    }));
+
+    const newRef = ref(rtdb, `game/${gameid}/players/${username}`);
+    promises.push(set(newRef, { to: username, from: username }));
+
+    const finishedRef = ref(rtdb, `game/${gameid}/finished/${username}`);
+    promises.push(set(finishedRef, -1));
+
+    await Promise.all(promises);
+  } catch (e){
+    console.error(e);
+    return false;
+  }
+
+  return gameid;
 }
 
 export async function beginGame(gameid, roundLength) {
