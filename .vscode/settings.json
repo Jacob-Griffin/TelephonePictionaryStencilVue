@@ -1,5 +1,4 @@
 {
     "editor.formatOnSave": true,
-    "prettier.singleQuote": true,
-    "prettier.jsxSingleQuote": true
+    "prettier.prettierPath": "./node_modules/prettier"
 }

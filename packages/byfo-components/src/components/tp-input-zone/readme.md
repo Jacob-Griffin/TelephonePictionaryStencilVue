@@ -26,7 +26,6 @@
 graph TD;
   tp-input-zone --> tp-canvas
   tp-input-zone --> tp-canvas-controls
-  tp-canvas-controls --> tp-icon-fill-squiggle
   style tp-input-zone fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

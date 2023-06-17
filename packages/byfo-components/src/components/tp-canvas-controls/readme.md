@@ -18,14 +18,9 @@
 
  - [tp-input-zone](../tp-input-zone)
 
-### Depends on
-
-- [tp-icon-fill-squiggle](../icons/tp-icon-fill-squiggle)
-
 ### Graph
 ```mermaid
 graph TD;
-  tp-canvas-controls --> tp-icon-fill-squiggle
   tp-input-zone --> tp-canvas-controls
   style tp-canvas-controls fill:#f9f,stroke:#333,stroke-width:4px
 ```

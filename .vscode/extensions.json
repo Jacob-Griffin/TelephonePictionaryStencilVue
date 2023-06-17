@@ -2,7 +2,6 @@
     "recommendations": [
         "esbenp.prettier-vscode",
         "vue.volar",
-        "vue.vscode-typescript-vue-plugin",
-        "bradlc.vscode-tailwindcss"
+        "vue.vscode-typescript-vue-plugin"
     ]
 }
