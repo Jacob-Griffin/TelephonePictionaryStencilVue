@@ -2,26 +2,26 @@
 export default {
   data() {
     return {
-      openModal: "",
+      openModal: '',
     };
   },
   methods: {
     switchModal(event) {
-      this.openModal = event?.target.getAttribute("modal") ?? "";
+      this.openModal = event?.target.getAttribute('modal') ?? '';
     },
     keyHandler(event) {
-      if (event.key !== "Enter") return;
-      const target = document.querySelector(".main-action");
+      if (event.key !== 'Enter') return;
+      const target = document.querySelector('.main-action');
       if (!target) return;
 
       target.click();
     },
   },
   beforeMount() {
-    document.addEventListener("keydown", this.keyHandler);
+    document.addEventListener('keydown', this.keyHandler);
   },
   beforeUnmount() {
-    document.removeEventListener("keydown", this.keyHandler);
+    document.removeEventListener('keydown', this.keyHandler);
   },
 };
 </script>

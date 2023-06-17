@@ -1,6 +1,6 @@
 <script>
-import "byfo-components/dist/components/tp-content";
-import { getGameData } from "../firebase/firestore";
+import 'byfo-components/dist/components/tp-content';
+import { getGameData } from '../firebase/firestore';
 export default {
   data() {
     return {
@@ -56,25 +56,25 @@ export default {
       if (this.imagesCached.has(imgURL)) return;
 
       //Otherwise, grab it
-      fetch(imgURL, { mode: "no-cors" });
+      fetch(imgURL, { mode: 'no-cors' });
       //We don't actually need to do anything with the fetched data,
       //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
       this.imagesCached.add(imgURL);
     },
     keyHandler(event) {
-      if (event.key === "ArrowRight") {
+      if (event.key === 'ArrowRight') {
         event.preventDefault();
         this.increment();
         return;
       }
-      if (event.key === "ArrowLeft") {
+      if (event.key === 'ArrowLeft') {
         event.preventDefault();
         this.decrement();
         return;
       }
     },
     goHome() {
-      window.open("/", "_self");
+      window.open('/', '_self');
     },
   },
   async beforeMount() {
@@ -82,13 +82,13 @@ export default {
     for (let event in this.globalListeners) {
       document.addEventListener(event, this.globalListeners[event]);
     }
-    const self = window.localStorage.getItem("username");
+    const self = window.localStorage.getItem('username');
     if (self && self in this.stacks) {
       this.clickPlayer(self);
     }
     //Once the page knows who you are, you are officially done with the game
     //Get rid of this so things behave as expected afterwards (anonymously)
-    window.localStorage.removeItem("username");
+    window.localStorage.removeItem('username');
   },
   beforeUnmount() {
     for (let event in this.globalListeners) {
@@ -114,13 +114,13 @@ export default {
       <strong>From:</strong> {{ stacks[selected][currentIndex].from }}
     </h4>
     <div class="main-row">
-      <p @click="decrement" class="arrow">{{ currentIndex > 0 ? "<" : "" }}</p>
+      <p @click="decrement" class="arrow">{{ currentIndex > 0 ? '<' : '' }}</p>
       <tp-content
         :content="stacks[selected][currentIndex].content"
         :type="stacks[selected][currentIndex].contentType"
       ></tp-content>
       <p @click="increment" class="arrow">
-        {{ currentIndex < indices.length - 1 ? ">" : "" }}
+        {{ currentIndex < indices.length - 1 ? '>' : '' }}
       </p>
     </div>
     <div class="carousel-dots">

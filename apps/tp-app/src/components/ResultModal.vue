@@ -1,10 +1,10 @@
 <script>
-import { getGameStatus } from "../firebase/rtdb";
+import { getGameStatus } from '../firebase/rtdb';
 
 export default {
   data() {
     return {
-      gameid: "",
+      gameid: '',
       findError: false,
     };
   },
@@ -12,15 +12,15 @@ export default {
     async reviewGame() {
       const status = await getGameStatus(this.gameid);
       if (!status) {
-        this.findError = "Game does not exist";
+        this.findError = 'Game does not exist';
         return;
       }
       if (!status.finished) {
-        this.findError = "Game not finished";
+        this.findError = 'Game not finished';
         return;
       }
       // If we made it past all the checks, navigate to the results
-      window.open(`/review/${this.gameid}`, "_self");
+      window.open(`/review/${this.gameid}`, '_self');
       return;
     },
   },
@@ -41,5 +41,5 @@ export default {
 </template>
 
 <style>
-@import "../assets/modal.css";
+@import '../assets/modal.css';
 </style>

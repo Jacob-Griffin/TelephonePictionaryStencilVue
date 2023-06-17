@@ -1,8 +1,8 @@
 <script>
-import "byfo-components/dist/components/tp-content";
-import "byfo-components/dist/components/tp-review-chat";
-import { getGameData } from "../firebase/firestore";
-import { sortNames } from "../utils/strings";
+import 'byfo-components/dist/components/tp-content';
+import 'byfo-components/dist/components/tp-review-chat';
+import { getGameData } from '../firebase/firestore';
+import { sortNames } from '../utils/strings';
 export default {
   data() {
     return {
@@ -10,7 +10,7 @@ export default {
       selected: false,
       showAllFlag: false,
       imagesCached: new Set(),
-      _playerAmount: undefined
+      _playerAmount: undefined,
     };
   },
   computed: {
@@ -21,8 +21,8 @@ export default {
       let newList = Object.keys(this.stacks);
       return sortNames(newList);
     },
-    playerAmount(){
-      if(!this._playerAmount){
+    playerAmount() {
+      if (!this._playerAmount) {
         this._playerAmount = Object.keys(this.stacks).length;
       }
       return this._playerAmount;
@@ -42,7 +42,7 @@ export default {
       if (this.imagesCached.has(imgURL)) return;
 
       //Otherwise, grab it
-      fetch(imgURL, { mode: "no-cors" });
+      fetch(imgURL, { mode: 'no-cors' });
       //We don't actually need to do anything with the fetched data,
       //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
       this.imagesCached.add(imgURL);
@@ -50,29 +50,29 @@ export default {
   },
   async beforeMount() {
     this.stacks = await getGameData(this.gameid);
-    const self = window.localStorage.getItem("username");
+    const self = window.localStorage.getItem('username');
     if (self && self in this.stacks) {
       this.clickPlayer(self);
     }
     //Once the page knows who you are, you are officially done with the game
     //Get rid of this so things behave as expected afterwards (anonymously)
-    window.localStorage.removeItem("username");
+    window.localStorage.removeItem('username');
 
     //Check "Show All" cases
 
     //Origin: search
-    const target = window.localStorage.getItem("fromSearch");
-    if(target && target in this.stacks){
+    const target = window.localStorage.getItem('fromSearch');
+    if (target && target in this.stacks) {
       this.showAllFlag = true;
       this.clickPlayer(target);
     }
-    window.localStorage.removeItem("fromSearch");
+    window.localStorage.removeItem('fromSearch');
 
     //Flag set (Not yet implemented)
-    if(window.localStorage.getItem("alwaysShowAll")){
+    if (window.localStorage.getItem('alwaysShowAll')) {
       this.showAllFlag = true;
     }
-  }
+  },
 };
 </script>
 
@@ -88,7 +88,10 @@ export default {
     </button>
   </div>
   <section v-if="selected">
-    <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
+    <tp-review-chat
+      :showAll="showAllFlag"
+      :stackProxy.prop="stacks[selected]"
+    ></tp-review-chat>
   </section>
   <section v-else>
     <h4>Select a stack to begin viewing</h4>
@@ -96,26 +99,25 @@ export default {
 </template>
 
 <style>
-
 #app {
   overflow: hidden;
   height: 100vh;
 }
 
 .chatNavigator {
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   max-width: 30rem;
-  width:fit-content;
-  margin:1rem;
-  flex:none;
+  width: fit-content;
+  margin: 1rem;
+  flex: none;
 }
 
 #homeButton {
-  flex:none;
-  margin-bottom: .5rem;
+  flex: none;
+  margin-bottom: 0.5rem;
 }
 
 .playerSelector {
@@ -146,7 +148,7 @@ export default {
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--scroll-color);
 }
 

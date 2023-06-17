@@ -101,5 +101,5 @@ export default {
 </template>
 
 <style>
-@import "../assets/modal.css";
+@import '../assets/modal.css';
 </style>

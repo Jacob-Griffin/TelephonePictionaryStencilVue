@@ -29,7 +29,7 @@
   --color-background: var(--vt-c-white-mute);
 
   --color-backdrop: rgba(210, 210, 210, 0.85);
-  --color-darker-backdrop: #A4A4A4;
+  --color-darker-backdrop: #a4a4a4;
   --color-backdrop-text: var(--vt-c-black-soft);
   /* This is the color used when text is put right on a backdrop */
 
@@ -39,8 +39,8 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --color-link: rgb(64,64,175);
-  --color-link-hover: rgb(70,70,200);
+  --color-link: rgb(64, 64, 175);
+  --color-link-hover: rgb(70, 70, 200);
 
   --color-button: rgb(60, 90, 190);
   --color-button-hover: rgb(47, 155, 72);
@@ -49,8 +49,8 @@
 
   --color-important: #f28705;
 
-  --icon: url("/byfo-logo.png");
-  --small-icon: url("/byfo-logo.png");
+  --icon: url('/byfo-logo.png');
+  --small-icon: url('/byfo-logo.png');
 
   --scroll-color: var(--color-text);
 }
@@ -67,7 +67,7 @@
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
 
-  --icon: url("/byfo-logo.png");
+  --icon: url('/byfo-logo.png');
 
   --scroll-color: #999;
 }
@@ -76,8 +76,8 @@
   --color-brand: #2c33bf;
   --color-button: var(--color-brand);
   --color-button-hover: #8cc63f;
-  --image-background: url("/basic-bkgd.jpg");
-  --icon: url("/byfo-logo.png");
+  --image-background: url('/basic-bkgd.jpg');
+  --icon: url('/byfo-logo.png');
 }
 
 .candy {
@@ -85,8 +85,8 @@
   --color-button: var(--color-brand);
   --color-button-hover: #8a43db;
   --color-important: #8a43db;
-  --image-background: url("/candyCarnival-bkgd.jpg");
-  --icon: url("/byfo-logo2.png");
+  --image-background: url('/candyCarnival-bkgd.jpg');
+  --icon: url('/byfo-logo2.png');
 
   --optional-text-backdrop: var(--color-backdrop);
 }
@@ -106,9 +106,9 @@ tp-review-chat {
 }
 
 .candy tp-review-chat {
-  --chat-background: #888B;
+  --chat-background: #888b;
 }
 
 .classic tp-review-chat {
-  --chat-background: #888B;
+  --chat-background: #888b;
 }

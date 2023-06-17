@@ -1,5 +1,5 @@
-import { setDoc, getDoc, doc, getDocFromServer } from "firebase/firestore";
-import { db } from "../../Firebase";
+import { setDoc, getDoc, doc, getDocFromServer } from 'firebase/firestore';
+import { db } from '../../Firebase';
 
 export async function storeGame(gameid, stacks) {
   const docRef = doc(db, `games/${gameid}`);

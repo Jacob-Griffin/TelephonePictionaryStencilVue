@@ -1,7 +1,7 @@
 <script setup>
-import Logo from "./components/Logo.vue";
-import { RouterView } from "vue-router";
-import { inGame, inHome } from "./utils/expressions";
+import Logo from './components/Logo.vue';
+import { RouterView } from 'vue-router';
+import { inGame, inHome } from './utils/expressions';
 import { ref, onBeforeMount } from 'vue';
 
 //#region const on page load/route
@@ -9,45 +9,45 @@ const isInGame = inGame(window.location);
 const isInHome = inHome(window.location);
 const themes = [
   {
-    name: "light",
-    icon: "🔆",
+    name: 'light',
+    icon: '🔆',
   },
   {
-    name: "dark",
-    icon: "🌙",
+    name: 'dark',
+    icon: '🌙',
   },
   {
-    name: "classic",
-    icon: "🕒",
+    name: 'classic',
+    icon: '🕒',
   },
   {
-    name: "candy",
-    icon: "🍬",
+    name: 'candy',
+    icon: '🍬',
   },
 ];
 const themeExtends = {
-  candy: "light",
-  classic: "light",
+  candy: 'light',
+  classic: 'light',
 };
 //#endregion
 
 //#region methods and states
-const currentTheme = ref(window.localStorage.getItem("theme") ?? "classic");
+const currentTheme = ref(window.localStorage.getItem('theme') ?? 'classic');
 
 const goHome = () => {
   if (isInGame) return;
-  window.open("/", "_self");
+  window.open('/', '_self');
 };
 
 const setTheme = (theme) => {
-  document.body.setAttribute("class", "");
+  document.body.setAttribute('class', '');
   document.body.classList.add(theme);
   if (themeExtends[theme]) {
     document.body.classList.add(themeExtends[theme]);
   }
   currentTheme.value = theme;
-  window.localStorage.setItem("theme", theme);
-}
+  window.localStorage.setItem('theme', theme);
+};
 //#endregion
 
 onBeforeMount(() => setTheme(currentTheme.value));
@@ -61,10 +61,7 @@ onBeforeMount(() => setTheme(currentTheme.value));
       </div>
     </div>
     <div>
-      <Logo
-        class="small logo"
-        v-if="!isInHome"
-      ></Logo>
+      <Logo class="small logo" v-if="!isInHome"></Logo>
     </div>
     <div class="same-size theme-picker">
       <button
@@ -89,7 +86,7 @@ header {
   line-height: 1.5;
   max-height: 100vh;
   width: 100%;
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   margin-bottom: 1.25rem;
   box-sizing: border-box;
   background-color: var(--color-brand);
@@ -109,7 +106,7 @@ header > div {
   flex-direction: row;
 }
 
-header .logo{
+header .logo {
   align-self: center;
   justify-self: center;
 }

@@ -1,4 +1,13 @@
-import {apiKey,authDomain,projectId,storageBucket,messagingSenderId,appId,measurementId,databaseURL} from './firebase.secrets.js'
+import {
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId,
+  databaseURL,
+} from './firebase.secrets.js';
 
 export default {
   apiKey,

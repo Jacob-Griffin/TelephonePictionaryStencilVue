@@ -1,12 +1,12 @@
-import { fileURLToPath, URL } from "node:url";
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
 const watcherPlugin = {
-  name: "watch-node-modules",
+  name: 'watch-node-modules',
   configureServer: (server) => {
-    server.watcher.on("change", (file) => {
+    server.watcher.on('change', (file) => {
       if (/byfo-components\/dist\/components\/.*/.test(file)) {
         server.restart();
       }
@@ -22,14 +22,14 @@ export default defineConfig({
       template: {
         compilerOptions: {
           isCustomElement: (tag) =>
-            tag.startsWith("tp-") || tag.startsWith("byfo-"),
+            tag.startsWith('tp-') || tag.startsWith('byfo-'),
         },
       },
     }),
   ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {
@@ -37,6 +37,6 @@ export default defineConfig({
     strictPort: true,
   },
   optimizeDeps: {
-    exclude: ["byfo-components/dist/components/tp-input-zone"],
+    exclude: ['byfo-components/dist/components/tp-input-zone'],
   },
 });

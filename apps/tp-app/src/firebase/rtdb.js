@@ -1,8 +1,8 @@
-import { rtdb } from "../../Firebase";
-import { ref, get, set, onValue, remove } from "firebase/database";
-import { storeGame } from "./firestore";
-import { uploadImage } from "./storage";
-import globalLimits from "../globalLimits";
+import { rtdb } from '../../Firebase';
+import { ref, get, set, onValue, remove } from 'firebase/database';
+import { storeGame } from './firestore';
+import { uploadImage } from './storage';
+import globalLimits from '../globalLimits';
 
 function generatePriority(taken = undefined) {
   let priority = Math.floor(Math.random() * 1000);
@@ -20,7 +20,7 @@ function defaultImage() {
 
 function defaultText() {
   //If we had an API call for generating or suggesting these sorts of things, it would go here
-  return "Whoops, I forgot to submit something :(";
+  return 'Whoops, I forgot to submit something :(';
 }
 
 export async function addPlayerToLobby(gameid, username) {
@@ -29,15 +29,15 @@ export async function addPlayerToLobby(gameid, username) {
 
   const gameStatus = await get(gameRef).then((result) => result.val());
   const result = {
-    action: "error",
+    action: 'error',
   };
   //If the game exists, read the data
   if (!gameStatus) {
-    result.detail = "Game does not exist";
+    result.detail = 'Game does not exist';
     return result;
   }
   if (gameStatus.finished) {
-    result.detail = "Game has already finished";
+    result.detail = 'Game has already finished';
     return result;
   }
 
@@ -49,26 +49,26 @@ export async function addPlayerToLobby(gameid, username) {
   for (let playerNumber in players) {
     const player = players[playerNumber];
     if (player.username === username) {
-      if (player.status === "missing") {
+      if (player.status === 'missing') {
         return {
-          action: "join",
+          action: 'join',
           detail: playerNumber,
         };
       }
       if (!gameStatus.started) {
-        result.detail = "Username already taken in game";
+        result.detail = 'Username already taken in game';
         return result;
       }
     }
   }
 
   if (gameStatus.started) {
-    result.detail = "Game has already started";
+    result.detail = 'Game has already started';
     return result;
   }
 
-  if (players.length > globalLimits.maxPlayers){
-    result.detail = "Too many players in game";
+  if (players.length > globalLimits.maxPlayers) {
+    result.detail = 'Too many players in game';
     return result;
   }
 
@@ -77,9 +77,9 @@ export async function addPlayerToLobby(gameid, username) {
     rtdb,
     `players/${gameid}/${generatePriority(new Set(Object.keys(players)))}`
   );
-  set(newPlayerRef, { username, status: "ready" });
+  set(newPlayerRef, { username, status: 'ready' });
 
-  return { action: "lobby" };
+  return { action: 'lobby' };
 }
 
 export function createLobby(gameid, username) {
@@ -88,7 +88,7 @@ export function createLobby(gameid, username) {
     finished: false,
   });
   const newPlayerRef = ref(rtdb, `players/${gameid}/${generatePriority()}`);
-  set(newPlayerRef, { username, status: "ready" });
+  set(newPlayerRef, { username, status: 'ready' });
 }
 
 export async function getGameStatus(gameid) {
@@ -97,24 +97,26 @@ export async function getGameStatus(gameid) {
 }
 
 export async function listGameStatus() {
-  const statusesRef = ref(rtdb, "game-statuses");
+  const statusesRef = ref(rtdb, 'game-statuses');
   return get(statusesRef).then((statusList) => statusList.val());
 }
 
-export async function createDevGame([username,key],gameid){
-  if(!/^draw|write$/i.test(key)) return false;
+export async function createDevGame([username, key], gameid) {
+  if (!/^draw|write$/i.test(key)) return false;
   const isDraw = /^draw$/i.test(key);
 
   try {
     const promises = [];
 
-    promises.push(set(ref(rtdb, `game-statuses/${gameid}`), {
-      started: true,
-      finished: false,
-    }));
+    promises.push(
+      set(ref(rtdb, `game-statuses/${gameid}`), {
+        started: true,
+        finished: false,
+      })
+    );
 
     const newPlayerRef = ref(rtdb, `players/${gameid}/${generatePriority()}`);
-    promises.push(set(newPlayerRef, { username, status: "missing" }));
+    promises.push(set(newPlayerRef, { username, status: 'missing' }));
 
     const roundRef = ref(rtdb, `game/${gameid}/round`);
     const round0 = {
@@ -124,10 +126,12 @@ export async function createDevGame([username,key],gameid){
     promises.push(set(roundRef, round0));
 
     const staticRoundInfoRef = ref(rtdb, `game/${gameid}/staticRoundInfo`);
-    promises.push(set(staticRoundInfoRef, {
-      lastRound: 1000,
-      roundLength: -1,
-    }));
+    promises.push(
+      set(staticRoundInfoRef, {
+        lastRound: 1000,
+        roundLength: -1,
+      })
+    );
 
     const newRef = ref(rtdb, `game/${gameid}/players/${username}`);
     promises.push(set(newRef, { to: username, from: username }));
@@ -136,7 +140,7 @@ export async function createDevGame([username,key],gameid){
     promises.push(set(finishedRef, -1));
 
     await Promise.all(promises);
-  } catch (e){
+  } catch (e) {
     console.error(e);
     return false;
   }
@@ -201,13 +205,13 @@ export async function submitRound(
   let savedContent = { contentType };
   if (!content) {
     //Blank images will be tested *before* generating a url and will be passed as ""
-    if (contentType === "image") {
+    if (contentType === 'image') {
       content = defaultImage();
     } else {
       content = defaultText();
     }
   }
-  if (contentType === "image") {
+  if (contentType === 'image') {
     savedContent.content = await uploadImage(gameid, name, round, content);
   } else {
     savedContent.content = content;
@@ -271,8 +275,8 @@ export async function turnInMissing(gameid, number) {
   }
   const statusref = ref(rtdb, `players/${gameid}/${number}/status`);
   const status = await get(statusref).then((result) => result.val());
-  if (status === "missing") {
-    set(statusref, "ready");
+  if (status === 'missing') {
+    set(statusref, 'ready');
     return true;
   }
   return false;
@@ -328,7 +332,7 @@ export async function finalizeGame(gameid) {
       remove(gameRef);
     },
     (failure) => {
-      console.log("failed to store game");
+      console.log('failed to store game');
     }
   );
   return;

@@ -1,4 +1,4 @@
-import globalLimits from "../globalLimits";
+import globalLimits from '../globalLimits';
 
 export function validGameId(input) {
   const exp = /^[0-9]{1,7}$/;
@@ -25,11 +25,11 @@ export function invalidCharactersList(input, { raw } = { raw: false }) {
   }
 
   if (rawList.length === 2) {
-    return rawList.join(" or ");
+    return rawList.join(' or ');
   }
 
-  let stringList = rawList.join(", ");
-  return stringList.replace(/, ([^,]+)$/, ", or $1");
+  let stringList = rawList.join(', ');
+  return stringList.replace(/, ([^,]+)$/, ', or $1');
 }
 
 export function inGame(location) {
@@ -37,6 +37,6 @@ export function inGame(location) {
 }
 
 export function inHome(location) {
-  const pattern = new RegExp(location.origin + "/?$");
+  const pattern = new RegExp(location.origin + '/?$');
   return pattern.test(location.href);
 }

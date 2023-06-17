@@ -1,10 +1,10 @@
 <script>
-import { validUsername, invalidCharactersList } from "../utils/expressions";
-import { listGameStatus, createLobby, createDevGame } from "../firebase/rtdb";
+import { validUsername, invalidCharactersList } from '../utils/expressions';
+import { listGameStatus, createLobby, createDevGame } from '../firebase/rtdb';
 export default {
   data() {
     return {
-      username: "",
+      username: '',
       hostError: false,
     };
   },
@@ -19,9 +19,9 @@ export default {
           )}`;
         }
         return true;
-      } else if (typeof isValidName === "string") {
+      } else if (typeof isValidName === 'string') {
         this.hostError = isValidName;
-      } else if (this.hostError && this.hostError.startsWith("Names cannot")) {
+      } else if (this.hostError && this.hostError.startsWith('Names cannot')) {
         //If the name was valid and that was the current error, clear it
         this.hostError = false;
       }
@@ -34,11 +34,11 @@ export default {
       if (!gameid) {
         return;
       }
-      localStorage.setItem("hosting", gameid);
-      localStorage.setItem("username", this.username);
-      if(gameid > 999999){
+      localStorage.setItem('hosting', gameid);
+      localStorage.setItem('username', this.username);
+      if (gameid > 999999) {
         location.href = `/game/${gameid}`;
-      } else{
+      } else {
         location.href = `/lobby/${gameid}`;
       }
       return;
@@ -53,8 +53,8 @@ export default {
       const usedIds = new Set(Object.keys(gameStatuses));
 
       const devGame = this.username.match(/Jacob-dev-test-(draw|write)/i);
-      if(devGame){
-        const devGameId = createDevGame(devGame,Math.max(...usedIds)+1)
+      if (devGame) {
+        const devGameId = createDevGame(devGame, Math.max(...usedIds) + 1);
         return devGameId;
       }
       // Try a random old game id
@@ -97,5 +97,5 @@ export default {
 </template>
 
 <style>
-@import "../assets/modal.css";
+@import '../assets/modal.css';
 </style>
