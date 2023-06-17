@@ -55,14 +55,26 @@ button:disabled {
 }
 
 button svg {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 tp-icon-fill-squiggle {
   --stroke-color: var(--color-button-text);
   width: 3rem;
   height: 3rem;
+}
+
+#white-clear, #black-clear {
+  background-color: var(--color-important);
+}
+
+#undo svg {
+  rotate: -50deg;
+}
+
+#redo svg {
+  rotate: 50deg;
 }
 
 #black-clear {

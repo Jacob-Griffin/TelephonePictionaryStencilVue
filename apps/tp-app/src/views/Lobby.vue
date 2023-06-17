@@ -64,7 +64,7 @@ export default {
     },
     async startGame() {
       await beginGame(this.gameid, this.roundLength);
-      window.open(`/game/${this.gameid}`, '_self');
+      location.href = `/game/${this.gameid}`;
     },
   },
   async beforeMount() {

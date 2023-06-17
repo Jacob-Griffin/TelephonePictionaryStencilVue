@@ -7,7 +7,8 @@ const watcherPlugin = {
   name: 'watch-node-modules',
   configureServer: (server) => {
     server.watcher.on('change', (file) => {
-      if (/byfo-components\/dist\/components\/.*/.test(file)) {
+      if (/byfo-components\/dist\/components\/.*/.test(file) ||
+        /byfo-native/.test(file)) {
         server.restart();
       }
     });

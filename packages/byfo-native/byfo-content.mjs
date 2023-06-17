@@ -39,21 +39,6 @@ class BYFOContent extends HTMLElement {
       this.#pElement.textContent = v;
     }
   }
-
-  /*static get observedAttributes() {
-    return ["content", "type"];
-  }
-  attributeChangedCallback(name, oldV, newV) {
-    console.log(name, newV);
-    if (oldV === newV) {
-      return;
-    }
-    if (name === "content") {
-      this.setContent(newV);
-    } else if (name === "type") {
-      this.setType(newV);
-    }
-  }*/
 }
 
 customElements.define("byfo-content", BYFOContent);
