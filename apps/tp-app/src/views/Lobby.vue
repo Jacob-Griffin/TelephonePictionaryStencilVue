@@ -45,9 +45,7 @@ export default {
         seconds = parseInt(secondString) + minutes * 60;
       }
       if (seconds > globalLimits.maxRoundLength * 60) {
-        this.timeError = `Round time must be less than ${
-          globalLimits.maxRoundLength
-        } minutes or ${globalLimits.maxRoundLength * 60} seconds, if any`;
+        this.timeError = `Round time must be less than ${globalLimits.maxRoundLength} minutes or ${globalLimits.maxRoundLength * 60} seconds, if any`;
         return false;
       } else if (seconds < 5) {
         this.timeError = 'Round time must be at least 5 seconds';
@@ -69,10 +67,10 @@ export default {
   },
   async beforeMount() {
     const playerListRef = ref(rtdb, `players/${this.gameid}`);
-    const playerList = await get(playerListRef).then((list) => list.val());
+    const playerList = await get(playerListRef).then(list => list.val());
     this.players = playerList;
 
-    onValue(playerListRef, (snapshot) => {
+    onValue(playerListRef, snapshot => {
       const playerList = snapshot.val();
       this.players = playerList;
 
@@ -95,7 +93,7 @@ export default {
     const gameStatusRef = ref(rtdb, `game-statuses/${this.gameid}`);
 
     //Subscribe to the game's status to see if it started
-    onValue(gameStatusRef, (snapshot) => {
+    onValue(gameStatusRef, snapshot => {
       const status = snapshot.val();
       //On the off chance that you jumped into a lobby of a finished game, redirect to the results
       if (status.finished) {
@@ -120,12 +118,7 @@ export default {
     </section>
     <div class="flex-col" v-if="hosting == gameid">
       <p class="needs-backdrop">Round length:</p>
-      <input
-        type="text"
-        @input="timerInputHandler"
-        value="3:00"
-        placeholder="∞"
-      />
+      <input type="text" @input="timerInputHandler" value="3:00" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength" @click="startGame">Start Game</button>
     </div>

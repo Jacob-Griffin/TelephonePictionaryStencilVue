@@ -34,18 +34,9 @@ export default {
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
     </div>
-    <HostModal
-      v-if="openModal == 'host'"
-      @modal-closed="switchModal"
-    ></HostModal>
-    <JoinModal
-      v-if="openModal == 'join'"
-      @modal-closed="switchModal"
-    ></JoinModal>
-    <ResultModal
-      v-if="openModal == 'result'"
-      @modal-closed="switchModal"
-    ></ResultModal>
+    <HostModal v-if="openModal == 'host'" @modal-closed="switchModal"></HostModal>
+    <JoinModal v-if="openModal == 'join'" @modal-closed="switchModal"></JoinModal>
+    <ResultModal v-if="openModal == 'result'" @modal-closed="switchModal"></ResultModal>
   </main>
   <BYFOFooter></BYFOFooter>
 </template>

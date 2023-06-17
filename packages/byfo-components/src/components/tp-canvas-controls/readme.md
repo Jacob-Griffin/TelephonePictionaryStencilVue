@@ -1,7 +1,5 @@
 # tp-canvas-controls
 
-
-
 <!-- Auto Generated Below -->
 
 

@@ -1,9 +1,6 @@
 <template>
   <footer>
-    <p>
-      Copyright ©2023 Jacob Griffin, Melinda Morang, Sarah Griffin. All rights
-      reserved
-    </p>
+    <p>Copyright ©2023 Jacob Griffin, Melinda Morang, Sarah Griffin. All rights reserved</p>
   </footer>
 </template>
 

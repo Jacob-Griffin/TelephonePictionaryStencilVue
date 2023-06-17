@@ -14,9 +14,7 @@ export default {
       if (!isValidName) {
         if (this.username.length !== 0) {
           //If the username exists and is invalid for other reasons, say why
-          this.hostError = `Names cannot contain ${invalidCharactersList(
-            this.username
-          )}`;
+          this.hostError = `Names cannot contain ${invalidCharactersList(this.username)}`;
         }
         return true;
       } else if (typeof isValidName === 'string') {
@@ -89,9 +87,7 @@ export default {
       <p>Name:</p>
       <input id="name-input" type="text" v-model="username" />
       <p class="error-text" v-if="hostError">{{ hostError }}</p>
-      <button class="main-action" :disabled="isDisabled" @click="joinGame">
-        Host
-      </button>
+      <button class="main-action" :disabled="isDisabled" @click="joinGame">Host</button>
     </article>
   </div>
 </template>

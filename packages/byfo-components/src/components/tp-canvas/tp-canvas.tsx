@@ -96,7 +96,7 @@ export class TpCanvas {
 
     this.ctx.fillRect(0, 0, this.width, this.height); //Background
 
-    if(this.paths?.length > 0){
+    if (this.paths?.length > 0) {
       // If there was a restore backup call but the ctx wasn't loaded yet, catch up
       this.redraw();
     }
@@ -194,7 +194,7 @@ export class TpCanvas {
     this.ctx.fillStyle = backupFill;
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
     this.ctx.strokeStyle = currentStroke;
-  }
+  };
   //#endregion undo-redo
 
   //#region handle inputs
@@ -250,7 +250,7 @@ export class TpCanvas {
     return !notBlank;
   }
 
-  @Method() exportDrawing():Promise<string> {
+  @Method() exportDrawing(): Promise<string> {
     const blankPromise = new Promise<string>(callback => callback(''));
     //If there are no paths, guaranteed blank
     if (!(this.paths?.length > 0)) {
@@ -274,13 +274,13 @@ export class TpCanvas {
     });
   }
 
-  @Method() backupPaths():Promise<string> {
+  @Method() backupPaths(): Promise<string> {
     return new Promise(resolve => resolve(JSON.stringify(this.paths)));
   }
 
-  @Method() restoreBackup(pathsString):Promise<void> {
+  @Method() restoreBackup(pathsString): Promise<void> {
     this.paths = JSON.parse(pathsString);
-    if(this.ctx){
+    if (this.ctx) {
       this.redraw();
     }
     return new Promise(() => {});

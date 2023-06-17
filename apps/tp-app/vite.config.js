@@ -5,10 +5,9 @@ import vue from '@vitejs/plugin-vue';
 
 const watcherPlugin = {
   name: 'watch-node-modules',
-  configureServer: (server) => {
-    server.watcher.on('change', (file) => {
-      if (/byfo-components\/dist\/components\/.*/.test(file) ||
-        /byfo-native/.test(file)) {
+  configureServer: server => {
+    server.watcher.on('change', file => {
+      if (/byfo-components\/dist\/components\/.*/.test(file) || /byfo-native/.test(file)) {
         server.restart();
       }
     });
@@ -22,8 +21,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) =>
-            tag.startsWith('tp-') || tag.startsWith('byfo-'),
+          isCustomElement: tag => tag.startsWith('tp-') || tag.startsWith('byfo-'),
         },
       },
     }),

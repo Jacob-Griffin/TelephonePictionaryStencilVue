@@ -38,35 +38,34 @@ export class TpInputZone {
     this.sendRound();
   }
 
-  componentDidLoad(){
+  componentDidLoad() {
     this.loadedBackup = localStorage.getItem('currentRoundData');
     this.saveInterval = setInterval(async () => {
       let v = this.text;
-      if(!this.isTextRound){
+      if (!this.isTextRound) {
         const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
         v = await canvas.backupPaths();
       }
       localStorage.setItem('currentRoundData', v);
-    },4000);
+    }, 4000);
   }
 
-  componentDidUpdate(){
-    if(!this.loadedBackup) return;
-    if(this.isTextRound){
-      this.text= this.loadedBackup;
+  componentDidUpdate() {
+    if (!this.loadedBackup) return;
+    if (this.isTextRound) {
+      this.text = this.loadedBackup;
       delete this.loadedBackup;
-    }
-    else {
+    } else {
       const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
-      if(canvas){
+      if (canvas) {
         canvas.restoreBackup(this.loadedBackup);
         delete this.loadedBackup;
       }
     }
   }
 
-  disconnectedCallback(){
-    if(this.saveInterval){
+  disconnectedCallback() {
+    if (this.saveInterval) {
       clearInterval(this.saveInterval);
     }
   }
@@ -77,10 +76,10 @@ export class TpInputZone {
   };
 
   sendRound = async () => {
-    let content = this.text
+    let content = this.text;
     if (!this.isTextRound) {
       const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
-      content = await canvas?.exportDrawing() || '';
+      content = (await canvas?.exportDrawing()) || '';
     }
 
     const submitEvent = new CustomEvent<string>('tp-submitted', {

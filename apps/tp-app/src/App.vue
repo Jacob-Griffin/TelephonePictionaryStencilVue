@@ -39,7 +39,7 @@ const goHome = () => {
   window.open('/', '_self');
 };
 
-const setTheme = (theme) => {
+const setTheme = theme => {
   document.body.setAttribute('class', '');
   document.body.classList.add(theme);
   if (themeExtends[theme]) {
@@ -56,20 +56,13 @@ onBeforeMount(() => setTheme(currentTheme.value));
 <template>
   <header :class="isInHome ? 'invisible' : ''">
     <div class="same-size">
-      <div class="home" @click="goHome" v-if="!isInHome && !isInGame">
-        🏠&#xfe0e;
-      </div>
+      <div class="home" @click="goHome" v-if="!isInHome && !isInGame">🏠&#xfe0e;</div>
     </div>
     <div>
       <Logo class="small logo" v-if="!isInHome"></Logo>
     </div>
     <div class="same-size theme-picker">
-      <button
-        v-for="theme in themes"
-        class="themebutton"
-        :class="{ selected: currentTheme == theme.name }"
-        @click="() => setTheme(theme.name, theme.extends)"
-      >
+      <button v-for="theme in themes" class="themebutton" :class="{ selected: currentTheme == theme.name }" @click="() => setTheme(theme.name, theme.extends)">
         {{ theme.icon }}&#xfe0e;
       </button>
     </div>

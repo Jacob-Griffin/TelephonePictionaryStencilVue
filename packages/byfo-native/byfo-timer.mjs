@@ -19,7 +19,7 @@ class BYFOTimer extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["endtime"];
+    return ['endtime'];
   }
   attributeChangedCallback(name, oldValue, newValue) {
     this.endtime = newValue;
@@ -29,12 +29,12 @@ class BYFOTimer extends HTMLElement {
   render = () => {
     const totalSeconds = Math.floor((this.endtime - Date.now()) / 1000);
     if (totalSeconds <= 0) {
-      this.textContent = "Out of time - submitting";
-      document.dispatchEvent(new CustomEvent("tp-timer-finished"));
+      this.textContent = 'Out of time - submitting';
+      document.dispatchEvent(new CustomEvent('tp-timer-finished'));
       return;
     }
     const minutes = Math.floor(totalSeconds / 60);
-    const seconds = `${totalSeconds % 60}`.replace(/^([0-9])$/, "0$1");
+    const seconds = `${totalSeconds % 60}`.replace(/^([0-9])$/, '0$1');
     const time = `${minutes}:${seconds}`;
     if (time !== this.textContent) {
       this.textContent = time;
@@ -42,4 +42,4 @@ class BYFOTimer extends HTMLElement {
   };
 }
 
-customElements.define("byfo-timer", BYFOTimer);
+customElements.define('byfo-timer', BYFOTimer);

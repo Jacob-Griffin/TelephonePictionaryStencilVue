@@ -41,4 +41,3 @@ jobs:
           channelId: live
           projectId: new-telephone-pictionary
           entryPoint: './apps/tp-app'
-          

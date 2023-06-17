@@ -1,10 +1,5 @@
 import { storage } from '../../Firebase';
-import {
-  getDownloadURL,
-  ref,
-  updateMetadata,
-  uploadBytes,
-} from 'firebase/storage';
+import { getDownloadURL, ref, updateMetadata, uploadBytes } from 'firebase/storage';
 
 export async function uploadImage(gameid, player, round, imgData) {
   if (!imgData) {

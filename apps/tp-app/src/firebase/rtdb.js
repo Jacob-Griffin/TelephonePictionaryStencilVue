@@ -27,7 +27,7 @@ export async function addPlayerToLobby(gameid, username) {
   //Grab the game status
   const gameRef = ref(rtdb, `game-statuses/${gameid}`);
 
-  const gameStatus = await get(gameRef).then((result) => result.val());
+  const gameStatus = await get(gameRef).then(result => result.val());
   const result = {
     action: 'error',
   };
@@ -43,7 +43,7 @@ export async function addPlayerToLobby(gameid, username) {
 
   //Check the players list
   const playersRef = ref(rtdb, `players/${gameid}`);
-  const players = await get(playersRef).then((result) => result.val());
+  const players = await get(playersRef).then(result => result.val());
 
   // Check to make sure there isn't a rejoin or duplicate name
   for (let playerNumber in players) {
@@ -73,10 +73,7 @@ export async function addPlayerToLobby(gameid, username) {
   }
 
   //If there are no issues, push in the new player
-  const newPlayerRef = ref(
-    rtdb,
-    `players/${gameid}/${generatePriority(new Set(Object.keys(players)))}`
-  );
+  const newPlayerRef = ref(rtdb, `players/${gameid}/${generatePriority(new Set(Object.keys(players)))}`);
   set(newPlayerRef, { username, status: 'ready' });
 
   return { action: 'lobby' };
@@ -93,12 +90,12 @@ export function createLobby(gameid, username) {
 
 export async function getGameStatus(gameid) {
   const statusRef = ref(rtdb, `game-statuses/${gameid}`);
-  return get(statusRef).then((status) => status.val());
+  return get(statusRef).then(status => status.val());
 }
 
 export async function listGameStatus() {
   const statusesRef = ref(rtdb, 'game-statuses');
-  return get(statusesRef).then((statusList) => statusList.val());
+  return get(statusesRef).then(statusList => statusList.val());
 }
 
 export async function createDevGame([username, key], gameid) {
@@ -112,7 +109,7 @@ export async function createDevGame([username, key], gameid) {
       set(ref(rtdb, `game-statuses/${gameid}`), {
         started: true,
         finished: false,
-      })
+      }),
     );
 
     const newPlayerRef = ref(rtdb, `players/${gameid}/${generatePriority()}`);
@@ -130,7 +127,7 @@ export async function createDevGame([username, key], gameid) {
       set(staticRoundInfoRef, {
         lastRound: 1000,
         roundLength: -1,
-      })
+      }),
     );
 
     const newRef = ref(rtdb, `game/${gameid}/players/${username}`);
@@ -162,9 +159,7 @@ export async function beginGame(gameid, roundLength) {
   set(roundRef, round0);
 
   //Get the players
-  const playerList = Object.values(
-    await get(ref(rtdb, `players/${gameid}`)).then((players) => players.val())
-  );
+  const playerList = Object.values(await get(ref(rtdb, `players/${gameid}`)).then(players => players.val()));
   const staticRoundInfoRef = ref(rtdb, `game/${gameid}/staticRoundInfo`);
   set(staticRoundInfoRef, {
     lastRound: playerList.length - 1,
@@ -194,13 +189,7 @@ export async function beginGame(gameid, roundLength) {
   return;
 }
 
-export async function submitRound(
-  gameid,
-  name,
-  round,
-  roundData,
-  staticRoundInfo
-) {
+export async function submitRound(gameid, name, round, roundData, staticRoundInfo) {
   let { contentType, content } = roundData;
   let savedContent = { contentType };
   if (!content) {
@@ -224,7 +213,7 @@ export async function submitRound(
   await set(playerFinishedRef, round);
 
   const finishedRef = ref(rtdb, `game/${gameid}/finished`);
-  const finished = await get(finishedRef).then((result) => result.val());
+  const finished = await get(finishedRef).then(result => result.val());
 
   //Check every player. If someone's not done, leave now
   for (let player in finished) {
@@ -253,9 +242,9 @@ export async function submitRound(
 
 export async function fetchCard(gameid, target, round) {
   const cardRef = ref(rtdb, `game/${gameid}/stacks/${target}/${round}`);
-  let value = new Promise((resolve) => {
+  let value = new Promise(resolve => {
     let unsub;
-    unsub = onValue(cardRef, (snapshot) => {
+    unsub = onValue(cardRef, snapshot => {
       const newvalue = snapshot.val();
       if (newvalue !== null) {
         unsub();
@@ -274,7 +263,7 @@ export async function turnInMissing(gameid, number) {
     return true;
   }
   const statusref = ref(rtdb, `players/${gameid}/${number}/status`);
-  const status = await get(statusref).then((result) => result.val());
+  const status = await get(statusref).then(result => result.val());
   if (status === 'missing') {
     set(statusref, 'ready');
     return true;
@@ -284,13 +273,11 @@ export async function turnInMissing(gameid, number) {
 
 export async function getToAndFrom(gameid, name) {
   const playerref = ref(rtdb, `game/${gameid}/players/${name}`);
-  return get(playerref).then((result) => result.val());
+  return get(playerref).then(result => result.val());
 }
 
 export async function getPlayerNumber(gameid, name) {
-  const players = await get(ref(rtdb, `players/${gameid}`)).then((result) =>
-    result.val()
-  );
+  const players = await get(ref(rtdb, `players/${gameid}`)).then(result => result.val());
   for (let num in players) {
     if (players[num].username === name) {
       return num;
@@ -301,15 +288,15 @@ export async function getPlayerNumber(gameid, name) {
 
 export async function getStaticRoundInfo(gameid) {
   const playerref = ref(rtdb, `game/${gameid}/staticRoundInfo`);
-  return get(playerref).then((result) => result.val());
+  return get(playerref).then(result => result.val());
 }
 
 export async function finalizeGame(gameid) {
   const allStacksRef = ref(rtdb, `game/${gameid}/stacks`);
   const playerref = ref(rtdb, `game/${gameid}/players`);
 
-  const playerPromise = get(playerref).then((result) => result.val());
-  const stackData = await get(allStacksRef).then((snap) => snap.val());
+  const playerPromise = get(playerref).then(result => result.val());
+  const stackData = await get(allStacksRef).then(snap => snap.val());
   const playerOrder = await playerPromise;
 
   const finalStackData = {};
@@ -326,14 +313,14 @@ export async function finalizeGame(gameid) {
   set(gameFinishedRef, true);
 
   storeGame(gameid, finalStackData).then(
-    (success) => {
+    success => {
       //Delete the game from the
       const gameRef = ref(rtdb, `game/${gameid}`);
       remove(gameRef);
     },
-    (failure) => {
+    failure => {
       console.log('failed to store game');
-    }
+    },
   );
   return;
 }

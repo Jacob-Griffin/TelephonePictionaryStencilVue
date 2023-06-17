@@ -1,4 +1,5 @@
 # BYFO Components
+
 Component Library capturing some initial work on the online telephone pictionary app, [blowyourfaceoff.com](https://blowyourfaceoff.com). Provides the component and logic structure for the bare minimum gameplay
 
 ## The Components
@@ -24,6 +25,7 @@ A wrapper that manages placement and events for the drawing-step components. Con
 A basic countdown timer that emits a tp-submitted event on completion. Based on an end time that's passed in
 
 ## Tree
+
 ```
 tp-content
 tp-input-zone

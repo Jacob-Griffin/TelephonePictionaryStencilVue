@@ -17,7 +17,7 @@ const invalidCharacters = /[\/\\]/g;
 
 export function invalidCharactersList(input, { raw } = { raw: false }) {
   const badCharactersUsed = [...input.matchAll(invalidCharacters)];
-  const rawList = badCharactersUsed.map((match) => match[0]);
+  const rawList = badCharactersUsed.map(match => match[0]);
   if (raw) return rawList;
 
   if (rawList.length === 1) {

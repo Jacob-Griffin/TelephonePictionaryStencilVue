@@ -93,9 +93,7 @@ export default {
       <p>Game Id:</p>
       <input type="text" v-model="gameid" />
       <p class="error-text" v-if="joinError">{{ joinError }}</p>
-      <button class="main-action" :disabled="isDisabled" @click="joinGame">
-        Join
-      </button>
+      <button class="main-action" :disabled="isDisabled" @click="joinGame">Join</button>
     </article>
   </div>
 </template>

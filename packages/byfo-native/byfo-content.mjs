@@ -1,8 +1,8 @@
 class BYFOContent extends HTMLElement {
   constructor() {
     super();
-    this.#imgElement = document.createElement("img");
-    this.#pElement = document.createElement("p");
+    this.#imgElement = document.createElement('img');
+    this.#pElement = document.createElement('p');
     if (this.content) {
       this.#imgElement.src = this.content;
       this.#pElement.textContent = this.content;
@@ -13,14 +13,14 @@ class BYFOContent extends HTMLElement {
   #pElement;
 
   get type() {
-    return this.getAttribute("type");
+    return this.getAttribute('type');
   }
   set type(v) {
-    this.setAttribute("type", v);
-    if (v === "image") {
+    this.setAttribute('type', v);
+    if (v === 'image') {
       this.#imgElement.src = this.content;
       this.replaceChildren(this.#imgElement);
-    } else if (v === "text") {
+    } else if (v === 'text') {
       this.#pElement.textContent = this.content;
       this.replaceChildren(this.#pElement);
     } else {
@@ -29,16 +29,16 @@ class BYFOContent extends HTMLElement {
   }
 
   get content() {
-    return this.getAttribute("content");
+    return this.getAttribute('content');
   }
   set content(v) {
-    this.setAttribute("content", v);
-    if (this.type === "image") {
+    this.setAttribute('content', v);
+    if (this.type === 'image') {
       this.#imgElement.src = v;
-    } else if (this.type === "text") {
+    } else if (this.type === 'text') {
       this.#pElement.textContent = v;
     }
   }
 }
 
-customElements.define("byfo-content", BYFOContent);
+customElements.define('byfo-content', BYFOContent);

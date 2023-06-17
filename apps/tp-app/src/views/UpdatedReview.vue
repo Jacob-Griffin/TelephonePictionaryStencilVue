@@ -78,20 +78,12 @@ export default {
 
 <template>
   <div class="playerSelector">
-    <button
-      @click="() => clickPlayer(player)"
-      v-for="player in players"
-      class="small"
-      :class="{ selected: player == selected }"
-    >
+    <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
       {{ player }}
     </button>
   </div>
   <section v-if="selected">
-    <tp-review-chat
-      :showAll="showAllFlag"
-      :stackProxy.prop="stacks[selected]"
-    ></tp-review-chat>
+    <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
   <section v-else>
     <h4>Select a stack to begin viewing</h4>

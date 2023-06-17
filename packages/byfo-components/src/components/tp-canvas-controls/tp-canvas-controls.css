@@ -7,7 +7,7 @@ section {
   gap: 1rem;
 }
 
-#button-container{
+#button-container {
   flex-wrap: wrap;
   justify-content: center;
   margin: 0.5rem;
@@ -27,7 +27,7 @@ section section {
   min-width: 9rem;
 }
 
-@container (min-width:19rem){
+@container (min-width:19rem) {
   #line-widths {
     width: 19rem;
   }
@@ -65,7 +65,8 @@ tp-icon-fill-squiggle {
   height: 3rem;
 }
 
-#white-clear, #black-clear {
+#white-clear,
+#black-clear {
   background-color: var(--color-important);
 }
 

@@ -100,37 +100,21 @@ export default {
 
 <template>
   <div class="playerSelector">
-    <button
-      @click="() => clickPlayer(player)"
-      v-for="player in players"
-      class="small"
-      :class="{ selected: player == selected }"
-    >
+    <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
       {{ player }}
     </button>
   </div>
   <section v-if="selected">
-    <h4 class="needs-backdrop">
-      <strong>From:</strong> {{ stacks[selected][currentIndex].from }}
-    </h4>
+    <h4 class="needs-backdrop"><strong>From:</strong> {{ stacks[selected][currentIndex].from }}</h4>
     <div class="main-row">
       <p @click="decrement" class="arrow">{{ currentIndex > 0 ? '<' : '' }}</p>
-      <tp-content
-        :content="stacks[selected][currentIndex].content"
-        :type="stacks[selected][currentIndex].contentType"
-      ></tp-content>
+      <tp-content :content="stacks[selected][currentIndex].content" :type="stacks[selected][currentIndex].contentType"></tp-content>
       <p @click="increment" class="arrow">
         {{ currentIndex < indices.length - 1 ? '>' : '' }}
       </p>
     </div>
     <div class="carousel-dots">
-      <p
-        v-for="index in indices"
-        :class="index == currentIndex ? 'dot dot-selected' : 'dot'"
-        @click="() => (currentIndex = index)"
-      >
-        •
-      </p>
+      <p v-for="index in indices" :class="index == currentIndex ? 'dot dot-selected' : 'dot'" @click="() => (currentIndex = index)">•</p>
     </div>
   </section>
   <button @click="goHome">Return to home</button>

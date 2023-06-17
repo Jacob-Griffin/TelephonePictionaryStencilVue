@@ -7,15 +7,7 @@ import 'byfo-components/dist/components/tp-input-zone';
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import {
-  getGameStatus,
-  submitRound,
-  fetchCard,
-  getToAndFrom,
-  getStaticRoundInfo,
-  turnInMissing,
-  getPlayerNumber,
-} from '../firebase/rtdb';
+import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber } from '../firebase/rtdb';
 import { onValue, onDisconnect, ref as dbRef } from 'firebase/database';
 import { rtdb } from '../../Firebase';
 
@@ -64,8 +56,7 @@ if (!status.started && localStorage.getItem('hosting') !== gameid) {
 
 const playerNumber = !redirect && (await getPlayerNumber(gameid, name));
 
-const statusref =
-  playerNumber && dbRef(rtdb, `players/${gameid}/${playerNumber}/status`);
+const statusref = playerNumber && dbRef(rtdb, `players/${gameid}/${playerNumber}/status`);
 if (statusref) onDisconnect(statusref).set('missing');
 
 //Grab who you're sending to and recieving from (only need it once)
@@ -76,7 +67,7 @@ const staticRoundInfo = !redirect && (await getStaticRoundInfo(gameid));
 const roundRef = !redirect && dbRef(rtdb, `game/${gameid}/round`);
 const roundSubscription =
   roundRef &&
-  onValue(roundRef, async (snapshot) => {
+  onValue(roundRef, async snapshot => {
     const newRound = snapshot.val();
     if (newRound === null) {
       //If the data no longer exists, go to the review page
@@ -93,18 +84,14 @@ const roundSubscription =
     if (newRound.roundnumber === 0) return;
 
     //Grab the data of your "from" player using pre-updated round#
-    content.value = await fetchCard(
-      gameid,
-      people?.from,
-      roundnumber.value - 1
-    );
+    content.value = await fetchCard(gameid, people?.from, roundnumber.value - 1);
   });
 
 //Subscribe to see when the game gets finished
 const finishedRef = !redirect && dbRef(rtdb, `game/${gameid}/finished`);
 const finishedSubscription =
   finishedRef &&
-  onValue(finishedRef, (snapshot) => {
+  onValue(finishedRef, snapshot => {
     const result = [];
     const pulledData = snapshot.val();
     for (let name in pulledData) {
@@ -123,17 +110,11 @@ onMounted(() => {
       content: detail,
       contentType: roundnumber.value % 2 == 0 ? 'text' : 'image',
     };
-    submitRound(
-      gameid,
-      name,
-      roundnumber.value,
-      contentObject,
-      staticRoundInfo
-    );
+    submitRound(gameid, name, roundnumber.value, contentObject, staticRoundInfo);
     finishedRound.value = roundnumber.value;
   });
 
-  document.addEventListener('keydown', (event) => {
+  document.addEventListener('keydown', event => {
     const isOddRound = !!(roundnumber.value % 2);
     if (event.metaKey && event.key === 'z' && isOddRound) {
       //ctrl+z during a drawing round will send an undo input
@@ -152,7 +133,7 @@ onMounted(() => {
 
 //Wrap up firebase subscriptions on unmount
 onBeforeUnmount(() => {
-  const unsub = (unsubFunction) => unsubFunction?.();
+  const unsub = unsubFunction => unsubFunction?.();
 
   unsub(roundSubscription);
   unsub(finishedSubscription);
@@ -164,39 +145,19 @@ onBeforeUnmount(() => {
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
       Round {{ roundnumber }}
-      <byfo-timer
-        v-if="roundData.endTime !== -1"
-        :endtime="roundData.endTime"
-      ></byfo-timer>
+      <byfo-timer v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
       <div v-for="player in finishedPlayers">
         <p>{{ player.name }}</p>
-        <span
-          :class="
-            player.lastRound < roundData.roundnumber ? 'pending' : 'ready'
-          "
-          >{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span
-        >
+        <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
       </div>
     </section>
   </section>
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
     <section id="gameplay-elements">
-      <byfo-content
-        v-if="roundnumber != 0"
-        :content="content.content"
-        :type="content.contentType"
-      ></byfo-content>
-      <byfo-timer
-        v-if="roundData.endTime !== -1"
-        :endtime="roundData.endTime"
-      ></byfo-timer>
-      <tp-input-zone
-        :round="roundnumber"
-        ref="inputzone"
-        :characterLimit="globalLimits.textboxMaxCharacters"
-        :sendingTo="people.to"
-      />
+      <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
+      <byfo-timer v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to" />
     </section>
   </section>
 </template>
