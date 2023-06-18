@@ -16,7 +16,7 @@ byfo-content {
   width: 100%;
   border: none;
   border-radius: 0.75rem;
-  color: var(--color-text, black);
+  color: var(--color-backdrop-text, black);
   font-size: x-large;
   font-weight: 500;
   padding: 1rem;

@@ -67,9 +67,12 @@ if (target && target in stacks) {
   showAllFlag.value = true;
   clickPlayer(target);
 } else {
+  console.log('added listener');
   document.addEventListener('tp-settings-changed', ({ detail }) => {
     const { setting, value } = detail;
+    console.log(detail);
     if (setting === 'alwaysShowAll') {
+      console.log('setting to ', value);
       showAllFlag.value = value;
     }
   });
@@ -82,10 +85,10 @@ if (target && target in stacks) {
       {{ player }}
     </button>
   </div>
-  <section v-if="selected">
+  <section class="stack" v-if="selected">
     <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
-  <section v-else>
+  <section class="stack" v-else>
     <h4>Select a stack to begin viewing</h4>
   </section>
 </template>
@@ -94,22 +97,6 @@ if (target && target in stacks) {
 #app {
   overflow: hidden;
   height: 100vh;
-}
-
-.chatNavigator {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  max-width: 30rem;
-  width: fit-content;
-  margin: 1rem;
-  flex: none;
-}
-
-#homeButton {
-  flex: none;
-  margin-bottom: 0.5rem;
 }
 
 .playerSelector {
@@ -144,7 +131,7 @@ if (target && target in stacks) {
   background-color: var(--scroll-color);
 }
 
-section {
+.stack {
   display: flex;
   flex-direction: column;
   flex-shrink: 1;

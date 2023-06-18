@@ -32,12 +32,13 @@ onBeforeMount(() => tp.useTheme());
     <div>
       <Logo class="small logo" v-if="!isInHome"></Logo>
     </div>
-    <div class="same-size align-end">
-      <div class="menu-button" @click="showingSettings = true">
-        <byfo-icon icon="gear"></byfo-icon>
-      </div>
-    </div>
+    <div class="same-size"></div>
   </header>
+  <div id="settings-control">
+    <div class="menu-button" @click="showingSettings = true">
+      <byfo-icon icon="gear"></byfo-icon>
+    </div>
+  </div>
   <Suspense>
     <RouterView />
   </Suspense>
@@ -45,7 +46,8 @@ onBeforeMount(() => tp.useTheme());
 </template>
 
 <style scoped>
-header {
+header,
+#settings-control {
   display: flex;
   justify-content: space-between;
   line-height: 1.5;
@@ -70,6 +72,17 @@ header > div {
 header .logo {
   align-self: center;
   justify-self: center;
+}
+
+#settings-control {
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: 1rem;
+  margin-bottom: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 0 0 0 1rem;
 }
 
 .menu-button {

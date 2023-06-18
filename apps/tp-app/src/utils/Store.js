@@ -1,5 +1,5 @@
 export default class TPStore {
-  changeEvent = (setting, value) => new CustomEvent('tp-setings-changed', { detail: { setting, value } });
+  changeEvent = (setting, value) => new CustomEvent('tp-settings-changed', { detail: { setting, value } });
 
   //#region theme
   themes = [
