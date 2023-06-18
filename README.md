@@ -15,11 +15,11 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 <hr>
 
 1. After cloning the repo, run `pnpm install` at the project root
-2. In /apps/tp-app, create a firebase.config.js and export your config object as default
-   - There are template files for firebase config things
+2. In /apps/tp-app, create a firebase.secrets.js and export your firebase variables individually
+   - This is just to keep my own keys private, and to support github action publishing.
 3. Run `pnpm build`, then `pnpm dev` at the root.
 
-The game will then be hosted at localhost:5173, and available to your local network at the same port (vite will tell you the address)
+The game will then be hosted at localhost:5150, and available to your local network at the same port (vite will tell you the address)
 
 ## Structure
 
@@ -29,10 +29,11 @@ root (turbo)
         /tp-app   (vue + vite)
     /packages
         /byfo-components (stencil.js)
+        /byfo-native (raw js webcomponents)
 ```
 
 All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
 
-The app is pretty close to what I would consider "Minimum shippable" but still has glaring issues to take care of. Demo/Test builds are available at https://byfo.jacob-g.dev
+The app is pretty close to what I would consider "Minimum shippable" but still has glaring issues to take care of. Demo/Test builds are available at https://beta.byfo.jacob-g.dev
