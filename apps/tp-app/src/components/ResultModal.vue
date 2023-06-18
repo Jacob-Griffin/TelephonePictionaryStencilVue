@@ -31,7 +31,9 @@ export default {
   <div class="modal">
     <article>
       <h1>Review game results</h1>
-      <button class="close" @click="$emit('modal-closed')">x</button>
+      <button class="close" @click="$emit('modal-closed')">
+        <byfo-icon icon="x"></byfo-icon>
+      </button>
       <p>Game Id:</p>
       <input type="text" v-model="gameid" />
       <p class="error-text" v-if="findError">{{ findError }}</p>

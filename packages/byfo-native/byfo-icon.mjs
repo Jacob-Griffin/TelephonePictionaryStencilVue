@@ -10,6 +10,19 @@ const icons = {
       <path d="M416 174.74V48h-80v58.45L256 32 0 272h64v208h144V320h96v160h144V272h64l-96-97.26z"/>
     </svg>
   `,
+  info: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <path d="M248 64C146.39 64 64 146.39 64 248s82.39 184 184 184 184-82.39 184-184S349.61 64 248 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/>
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M220 220h32v116"/>
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M208 340h88"/>
+      <path d="M248 130a26 26 0 1026 26 26 26 0 00-26-26z"/>
+    </svg>
+  `,
+  x: `
+    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M368 368L144 144M368 144L144 368"/>
+    </svg>
+  `,
 };
 
 class BYFOIcon extends HTMLElement {

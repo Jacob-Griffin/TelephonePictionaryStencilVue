@@ -87,7 +87,7 @@ export default {
   <div class="modal">
     <article>
       <h1>Join a game</h1>
-      <button class="close" @click="$emit('modal-closed')">x</button>
+      <button class="close" @click="$emit('modal-closed')"><byfo-icon icon="x"></byfo-icon></button>
       <p>Name:</p>
       <input id="name-input" type="text" v-model="username" />
       <p>Game Id:</p>
