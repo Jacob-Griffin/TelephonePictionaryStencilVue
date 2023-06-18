@@ -1,7 +1,15 @@
 <script setup>
-import { inject } from 'vue';
+import { inject, ref } from 'vue';
 
 const store = inject('TpStore');
+
+const selected = ref('');
+selected.value = store.theme;
+
+const changeTheme = ({ name }) => {
+  selected.value = name;
+  store.setTheme(name);
+};
 </script>
 
 <template>
@@ -11,9 +19,7 @@ const store = inject('TpStore');
       <button class="close" @click="$emit('modal-closed')">x</button>
 
       <div class="theme-picker">
-        <button v-for="theme in store.themes" class="theme-button" :class="{ selected: store.theme == theme.name }" @click="() => store.setTheme(theme.name)">
-          {{ theme.icon }}&#xfe0e;
-        </button>
+        <button v-for="theme in store.themes" class="theme-button" :class="{ selected: selected == theme.name }" @click="() => changeTheme(theme)">{{ theme.icon }}&#xfe0e;</button>
       </div>
 
       <input type="checkbox" class="toggle" @input="e => store.setShowAll(e.target.checked)" :checked="store.alwaysShowAll" />
