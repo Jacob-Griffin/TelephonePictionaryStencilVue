@@ -68,14 +68,14 @@ export default {
           //TODO: if game was finished, link to results, but don't redirect
           return;
         case 'join':
-          window.localStorage.setItem("username", this.username);
-          window.localStorage.setItem("rejoinNumber", result.detail);
-          window.open(`/game/${this.gameid}`, "_self");
+          localStorage.setItem("username", this.username);
+          localStorage.setItem("rejoinNumber", result.detail);
+          location.href = `/game/${this.gameid}`;
           return;
         case 'lobby':
           //If we're all good, navigate to the lobby
-          window.localStorage.setItem("username", this.username);
-          window.open(`/lobby/${this.gameid}`, "_self");
+          localStorage.setItem("username", this.username);
+          location.href = `/lobby/${this.gameid}`;
           return;
       }
     },

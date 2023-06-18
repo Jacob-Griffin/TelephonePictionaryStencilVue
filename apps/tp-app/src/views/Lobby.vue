@@ -10,9 +10,9 @@ export default {
   data() {
     return {
       players: [],
-      self: window.localStorage.getItem('username'),
+      self: localStorage.getItem('username'),
       priority: undefined,
-      hosting: window.localStorage.getItem('hosting'),
+      hosting: localStorage.getItem('hosting'),
       roundLengthInput: '3:00',
       timeError: '',
     };
@@ -85,7 +85,7 @@ export default {
 
       if (!isInGame) {
         //If we discover that we're not supposed to be in this game, kick back to the home screen
-        window.open('/', '_self');
+        location.href = '/';
         return;
       }
     });
@@ -97,12 +97,12 @@ export default {
       const status = snapshot.val();
       //On the off chance that you jumped into a lobby of a finished game, redirect to the results
       if (status.finished) {
-        window.open(`/results/${this.gameid}`, '_self');
+        location.href = `/results/${this.gameid}`;
         return;
       }
       //If the game started, go to the gameplay page
       if (status.started) {
-        window.open(`/game/${this.gameid}`, '_self');
+        location.href = `/game/${this.gameid}`;
         return;
       }
     });

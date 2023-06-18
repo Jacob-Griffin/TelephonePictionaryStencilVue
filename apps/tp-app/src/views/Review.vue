@@ -74,7 +74,7 @@ export default {
       }
     },
     goHome() {
-      window.open('/', '_self');
+      location.href = '/';
     },
   },
   async beforeMount() {
@@ -82,13 +82,13 @@ export default {
     for (let event in this.globalListeners) {
       document.addEventListener(event, this.globalListeners[event]);
     }
-    const self = window.localStorage.getItem('username');
+    const self = localStorage.getItem('username');
     if (self && self in this.stacks) {
       this.clickPlayer(self);
     }
     //Once the page knows who you are, you are officially done with the game
     //Get rid of this so things behave as expected afterwards (anonymously)
-    window.localStorage.removeItem('username');
+    localStorage.removeItem('username');
   },
   beforeUnmount() {
     for (let event in this.globalListeners) {

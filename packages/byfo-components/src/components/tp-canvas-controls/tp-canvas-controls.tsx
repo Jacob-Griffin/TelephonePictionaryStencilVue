@@ -1,5 +1,5 @@
 import { Component, h, Element, Prop, State } from '@stencil/core';
-import icons from '../icons';
+import icons from './icons';
 
 @Component({
   tag: 'tp-canvas-controls',

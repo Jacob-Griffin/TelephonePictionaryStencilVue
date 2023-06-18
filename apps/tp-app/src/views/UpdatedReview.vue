@@ -1,79 +1,79 @@
-<script>
+<script setup>
 import 'byfo-components/dist/components/tp-content';
 import 'byfo-components/dist/components/tp-review-chat';
 import { getGameData } from '../firebase/firestore';
 import { sortNames } from '../utils/strings';
-export default {
-  data() {
-    return {
-      stacks: {},
-      selected: false,
-      showAllFlag: false,
-      imagesCached: new Set(),
-      _playerAmount: undefined,
-    };
-  },
-  computed: {
-    gameid() {
-      return this.$route.params.gameid;
-    },
-    players() {
-      let newList = Object.keys(this.stacks);
-      return sortNames(newList);
-    },
-    playerAmount() {
-      if (!this._playerAmount) {
-        this._playerAmount = Object.keys(this.stacks).length;
-      }
-      return this._playerAmount;
-    },
-  },
-  methods: {
-    clickPlayer(username) {
-      this.selected = username;
-      for (let i = 1; i < this.playerAmount; i += 2) {
-        //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
-        this.cacheImage(username, i);
-      }
-    },
-    cacheImage(player, idx) {
-      const imgURL = this.stacks[player][idx].content;
-      //If we already cached this image, move on
-      if (this.imagesCached.has(imgURL)) return;
+import { ref, reactive, inject } from 'vue';
+import { useRoute } from 'vue-router';
 
-      //Otherwise, grab it
-      fetch(imgURL, { mode: 'no-cors' });
-      //We don't actually need to do anything with the fetched data,
-      //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
-      this.imagesCached.add(imgURL);
-    },
-  },
-  async beforeMount() {
-    this.stacks = await getGameData(this.gameid);
-    const self = window.localStorage.getItem('username');
-    if (self && self in this.stacks) {
-      this.clickPlayer(self);
-    }
-    //Once the page knows who you are, you are officially done with the game
-    //Get rid of this so things behave as expected afterwards (anonymously)
-    window.localStorage.removeItem('username');
+const store = inject('TpStore');
+const gameid = useRoute().params.gameid;
 
-    //Check "Show All" cases
+const stacks = await getGameData(gameid);
+const players = sortNames(Object.keys(stacks));
+const imagesCached = new Set();
 
-    //Origin: search
-    const target = window.localStorage.getItem('fromSearch');
-    if (target && target in this.stacks) {
-      this.showAllFlag = true;
-      this.clickPlayer(target);
-    }
-    window.localStorage.removeItem('fromSearch');
+const selected = ref('');
+const showAllFlag = ref(!!store.alwaysShowAll);
 
-    //Flag set (Not yet implemented)
-    if (window.localStorage.getItem('alwaysShowAll')) {
-      this.showAllFlag = true;
-    }
-  },
+const cacheImage = (player, idx) => {
+  const imgURL = stacks[player][idx].content;
+  //If we already cached this image, move on
+  if (imagesCached.has(imgURL)) return;
+
+  //Otherwise, grab it
+  fetch(imgURL, { mode: 'no-cors' });
+  //We don't actually need to do anything with the fetched data,
+  //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
+  imagesCached.add(imgURL);
 };
+
+const clickPlayer = username => {
+  selected.value = username;
+  if (!showAllFlag.value) {
+    for (let i = 1; i < players.length; i += 2) {
+      //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
+      cacheImage(username, i);
+    }
+  }
+};
+
+//If the user wasn't looking for something specific, and has the show all flag on, precache the beginning of each stack
+if (showAllFlag.value) {
+  players.forEach(username => {
+    //Get the first (up to) 3 images from each stack if the show all flag is on to avoid weird "laggy" appearance on switch
+    //A player would have to be real fast to click and scroll to the 4th image before it could load
+    //This does cost bandwidth to pre-cache every stack like this when the user may not look at all of them, but it's better than the weird lag effect.
+    for (let i = 1; i < players.length && i <= 5; i += 2) {
+      cacheImage(username, i);
+    }
+  });
+}
+
+// Check if we're coming out of a game
+const self = localStorage.getItem('username');
+if (self && self in stacks) {
+  clickPlayer(self);
+}
+//Once the page knows who you are, you are officially done with the game
+//Get rid of this so things behave as expected afterwards (anonymously)
+localStorage.removeItem('username');
+
+//Check for temporary "Show All" cases, or listen for setting changes otherwise
+const target = sessionStorage.getItem('fromSearch');
+sessionStorage.removeItem('fromSearch');
+
+if (target && target in stacks) {
+  showAllFlag.value = true;
+  clickPlayer(target);
+} else {
+  document.addEventListener('tp-settings-changed', ({ detail }) => {
+    const { setting, value } = detail;
+    if (setting === 'alwaysShowAll') {
+      showAllFlag.value = value;
+    }
+  });
+}
 </script>
 
 <template>

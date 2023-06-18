@@ -20,7 +20,7 @@ export default {
         return;
       }
       // If we made it past all the checks, navigate to the results
-      window.open(`/review/${this.gameid}`, '_self');
+      location.href = `/review/${this.gameid}`;
       return;
     },
   },

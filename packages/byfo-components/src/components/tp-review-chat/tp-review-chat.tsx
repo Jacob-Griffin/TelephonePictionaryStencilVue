@@ -38,8 +38,11 @@ export class TpReviewChat {
     } else {
       this.stackChanging = true;
       this.index = 0;
-      setTimeout(() => (this.stackChanging = false), 200);
+      setTimeout(() => {
+        this.stackChanging = false;
+      }, 200);
     }
+    this.el.scroll({ behavior: 'instant', top: 0 });
   }
 
   imgClicked = (e: PointerEvent) => {
@@ -106,7 +109,7 @@ export class TpReviewChat {
 
   // Stack Controls holds the nex/show all buttons and the end-of-stack behavior
   stackControls = () =>
-    this.index < this.stack?.length - 1 ? (
+    !this.showAll && this.index < this.stack?.length - 1 ? (
       <div class="chatNavigator">
         <button class="small" onClick={this.doNext}>
           Next
@@ -119,7 +122,7 @@ export class TpReviewChat {
     ) : (
       <div class="end-text">
         <p>End of Stack</p>
-        {this.showEnd ? <a onClick={this.doEnd}>Reset the stack</a> : ''}
+        {this.showEnd && !this.showAll ? <a onClick={this.doEnd}>Reset the stack</a> : ''}
       </div>
     );
 
