@@ -4,7 +4,7 @@ import 'byfo-native-components/byfo-timer';
 import 'byfo-native-components/byfo-content';
 import 'byfo-components/dist/components/tp-input-zone';
 
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber } from '../firebase/rtdb';
@@ -14,7 +14,9 @@ import { rtdb } from '../../Firebase';
 import { sortNames } from '../utils/strings';
 import globalLimits from '../globalLimits';
 
-const name = localStorage.getItem('username');
+const store = inject('TpStore');
+
+const name = store.username;
 const gameid = useRoute().params.gameid;
 
 const inputzone = ref(null);
@@ -39,13 +41,13 @@ const finishedPlayers = ref([]);
 let redirect = false;
 //Check the game status and redirect if necessary
 const status = await getGameStatus(gameid);
-if (!status.started && localStorage.getItem('hosting') !== gameid) {
+if (!status.started && store.hosting !== gameid) {
   location.href = redirect = `/lobby/${gameid}`;
 } else if (status.finished) {
   location.href = redirect = `/review/${gameid}`;
 } else {
   //Check if the current game was exited improperly
-  const rejoinNumber = localStorage.getItem('rejoinNumber');
+  const rejoinNumber = store.rejoinNumber;
   if (rejoinNumber) {
     const rejoined = await turnInMissing(gameid, rejoinNumber);
     if (!rejoined) {
@@ -72,7 +74,6 @@ const roundSubscription =
     if (newRound === null) {
       //If the data no longer exists, go to the review page
       onDisconnect(statusref).cancel(); // This is an expected navigation, don't give "missing"
-      localStorage.setItem('rejoinNumber', undefined); //The user has nothing to rejoin
       location.href = `/review/${gameid}`;
       return;
     }

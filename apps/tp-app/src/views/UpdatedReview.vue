@@ -3,7 +3,7 @@ import 'byfo-components/dist/components/tp-content';
 import 'byfo-components/dist/components/tp-review-chat';
 import { getGameData } from '../firebase/firestore';
 import { sortNames } from '../utils/strings';
-import { ref, reactive, inject } from 'vue';
+import { ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
 const store = inject('TpStore');
@@ -51,13 +51,10 @@ if (showAllFlag.value) {
 }
 
 // Check if we're coming out of a game
-const self = localStorage.getItem('username');
+const self = store.username;
 if (self && self in stacks) {
   clickPlayer(self);
 }
-//Once the page knows who you are, you are officially done with the game
-//Get rid of this so things behave as expected afterwards (anonymously)
-localStorage.removeItem('username');
 
 //Check for temporary "Show All" cases, or listen for setting changes otherwise
 const target = sessionStorage.getItem('fromSearch');
@@ -67,16 +64,16 @@ if (target && target in stacks) {
   showAllFlag.value = true;
   clickPlayer(target);
 } else {
-  console.log('added listener');
   document.addEventListener('tp-settings-changed', ({ detail }) => {
     const { setting, value } = detail;
-    console.log(detail);
     if (setting === 'alwaysShowAll') {
-      console.log('setting to ', value);
       showAllFlag.value = value;
     }
   });
 }
+
+//Once all of the loading is done, and any effects happened, clear the backed up game data
+store.clearGameData();
 </script>
 
 <template>

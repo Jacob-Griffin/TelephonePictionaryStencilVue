@@ -1,85 +1,79 @@
-<script lang="js">
-import {
-  validGameId,
-  validUsername,
-  invalidCharactersList,
-} from "../utils/expressions.js";
-import { addPlayerToLobby } from "../firebase/rtdb.js";
+<script setup>
+import { validGameId, validUsername, invalidCharactersList } from '../utils/expressions.js';
+import { addPlayerToLobby } from '../firebase/rtdb.js';
+import { ref, inject, computed } from 'vue';
 
-export default {
-  data() {
-    return {
-      gameid: "",
-      username: "",
-      joinError: false,
-    };
-  },
-  computed: {
-    isDisabled() {
-      const isValidName = validUsername(this.username);
-      if (!isValidName) {
-        if (this.username.length !== 0) {
-          //If the username exists and is invalid for other reasons, say why
-          this.joinError = `Names cannot contain ${invalidCharactersList(
-            this.username
-          )}`;
-          return true;
-        }
-      } else if (typeof isValidName === "string") {
-        this.joinError = isValidName;
-        return true;
-      } else if (this.joinError && this.joinError.startsWith("Names cannot")) {
-        //If the name was valid and that was the current error, clear it
-        this.joinError = false;
-      }
+const store = inject('TpStore');
 
-      if (!validGameId(this.gameid)) {
-        if (this.gameid?.length) {
-          //If the username exists and is invalid for other reasons, say why
-          this.joinError = "Game Id must be 1-6 digits";
-          return true;
-        }
-      } else if (this.joinError && this.joinError.startsWith("Game Id must")) {
-        //If the name was valid and that was the current error, clear it
-        this.joinError = false;
-      }
+const gameid = ref('');
+const username = ref('');
+const joinError = ref('');
 
-      return !(
-        this.gameid &&
-        validGameId(this.gameid) &&
-        this.username &&
-        validUsername(this.username)
-      );
-    },
-  },
-  methods: {
-    async joinGame() {
-      //Valid gameid and username are being checked by is disabled
-      if (this.isDisabled) {
-        return;
-      }
+if (store.username && store.gameid) {
+  // This means that if we're holding onto current game data, autopopulate it
+  gameid.value = store.gameid;
+  username.value = store.username;
+  joinError.value = 'Populated from incomplete game';
+}
 
-      //All other checks are handled by the db
-      const result = await addPlayerToLobby(this.gameid, this.username);
-      switch (result.action) {
-        case "error":
-          //If there is an error, it will be a string, pass it to the error area
-          this.joinError = result.detail;
-          //TODO: if game was finished, link to results, but don't redirect
-          return;
-        case 'join':
-          localStorage.setItem("username", this.username);
-          localStorage.setItem("rejoinNumber", result.detail);
-          location.href = `/game/${this.gameid}`;
-          return;
-        case 'lobby':
-          //If we're all good, navigate to the lobby
-          localStorage.setItem("username", this.username);
-          location.href = `/lobby/${this.gameid}`;
-          return;
-      }
-    },
-  },
+const isDisabled = computed(() => {
+  const thisUsername = username.value;
+  const isValidName = validUsername(thisUsername);
+  if (!isValidName) {
+    if (thisUsername.length !== 0) {
+      //If the username exists and is invalid for other reasons, say why
+      this.joinError = `Names cannot contain ${invalidCharactersList(thisUsername)}`;
+      return true;
+    }
+  } else if (typeof isValidName === 'string') {
+    joinError.value = isValidName;
+    return true;
+  } else if (joinError.value && joinError.value.startsWith('Names cannot')) {
+    //If the name was valid and that was the current error, clear it
+    joinError.value = '';
+  }
+  const thisGameid = gameid.value;
+  if (!validGameId(thisGameid)) {
+    if (thisGameid?.length) {
+      //If the username exists and is invalid for other reasons, say why
+      joinError.value = 'Game Id must be 1-6 digits';
+      return true;
+    }
+  } else if (joinError.value && joinError.value.startsWith('Game Id must')) {
+    //If the name was valid and that was the current error, clear it
+    joinError.value = false;
+  }
+
+  return !(thisGameid && validGameId(thisGameid) && thisUsername && isValidName);
+});
+
+const joinGame = async () => {
+  //Valid gameid and username are being checked by is disabled
+  if (isDisabled.value) {
+    return;
+  }
+
+  const gid = gameid.value;
+  const user = username.value;
+
+  //All other checks are handled by the db
+  const result = await addPlayerToLobby(gid, user);
+  switch (result.action) {
+    case 'error':
+      //If there is an error, it will be a string, pass it to the error area
+      joinError.value = result.detail;
+      //TODO: if game was finished, link to results, but don't redirect
+      return;
+    case 'join':
+      store.setRejoinNumber(result.detail);
+      location.href = `/game/${gid}`;
+      return;
+    case 'lobby':
+      //If we're all good, navigate to the lobby
+      store.setUsername(user);
+      location.href = `/lobby/${gid}`;
+      return;
+  }
 };
 </script>
 

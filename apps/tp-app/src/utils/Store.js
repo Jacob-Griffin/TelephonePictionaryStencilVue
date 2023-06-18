@@ -41,7 +41,6 @@ export default class TPStore {
   };
   //#endregion theme
 
-  //#region alwaysShowAll
   alwaysShowAll = !!localStorage.getItem('alwaysShowAll');
   setShowAll(v) {
     localStorage.setItem('alwaysShowAll', !v ? '' : 'true');
@@ -49,5 +48,53 @@ export default class TPStore {
     const e = this.changeEvent('alwaysShowAll', !!v);
     document.dispatchEvent(e);
   }
-  //#endregion
+
+  //#region gamedata
+  username = localStorage.getItem('username');
+  setUsername(v) {
+    if (!v) {
+      localStorage.removeItem('username');
+      this.username = undefined;
+    }
+    localStorage.setItem('username', v);
+    this.username = v;
+  }
+
+  gameid = localStorage.getItem('game-playing');
+  setGameid(v) {
+    if (!v) {
+      localStorage.removeItem('game-playing');
+      this.gameid = undefined;
+    }
+    localStorage.setItem('game-playing', v);
+    this.gameid = v;
+  }
+
+  hosting = localStorage.getItem('hosting');
+  setHosting(v) {
+    if (!v) {
+      localStorage.removeItem('hosting');
+      this.hosting = undefined;
+    }
+    localStorage.setItem('hosting', v);
+    this.hosting = v;
+  }
+
+  rejoinNumber = localStorage.getItem('rejoinNumber');
+  setRejoinNumber(v) {
+    if (!v) {
+      localStorage.removeItem('rejoinNumber');
+      this.rejoinNumber = undefined;
+    }
+    localStorage.setItem('rejoinNumber', v);
+    this.rejoinNumber = v;
+  }
+
+  clearGameData() {
+    this.setUsername(undefined);
+    this.setGameid(undefined);
+    this.setHosting(undefined);
+    this.setRejoinNumber(undefined);
+  }
+  //#endregion gamedata
 }
