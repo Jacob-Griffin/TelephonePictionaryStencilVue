@@ -6,9 +6,31 @@ const store = inject('TpStore');
 const selected = ref('');
 selected.value = store.theme;
 
-const changeTheme = ({ name }) => {
+const changeTheme = e => {
+  const name = e.target.value;
   selected.value = name;
   store.setTheme(name);
+};
+
+const handleToggle = (prop, setter, e) => {
+  const enabled = e.target.checked;
+  setter(enabled);
+  const div = document.getElementById(`${prop}-toggle`);
+  if (enabled && !div.classList.contains('checked')) {
+    div.classList.add('checked');
+    return;
+  }
+  if (!enabled) {
+    div.classList.remove('checked');
+  }
+};
+
+//This is to make sure you can click anywhere in the toggle to do the action
+const passClick = e => {
+  const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
+  if (target) {
+    document.getElementById(`${target}Input`).click();
+  }
 };
 </script>
 
@@ -23,16 +45,19 @@ const changeTheme = ({ name }) => {
       <section>
         <div>
           <h2 class="label">Theme</h2>
-          <div class="theme-picker">
-            <button v-for="theme in store.themes" class="theme-button" :class="{ selected: selected == theme.name }" @click="() => changeTheme(theme)">
-              {{ theme.icon }}&#xfe0e;
-            </button>
-          </div>
+          <select @input="changeTheme">
+            <option v-for="theme in store.themes" :value="theme.name">
+              {{ theme.displayName }}
+            </option>
+          </select>
         </div>
 
         <div>
-          <h2 class="label" aria-label="Always 'Show all'">Always "Show all" <byfo-icon title="Applies to review page" icon="info"></byfo-icon></h2>
-          <input type="checkbox" class="toggle" @input="e => store.setShowAll(e.target.checked)" :checked="store.alwaysShowAll" />
+          <h2 class="label">Always "Show all" <byfo-icon title="Applies to review page" icon="info"></byfo-icon></h2>
+          <div id="showAll-toggle" class="toggle-wrapper" @click="passClick" :class="store.alwaysShowAll ? 'checked' : ''">
+            <input type="checkbox" id="showAllInput" @input="e => handleToggle('showAll', store.setShowAll, e)" :checked="store.alwaysShowAll" />
+            <label for="showAllInput"></label>
+          </div>
         </div>
       </section>
     </article>
@@ -55,6 +80,7 @@ section > div {
   width: 100%;
   max-width: 500px;
   padding-block: 0.75rem;
+  align-items: center;
 }
 
 section > div:last-child {
@@ -70,21 +96,45 @@ section > div:last-child {
   width: 1em;
 }
 
-.theme-button {
-  justify-self: right;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0;
-  border-block: 1px solid white;
-  border-right: 1px solid white;
+select {
+  width: 20ch;
+  height: 2rem;
+  border-radius: 0.5rem;
+  font-size: medium;
 }
 
-.theme-button:first-child {
-  border-radius: 1rem 0 0 1rem;
-  border-left: 1px solid white;
+.toggle-wrapper {
+  height: 1.3rem;
+  width: 2.3rem;
+  position: relative;
+  border-radius: 1rem;
+  background-color: #777;
+  cursor: pointer;
 }
 
-.theme-button:last-child {
-  border-radius: 0 1rem 1rem 0;
+.toggle-wrapper.checked {
+  background-color: var(--color-brand);
+}
+
+.toggle-wrapper > input {
+  visibility: hidden;
+}
+
+.toggle-wrapper > label {
+  display: block;
+  position: absolute;
+  cursor: pointer;
+  top: 0.15rem;
+  left: 0.15rem;
+  transition: left 0.2s;
+  background-color: var(--vt-c-white-mute);
+  z-index: 1;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 0.55rem;
+}
+
+input:checked + label {
+  left: 1.15rem;
 }
 </style>

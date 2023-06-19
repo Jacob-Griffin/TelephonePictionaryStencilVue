@@ -5,19 +5,19 @@ export default class TPStore {
   themes = [
     {
       name: 'light',
-      icon: '🔆',
+      displayName: 'Light',
     },
     {
       name: 'dark',
-      icon: '🌙',
+      displayName: 'Dark',
     },
     {
       name: 'classic',
-      icon: '🕒',
+      displayName: 'Classic',
     },
     {
       name: 'candy',
-      icon: '🍬',
+      displayName: 'Candy Vomit',
     },
   ];
   themeExtends = {
@@ -26,11 +26,11 @@ export default class TPStore {
   };
 
   theme = localStorage.getItem('theme') ?? 'classic';
-  setTheme(v) {
+  setTheme = v => {
     this.useTheme(v);
     localStorage.setItem('theme', v);
     this.theme = v;
-  }
+  };
 
   useTheme = (theme = this.theme) => {
     document.body.setAttribute('class', '');
@@ -42,53 +42,53 @@ export default class TPStore {
   //#endregion theme
 
   alwaysShowAll = !!localStorage.getItem('alwaysShowAll');
-  setShowAll(v) {
+  setShowAll = v => {
     localStorage.setItem('alwaysShowAll', !v ? '' : 'true');
     this.alwaysShowAll = !!v;
     const e = this.changeEvent('alwaysShowAll', !!v);
     document.dispatchEvent(e);
-  }
+  };
 
   //#region gamedata
   username = localStorage.getItem('username');
-  setUsername(v) {
+  setUsername = v => {
     if (!v) {
       localStorage.removeItem('username');
       this.username = undefined;
     }
     localStorage.setItem('username', v);
     this.username = v;
-  }
+  };
 
   gameid = localStorage.getItem('game-playing');
-  setGameid(v) {
+  setGameid = v => {
     if (!v) {
       localStorage.removeItem('game-playing');
       this.gameid = undefined;
     }
     localStorage.setItem('game-playing', v);
     this.gameid = v;
-  }
+  };
 
   hosting = localStorage.getItem('hosting');
-  setHosting(v) {
+  setHosting = v => {
     if (!v) {
       localStorage.removeItem('hosting');
       this.hosting = undefined;
     }
     localStorage.setItem('hosting', v);
     this.hosting = v;
-  }
+  };
 
   rejoinNumber = localStorage.getItem('rejoinNumber');
-  setRejoinNumber(v) {
+  setRejoinNumber = v => {
     if (!v) {
       localStorage.removeItem('rejoinNumber');
       this.rejoinNumber = undefined;
     }
     localStorage.setItem('rejoinNumber', v);
     this.rejoinNumber = v;
-  }
+  };
 
   clearGameData() {
     this.setUsername(undefined);
