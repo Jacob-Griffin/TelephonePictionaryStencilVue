@@ -12,7 +12,7 @@ import { onValue, onDisconnect, ref as dbRef } from 'firebase/database';
 import { rtdb } from '../../Firebase';
 
 import { sortNames } from '../utils/strings';
-import globalLimits from '../globalLimits';
+import globalLimits from '../utils/globalLimits';
 
 const store = inject('TpStore');
 

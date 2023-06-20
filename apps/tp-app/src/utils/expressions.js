@@ -1,4 +1,4 @@
-import globalLimits from '../globalLimits';
+import globalLimits from './globalLimits';
 
 export function validGameId(input) {
   const exp = /^[0-9]{1,7}$/;

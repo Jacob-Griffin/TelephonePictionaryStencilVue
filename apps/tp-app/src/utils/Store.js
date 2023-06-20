@@ -55,6 +55,7 @@ export default class TPStore {
     if (!v) {
       localStorage.removeItem('username');
       this.username = undefined;
+      return;
     }
     localStorage.setItem('username', v);
     this.username = v;
@@ -65,6 +66,7 @@ export default class TPStore {
     if (!v) {
       localStorage.removeItem('game-playing');
       this.gameid = undefined;
+      return;
     }
     localStorage.setItem('game-playing', v);
     this.gameid = v;
@@ -75,6 +77,7 @@ export default class TPStore {
     if (!v) {
       localStorage.removeItem('hosting');
       this.hosting = undefined;
+      return;
     }
     localStorage.setItem('hosting', v);
     this.hosting = v;
@@ -85,6 +88,7 @@ export default class TPStore {
     if (!v) {
       localStorage.removeItem('rejoinNumber');
       this.rejoinNumber = undefined;
+      return;
     }
     localStorage.setItem('rejoinNumber', v);
     this.rejoinNumber = v;

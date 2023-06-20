@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router';
 import SettingsModal from './components/SettingsModal.vue';
 import { inGame, inHome } from './utils/expressions';
 import { ref, onBeforeMount, provide } from 'vue';
-import 'byfo-native-components/byfo-icon.mjs';
+import 'byfo-native-components/byfo-icon';
 import TPStore from './utils/Store';
 
 const isInGame = inGame(location);

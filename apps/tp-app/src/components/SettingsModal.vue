@@ -12,6 +12,7 @@ const changeTheme = e => {
   store.setTheme(name);
 };
 
+// Toggle stuff should probably moved into a webcomponent, probably actually using a shadowdom this time
 const handleToggle = (prop, setter, e) => {
   const enabled = e.target.checked;
   setter(enabled);
@@ -42,10 +43,10 @@ const passClick = e => {
         <byfo-icon icon="x"></byfo-icon>
       </button>
 
-      <section>
+      <section class="settings">
         <div>
           <h2 class="label">Theme</h2>
-          <select @input="changeTheme">
+          <select @input="changeTheme" :value="store.theme">
             <option v-for="theme in store.themes" :value="theme.name">
               {{ theme.displayName }}
             </option>
@@ -67,14 +68,14 @@ const passClick = e => {
 <style>
 @import '../assets/modal.css';
 
-section {
+.settings {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-section > div {
+.settings > div {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -83,58 +84,10 @@ section > div {
   align-items: center;
 }
 
-section > div:last-child {
-  border-bottom: none;
-}
-
-[icon='info'] {
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  top: 0.15em;
-  height: 1em;
-  width: 1em;
-}
-
-select {
+.settings select {
   width: 20ch;
   height: 2rem;
   border-radius: 0.5rem;
   font-size: medium;
-}
-
-.toggle-wrapper {
-  height: 1.3rem;
-  width: 2.3rem;
-  position: relative;
-  border-radius: 1rem;
-  background-color: #777;
-  cursor: pointer;
-}
-
-.toggle-wrapper.checked {
-  background-color: var(--color-brand);
-}
-
-.toggle-wrapper > input {
-  visibility: hidden;
-}
-
-.toggle-wrapper > label {
-  display: block;
-  position: absolute;
-  cursor: pointer;
-  top: 0.15rem;
-  left: 0.15rem;
-  transition: left 0.2s;
-  background-color: var(--vt-c-white-mute);
-  z-index: 1;
-  height: 1rem;
-  width: 1rem;
-  border-radius: 0.55rem;
-}
-
-input:checked + label {
-  left: 1.15rem;
 }
 </style>

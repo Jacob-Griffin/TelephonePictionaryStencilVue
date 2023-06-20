@@ -1,29 +1,21 @@
-<script>
-export default {
-  data() {
-    return {
-      openModal: '',
-    };
-  },
-  methods: {
-    switchModal(event) {
-      this.openModal = event?.target.getAttribute('modal') ?? '';
-    },
-    keyHandler(event) {
-      if (event.key !== 'Enter') return;
-      const target = document.querySelector('.main-action');
-      if (!target) return;
+<script setup>
+import { ref, onBeforeUnmount } from 'vue';
+const openModal = ref('');
 
-      target.click();
-    },
-  },
-  beforeMount() {
-    document.addEventListener('keydown', this.keyHandler);
-  },
-  beforeUnmount() {
-    document.removeEventListener('keydown', this.keyHandler);
-  },
+const switchModal = event => {
+  openModal.value = event?.target.getAttribute('modal') ?? '';
 };
+
+const keyHandler = event => {
+  if (event.key !== 'Enter') return;
+  const target = document.querySelector('.main-action');
+  if (!target) return;
+
+  target.click();
+};
+
+document.addEventListener('keydown', keyHandler);
+onBeforeUnmount(() => document.removeEventListener('keydown', keyHandler));
 </script>
 
 <template>
@@ -38,7 +30,9 @@ export default {
     <JoinModal v-if="openModal == 'join'" @modal-closed="switchModal"></JoinModal>
     <ResultModal v-if="openModal == 'result'" @modal-closed="switchModal"></ResultModal>
   </main>
-  <BYFOFooter></BYFOFooter>
+  <footer>
+    <p>Copyright ©2023 Jacob Griffin, Melinda Morang, Sarah Griffin. All rights reserved</p>
+  </footer>
 </template>
 
 <style>
@@ -50,5 +44,16 @@ export default {
   padding: 2rem;
   max-width: 768px;
   gap: 1rem;
+}
+
+footer {
+  background-color: var(--color-brand);
+  color: var(--color-button-text);
+  width: 100vw;
+  box-sizing: border-box;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

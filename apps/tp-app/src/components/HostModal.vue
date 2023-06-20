@@ -11,9 +11,9 @@ const hostError = ref('');
 const isDisabled = computed(() => {
   const isValidName = validUsername(username.value);
   if (!isValidName) {
-    if (username.value !== 0) {
+    if (username.value !== '') {
       //If the username exists and is invalid for other reasons, say why
-      hostError.value = `Names cannot contain ${invalidCharactersList(this.username)}`;
+      hostError.value = `Names cannot contain ${invalidCharactersList(username.value)}`;
     }
     return true;
   } else if (typeof isValidName === 'string') {

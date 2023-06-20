@@ -1,29 +1,23 @@
-<script>
+<script setup>
 import { getGameStatus } from '../firebase/rtdb';
+import { ref } from 'vue';
 
-export default {
-  data() {
-    return {
-      gameid: '',
-      findError: false,
-    };
-  },
-  methods: {
-    async reviewGame() {
-      const status = await getGameStatus(this.gameid);
-      if (!status) {
-        this.findError = 'Game does not exist';
-        return;
-      }
-      if (!status.finished) {
-        this.findError = 'Game not finished';
-        return;
-      }
-      // If we made it past all the checks, navigate to the results
-      location.href = `/review/${this.gameid}`;
-      return;
-    },
-  },
+const gameid = ref('');
+const findError = ref('');
+
+const reviewGame = async () => {
+  const status = await getGameStatus(gameid.value);
+  if (!status) {
+    findError.value = 'Game does not exist';
+    return;
+  }
+  if (!status.finished) {
+    findError.value = 'Game not finished';
+    return;
+  }
+  // If we made it past all the checks, navigate to the results
+  location.href = `/review/${gameid.value}`;
+  return;
 };
 </script>
 

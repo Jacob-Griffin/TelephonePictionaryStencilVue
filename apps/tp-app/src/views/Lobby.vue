@@ -3,7 +3,7 @@ import { rtdb } from '../../Firebase';
 import { ref, get, onValue } from 'firebase/database';
 import { beginGame } from '../firebase/rtdb';
 import { toRaw } from 'vue';
-import globalLimits from '../globalLimits';
+import globalLimits from '../utils/globalLimits';
 import { sortNames } from '../utils/strings';
 
 export default {

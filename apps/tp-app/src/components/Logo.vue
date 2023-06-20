@@ -1,3 +1,7 @@
+<script setup>
+//This should probably be a webcomponent instead
+</script>
+
 <template>
   <div class="icon"></div>
 </template>

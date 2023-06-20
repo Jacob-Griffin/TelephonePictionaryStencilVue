@@ -2,7 +2,7 @@ import { rtdb } from '../../Firebase';
 import { ref, get, set, onValue, remove } from 'firebase/database';
 import { storeGame } from './firestore';
 import { uploadImage } from './storage';
-import globalLimits from '../globalLimits';
+import globalLimits from '../utils/globalLimits';
 
 function generatePriority(taken = undefined) {
   let priority = Math.floor(Math.random() * 1000);
