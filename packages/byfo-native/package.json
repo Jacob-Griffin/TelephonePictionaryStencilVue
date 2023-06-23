@@ -5,5 +5,11 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "scripts": {
+    "g": "pnpm --silent run generateComponent",
+    "generate": "pnpm --silent run generateComponent",
+    "new": "pnpm --silent run generateComponent",
+    "generateComponent": "bash ./generate.sh -n BYFO"
+  },
   "packageManager": "pnpm@8.6.2"
 }

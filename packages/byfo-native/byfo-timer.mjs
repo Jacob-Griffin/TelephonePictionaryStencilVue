@@ -1,3 +1,6 @@
+//#region Template
+// (This only uses textContent)
+//#endregion
 class BYFOTimer extends HTMLElement {
   constructor() {
     super();
