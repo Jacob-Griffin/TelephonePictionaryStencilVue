@@ -61,6 +61,8 @@ const passClick = e => {
           </div>
         </div>
       </section>
+
+      <h4>Looking for help? Check our <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">knowlege base</a></h4>
     </article>
   </div>
 </template>

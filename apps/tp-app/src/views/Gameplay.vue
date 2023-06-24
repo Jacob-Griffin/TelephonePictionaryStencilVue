@@ -35,6 +35,8 @@ const content = ref({
 //Toggles whether to show the actual gameplay or not
 const finishedRound = ref(-1);
 const waiting = computed(() => finishedRound.value >= roundnumber.value);
+const stuck = ref(false);
+const stuckTimeout = ref('');
 //Which players are done with the current round
 const finishedPlayers = ref([]);
 
@@ -70,6 +72,9 @@ const roundRef = !redirect && dbRef(rtdb, `game/${gameid}/round`);
 const roundSubscription =
   roundRef &&
   onValue(roundRef, async snapshot => {
+    clearTimeout(stuckTimeout.value);
+    stuckTimeout.value = '';
+    stuck.value = false;
     const newRound = snapshot.val();
     if (newRound === null) {
       //If the data no longer exists, go to the review page
@@ -115,6 +120,8 @@ onMounted(() => {
     finishedRound.value = roundnumber.value;
   });
 
+  document.addEventListener('tp-timer-finished', () => (stuckTimeout.value = setTimeout(() => (stuck.value = waiting.value), 5000)));
+
   document.addEventListener('keydown', event => {
     const isOddRound = !!(roundnumber.value % 2);
     if (event.metaKey && event.key === 'z' && isOddRound) {
@@ -146,7 +153,8 @@ onBeforeUnmount(() => {
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
       Round {{ roundnumber }}
-      <byfo-timer v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
+      <byfo-timer v-if="roundData.endTime !== -1 && !stuck" :endtime="roundData.endTime"></byfo-timer>
+      <p v-else="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
       <div v-for="player in finishedPlayers">
         <p>{{ player.name }}</p>
         <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>

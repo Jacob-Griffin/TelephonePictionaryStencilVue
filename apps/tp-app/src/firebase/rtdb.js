@@ -146,9 +146,6 @@ export async function createDevGame([username, key], gameid) {
 }
 
 export async function beginGame(gameid, roundLength) {
-  //List of outstanding promises, that way we can let them all run in parallel and only block for them at the end
-  const promises = [];
-
   //Set up the round variable at 0
   const roundRef = ref(rtdb, `game/${gameid}/round`);
   const round0 = {
@@ -165,6 +162,9 @@ export async function beginGame(gameid, roundLength) {
     lastRound: playerList.length - 1,
     roundLength,
   });
+
+  //List of outstanding promises, that way we can let them all run in parallel and only block for them at the end
+  const promises = [];
   for (let i = 0; i < playerList.length; i++) {
     const name = playerList[i].username;
 
@@ -181,11 +181,12 @@ export async function beginGame(gameid, roundLength) {
     promises.push(set(finishedRef, -1));
   }
 
+  await Promise.all(promises);
+
   //Set the game status started to true
   const startedRef = ref(rtdb, `game-statuses/${gameid}/started`);
-  promises.push(set(startedRef, true));
+  await set(startedRef, true);
 
-  await Promise.all(promises);
   return;
 }
 

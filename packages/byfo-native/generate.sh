@@ -68,7 +68,7 @@ class $classname extends HTMLElement {
   }
 
   render () {
-    this.innerHTML = template;
+    this.innerHTML = template.trim();
   }
 }
 

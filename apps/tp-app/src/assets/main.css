@@ -79,7 +79,11 @@ input[type='text']:focus,
 
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--color-link);
+}
+
+a:hover {
+  color: var(--color-link-hover);
 }
 
 strong {
