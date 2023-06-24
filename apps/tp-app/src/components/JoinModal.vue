@@ -66,11 +66,14 @@ const joinGame = async () => {
       return;
     case 'join':
       store.setRejoinNumber(result.detail);
+      store.setUsername(user);
+      store.setGameid(gid);
       location.href = `/game/${gid}`;
       return;
     case 'lobby':
       //If we're all good, navigate to the lobby
       store.setUsername(user);
+      store.setGameid(gid);
       location.href = `/lobby/${gid}`;
       return;
   }

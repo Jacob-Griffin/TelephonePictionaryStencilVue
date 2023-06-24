@@ -120,7 +120,14 @@ onMounted(() => {
     finishedRound.value = roundnumber.value;
   });
 
-  document.addEventListener('tp-timer-finished', () => (stuckTimeout.value = setTimeout(() => (stuck.value = waiting.value), 5000)));
+  document.addEventListener(
+    'tp-timer-finished',
+    () =>
+      (stuckTimeout.value = setTimeout(() => {
+        stuck.value = waiting.value && roundData.value.endTime > 0;
+        console.log(roundData.value);
+      }, 5000)),
+  );
 
   document.addEventListener('keydown', event => {
     const isOddRound = !!(roundnumber.value % 2);
@@ -154,7 +161,7 @@ onBeforeUnmount(() => {
     <section class="playerlist">
       Round {{ roundnumber }}
       <byfo-timer v-if="roundData.endTime !== -1 && !stuck" :endtime="roundData.endTime"></byfo-timer>
-      <p v-else="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
+      <p v-if="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
       <div v-for="player in finishedPlayers">
         <p>{{ player.name }}</p>
         <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
