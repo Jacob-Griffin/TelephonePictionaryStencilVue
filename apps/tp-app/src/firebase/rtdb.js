@@ -321,7 +321,22 @@ export async function finalizeGame(gameid) {
     },
     failure => {
       console.log('failed to store game');
+      window.failedStackData = finalStackData;
     },
   );
   return;
+}
+
+export async function sendAddTime(gameid, msToAdd) {
+  if (msToAdd < 1000) return;
+
+  const roundRef = ref(rtdb, `game/${gameid}/round/endTime`);
+  const oldEndTime = await get(roundRef).then(result => result.val());
+
+  if (!oldEndTime) return;
+
+  const baseTime = Math.max(oldEndTime, Date.now());
+  const endTime = baseTime + msToAdd;
+
+  return set(roundRef, endTime);
 }

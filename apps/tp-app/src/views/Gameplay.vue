@@ -7,7 +7,7 @@ import 'byfo-components/dist/components/tp-input-zone';
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber } from '../firebase/rtdb';
+import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber, sendAddTime } from '../firebase/rtdb';
 import { onValue, onDisconnect, ref as dbRef } from 'firebase/database';
 import { rtdb } from '../../Firebase';
 
@@ -18,6 +18,7 @@ const store = inject('TpStore');
 
 const name = store.username;
 const gameid = useRoute().params.gameid;
+const isHosting = store.hosting === gameid;
 
 const inputzone = ref(null);
 
@@ -109,6 +110,46 @@ const finishedSubscription =
     finishedPlayers.value = sortNames(result, 'name');
   });
 
+//Time input handler for host (maybe this should be webcomponent?)
+const timeError = ref('');
+const msToAdd = ref(-1);
+const handleTimeadd = e => {
+  const input = e.target.value;
+  if (input.length === 0) {
+    timeError.value = '';
+    return -1;
+  }
+  const matches = input.match(/^([0-9]+)(:[0-5][0-9])?$/);
+  if (matches === null) {
+    timeError.value = 'Improper format. Must be ss or mm:ss';
+    msToAdd.value = -1;
+    return;
+  }
+  let seconds = parseInt(matches[1]);
+  if (matches[2]) {
+    const secondString = matches[2].replace(/:/, '');
+    let minutes = seconds;
+    seconds = parseInt(secondString) + minutes * 60;
+  }
+  if (seconds > globalLimits.maxRoundLength * 60) {
+    timeError.value = `Cannot add more than ${globalLimits.maxRoundLength} minutes or ${globalLimits.maxRoundLength * 60} seconds`;
+    msToAdd.value = -1;
+    return;
+  } else if (seconds < 5) {
+    timeError.value = 'Must add at least 5 seconds';
+    msToAdd.value = -1;
+    return;
+  } else {
+    timeError.value = '';
+  }
+  msToAdd.value = seconds * 1000; //Unix timestamps, like we use are in ms
+};
+
+const addTime = e => {
+  if (!isHosting || msToAdd.value < 1000) return;
+  sendAddTime(gameid, msToAdd.value);
+};
+
 //Add event listeners
 onMounted(() => {
   document.addEventListener('tp-submitted', ({ detail }) => {
@@ -166,6 +207,10 @@ onBeforeUnmount(() => {
         <p>{{ player.name }}</p>
         <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
       </div>
+      <div class="time-adder" v-if="isHosting && roundData.endTime > 0">
+        <input @input="handleTimeadd" type="text" placeholder="mm:ss" /> <button @click="addTime" class="small" :disabled="msToAdd < 1000">Add Time</button>
+      </div>
+      <p v-if="timeError">{{ timeError }}</p>
     </section>
   </section>
   <section id="not-waiting" v-else>
@@ -207,6 +252,17 @@ section {
 .playerlist > div > span {
   flex: 1;
   text-align: right;
+}
+
+.time-adder {
+  margin-top: 1rem;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+}
+
+.time-adder input {
+  max-width: 10ch;
 }
 
 tp-input-zone {
