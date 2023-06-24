@@ -97,6 +97,7 @@ strong {
   margin: 0;
   position: relative;
   font-weight: normal;
+  overscroll-behavior: none;
 }
 
 body {
