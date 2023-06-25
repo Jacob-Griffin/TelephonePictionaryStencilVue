@@ -7,6 +7,10 @@ class BYFOTimer extends HTMLElement {
   }
 
   endtime;
+  sentEvent = {
+    stuck: false,
+    done: false,
+  };
   #timerInterval;
 
   connectedCallback() {
@@ -21,19 +25,37 @@ class BYFOTimer extends HTMLElement {
     clearInterval(this.#timerInterval);
   }
 
+  get timeoutMessage() {
+    return this.getAttribute('timeout-message') || 'Out of time - submitting';
+  }
+
   static get observedAttributes() {
     return ['endtime'];
   }
   attributeChangedCallback(name, oldValue, newValue) {
     this.endtime = newValue;
+    this.sentEvent = {
+      stuck: false,
+      done: false,
+    };
     this.render();
   }
 
   render = () => {
     const totalSeconds = Math.floor((this.endtime - Date.now()) / 1000);
+    if (totalSeconds <= -5) {
+      if (!this.sentEvent.stuck) {
+        this.sentEvent.stuck = true;
+        document.dispatchEvent(new CustomEvent('tp-stuck-signal'));
+      }
+      return;
+    }
     if (totalSeconds <= 0) {
-      this.textContent = 'Out of time - submitting';
-      document.dispatchEvent(new CustomEvent('tp-timer-finished'));
+      if (!this.sentEvent.done) {
+        this.textContent = this.timeoutMessage;
+        this.sentEvent.done = true;
+        document.dispatchEvent(new CustomEvent('tp-timer-finished'));
+      }
       return;
     }
     const minutes = Math.floor(totalSeconds / 60);

@@ -5,6 +5,7 @@ import SettingsModal from './components/SettingsModal.vue';
 import { inGame, inHome } from './utils/expressions';
 import { ref, onBeforeMount, provide } from 'vue';
 import 'byfo-native-components/byfo-icon';
+import 'byfo-native-components/byfo-time-input';
 import TPStore from './utils/Store';
 
 const isInGame = inGame(location);
