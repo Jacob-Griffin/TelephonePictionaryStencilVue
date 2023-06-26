@@ -14,14 +14,7 @@ class BYFOTimeInput extends HTMLElement {
   #inputElement;
 
   timeError = '';
-
-  get value() {
-    return super.value;
-  }
-
-  set value(v) {
-    super.value = v;
-  }
+  value = -1;
 
   ///ATTRIBUTES NOT LISTED:
   /// max-minutes
@@ -75,6 +68,24 @@ class BYFOTimeInput extends HTMLElement {
   connectedCallback() {
     if (!this.isConnected) return;
     this.replaceChildren(this.#inputElement);
+    this.#inputElement.value = this.getAttribute('init-value') || this.#inputElement.value;
+    this.#inputElement.placeholder = this.getAttribute('placeholder') || this.#inputElement.placeholder;
+    this.handleInput();
+  }
+
+  static get observedAttributes() {
+    return ['init-value', 'max-minutes', 'max-seconds', 'placeholder'];
+  }
+  attributeChangedCallback(attr, oldV, newV) {
+    if (oldV === newV) return;
+
+    if (attr === 'value') {
+      this.#inputElement.value = newV;
+    }
+    if (attr === 'placeholder') {
+      this.#inputElement.setAttribute(attr, newV);
+    }
+    this.handleInput();
   }
 }
 

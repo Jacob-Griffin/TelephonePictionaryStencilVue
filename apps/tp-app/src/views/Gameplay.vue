@@ -179,7 +179,7 @@ onBeforeUnmount(() => {
         <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
       </div>
       <div class="time-adder" v-if="isHosting && roundData.endTime > 0">
-        <byfo-time-input id="time-input" :max-minutes="globalLimits.maxRoundLength"></byfo-time-input>
+        <byfo-time-input :max-minutes="globalLimits.maxRoundLength"></byfo-time-input>
         <button @click="addTime" class="small" :disabled="timeValue < 1000">Add Time</button>
       </div>
       <p v-if="timeError">{{ timeError }}</p>
