@@ -1,7 +1,7 @@
 <script setup>
 import { rtdb } from '../../Firebase';
-import { ref as dbRef, get, onValue } from 'firebase/database';
-import { beginGame } from '../firebase/rtdb';
+import { ref as dbRef, get, onValue, onDisconnect } from 'firebase/database';
+import { beginGame, turnInMissing } from '../firebase/rtdb';
 import { onMounted, toRaw } from 'vue';
 import globalLimits from '../utils/globalLimits';
 import { useRoute } from 'vue-router';
@@ -22,12 +22,28 @@ const startGame = async () => {
 };
 
 //Before Mount
+const rejoinNumber = store.rejoinNumber;
+if (rejoinNumber) {
+  const rejoined = await turnInMissing(gameid, rejoinNumber);
+  if (!rejoined) {
+    //If a rejoin number exists, but the data doesn't match, you're not supposed to be here
+    location.href = redirect = '/';
+  }
+}
+
 const playerListRef = dbRef(rtdb, `players/${gameid}`);
 const playerList = await get(playerListRef).then(list => list.val());
 const rawPlayers = Object.values(toRaw(playerList));
 //Players by default are sorted by their priority. That is, the player order is generated as they join
 //This realphabetizes the players for displaying in the lobby's list
 players.value = sortNames(rawPlayers, 'username');
+
+for (const playerNumber in playerList) {
+  if (playerList[playerNumber]?.username === store.username) {
+    const myStatusRef = dbRef(rtdb, `players/${gameid}/${playerNumber}/status`);
+    onDisconnect(myStatusRef).set('missing');
+  }
+}
 
 onValue(playerListRef, snapshot => {
   const playerList = snapshot.val();

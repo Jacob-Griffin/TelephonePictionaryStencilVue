@@ -53,6 +53,7 @@ export async function addPlayerToLobby(gameid, username) {
         return {
           action: 'join',
           detail: playerNumber,
+          dest: gameStatus.started ? 'game' : 'lobby',
         };
       }
       if (!gameStatus.started) {
