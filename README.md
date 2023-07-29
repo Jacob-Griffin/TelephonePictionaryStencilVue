@@ -36,4 +36,4 @@ All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
 
-The app is pretty close to what I would consider "Minimum shippable" but still has glaring issues to take care of. Demo/Test builds are available at https://beta.byfo.jacob-g.dev
+The app is pretty close to what I would consider "Minimum shippable" but still has glaring issues to take care of. Demo/Test builds are available at https://jacob-griffin.github.io/TelephonePictionary2.0
