@@ -84,6 +84,7 @@ onValue(gameStatusRef, snapshot => {
 
 onMounted(() => {
   document.addEventListener('byfo-time-input', ({ detail }) => {
+    console.log(detail);
     roundLength.value = detail.value;
     timeError.value = detail.timeError;
   });
@@ -100,7 +101,7 @@ onMounted(() => {
       <p class="needs-backdrop">Round length:</p>
       <byfo-time-input :max-minutes="globalLimits.maxRoundLength" init-value="3:00" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
-      <button :disabled="roundLength < 1000" @click="startGame">Start Game</button>
+      <button :disabled="!roundLength" @click="startGame">Start Game</button>
     </div>
     <div class="flex-col needs-backdrop" v-else>
       <p>Waiting for host</p>

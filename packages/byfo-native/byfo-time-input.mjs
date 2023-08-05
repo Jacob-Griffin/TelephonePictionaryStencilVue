@@ -41,7 +41,7 @@ class BYFOTimeInput extends HTMLElement {
     const matches = input.match(/^([0-9]+)(:[0-5][0-9])?$/);
     if (matches === null) {
       this.timeError = 'Improper format. Must be ss or mm:ss';
-      this.value = -1;
+      this.value = undefined;
       return this.sendEvent();
     }
     let seconds = parseInt(matches[1]);
@@ -52,11 +52,11 @@ class BYFOTimeInput extends HTMLElement {
     }
     if (seconds > maxRoundLength * 60) {
       this.timeError = `Cannot add more than ${maxRoundLength} minutes or ${maxRoundLength * 60} seconds`;
-      this.value = -1;
+      this.value = undefined;
       return this.sendEvent();
     } else if (seconds < 5) {
       this.timeError = 'Must add at least 5 seconds';
-      this.value = -1;
+      this.value = undefined;
       return this.sendEvent();
     } else {
       this.timeError = '';

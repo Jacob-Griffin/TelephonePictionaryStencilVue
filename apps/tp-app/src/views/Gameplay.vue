@@ -11,7 +11,7 @@ import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo
 import { onValue, onDisconnect, ref as dbRef } from 'firebase/database';
 import { rtdb } from '../../Firebase';
 
-import { sortNames } from '../utils/strings';
+import { sortNames, calculatePlayerNameWidth } from '../utils/strings';
 import globalLimits from '../utils/globalLimits';
 
 const store = inject('TpStore');
@@ -47,6 +47,7 @@ const stuck = computed(() => {
 });
 //Which players are done with the current round
 const finishedPlayers = ref([]);
+const widthVar = ref('');
 
 let redirect = false;
 //Check the game status and redirect if necessary
@@ -112,14 +113,12 @@ const finishedSubscription =
       });
     }
     finishedPlayers.value = sortNames(result, 'name');
+    widthVar.value = calculatePlayerNameWidth(finishedPlayers.value);
   });
 
-const timeError = ref('');
-const timeValue = ref(-1);
+const timeValue = 30; //Seconds to be added on "add time"
 const addTime = e => {
-  const value = timeValue.value;
-  if (!isHosting || value < 1000) return;
-  sendAddTime(gameid, value);
+  sendAddTime(gameid, timeValue * 1000);
 };
 
 //Add event listeners
@@ -175,18 +174,15 @@ onBeforeUnmount(() => {
       <byfo-timer v-if="roundData.endTime !== -1 && !stuck" :endtime="roundData.endTime"></byfo-timer>
       <p v-if="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
       <div v-for="player in finishedPlayers">
-        <p>{{ player.name }}</p>
         <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
+        <p>{{ player.name }}</p>
       </div>
-      <div class="time-adder" v-if="isHosting && roundData.endTime > 0">
-        <byfo-time-input :max-minutes="globalLimits.maxRoundLength"></byfo-time-input>
-        <button @click="addTime" class="small" :disabled="timeValue < 1000">Add Time</button>
-      </div>
-      <p v-if="timeError">{{ timeError }}</p>
+      <button @click="addTime" class="small" v-if="isHosting && roundData.endTime > 0">Add {{ timeValue }}s</button>
     </section>
   </section>
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
+    <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements">
       <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
       <byfo-timer v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
@@ -217,24 +213,14 @@ section {
 .playerlist > div {
   max-width: 600px;
 }
+
 .playerlist > div > p {
-  flex: 1;
+  width: v-bind('widthVar');
   text-align: left;
 }
 .playerlist > div > span {
   flex: 1;
   text-align: right;
-}
-
-.time-adder {
-  margin-top: 1rem;
-  width: fit-content;
-  display: flex;
-  align-items: center;
-}
-
-.time-adder byfo-time-input {
-  max-width: 10ch;
 }
 
 tp-input-zone {

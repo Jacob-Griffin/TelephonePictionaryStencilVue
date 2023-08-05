@@ -1,5 +1,6 @@
 <script setup>
 import { inject, ref } from 'vue';
+import { stopPropagation } from '../utils/event';
 
 const store = inject('TpStore');
 
@@ -36,8 +37,8 @@ const passClick = e => {
 </script>
 
 <template>
-  <div class="modal">
-    <article>
+  <div class="modal" @click="$emit('modal-closed')">
+    <article @click="stopPropagation">
       <h1>Settings</h1>
       <button class="close" @click="$emit('modal-closed')">
         <byfo-icon icon="x"></byfo-icon>

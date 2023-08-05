@@ -1,5 +1,6 @@
 <script setup>
 import { validGameId, validUsername, invalidCharactersList } from '../utils/expressions.js';
+import { stopPropagation } from '../utils/event.js';
 import { addPlayerToLobby } from '../firebase/rtdb.js';
 import { ref, inject, computed } from 'vue';
 
@@ -82,8 +83,8 @@ const joinGame = async () => {
 </script>
 
 <template>
-  <div class="modal">
-    <article>
+  <div class="modal" @click="$emit('modal-closed')">
+    <article @click="stopPropagation">
       <h1>Join a game</h1>
       <button class="close" @click="$emit('modal-closed')"><byfo-icon icon="x"></byfo-icon></button>
       <p>Name:</p>

@@ -1,6 +1,7 @@
 <script setup>
 import { getGameStatus } from '../firebase/rtdb';
 import { ref } from 'vue';
+import { stopPropagation } from '../utils/event';
 
 const gameid = ref('');
 const findError = ref('');
@@ -22,8 +23,8 @@ const reviewGame = async () => {
 </script>
 
 <template>
-  <div class="modal">
-    <article>
+  <div class="modal" @click="$emit('modal-closed')">
+    <article @click="stopPropagation">
       <h1>Review game results</h1>
       <button class="close" @click="$emit('modal-closed')">
         <byfo-icon icon="x"></byfo-icon>

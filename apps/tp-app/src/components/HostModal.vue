@@ -2,6 +2,7 @@
 import { validUsername, invalidCharactersList } from '../utils/expressions';
 import { listGameStatus, createLobby, createDevGame } from '../firebase/rtdb';
 import { inject, ref, computed } from 'vue';
+import { stopPropagation } from '../utils/event';
 
 const store = inject('TpStore');
 
@@ -79,8 +80,8 @@ const joinGame = async () => {
 </script>
 
 <template>
-  <div class="modal">
-    <article>
+  <div class="modal" @click="$emit('modal-closed')">
+    <article @click="stopPropagation">
       <h1>Host a game</h1>
       <button class="close" @click="$emit('modal-closed')">
         <byfo-icon icon="x"></byfo-icon>
