@@ -15,6 +15,7 @@ export class TpCanvas {
   @Element() el: HTMLElement;
   canvasElement;
   ctx;
+  dotPos;
 
   lineWidthSets = {
     draw: {
@@ -111,13 +112,21 @@ export class TpCanvas {
       this.currentPath = new Path2D();
       this.currentSaveablePath = `M ${point[0]} ${point[1]}`;
       this.currentPath.moveTo(...point);
+      //Canvas API no longer accepts "Line to" on an exact point
+      this.dotPos = point;
     }
   };
 
   draw = event => {
     //We only want to continue drawing if we've already started a line
     if (this.currentPath) {
-      const point = this.transformCoordinates(event);
+      let point = this.transformCoordinates(event);
+      // If this is a dot (No lineTos yet, and the point is the same)
+      if (point[0] == this.dotPos[0] && point[1] == this.dotPos[1] && /^M [0-9.]+ [0-9.]+$/.test(this.currentSaveablePath)) {
+        // Adjust the point just barely so it renders
+        point[0] += 0.1;
+        point[1] += 0.1;
+      }
       this.currentPath.lineTo(...point);
       this.currentSaveablePath = `${this.currentSaveablePath} L ${point[0]} ${point[1]}`;
       this.ctx.stroke(this.currentPath);
@@ -233,7 +242,9 @@ export class TpCanvas {
   transformCoordinates(event): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
     let box = this.canvasElement.getBoundingClientRect();
-    return [((event.clientX - box.left) * this.width) / box.width, ((event.clientY - box.top) * this.height) / box.height];
+    const x = Math.round(((event.clientX - box.left) * this.width) / box.width);
+    const y = Math.round(((event.clientY - box.top) * this.height) / box.height);
+    return [x, y];
   }
 
   isBlankCanvas() {
