@@ -5,9 +5,10 @@
 
 ## Properties
 
-| Property | Attribute | Description | Type          | Default     |
-| -------- | --------- | ----------- | ------------- | ----------- |
-| `hostEl` | --        |             | `HTMLElement` | `undefined` |
+| Property        | Attribute | Description | Type                 | Default     |
+| --------------- | --------- | ----------- | -------------------- | ----------- |
+| `hostEl`        | --        |             | `HTMLElement`        | `undefined` |
+| `submithandler` | --        |             | `(e: Event) => void` | `undefined` |
 
 
 ## Dependencies

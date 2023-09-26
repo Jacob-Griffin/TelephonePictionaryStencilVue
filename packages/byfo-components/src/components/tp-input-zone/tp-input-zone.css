@@ -76,3 +76,27 @@ button:disabled {
 #character-limit-count.danger {
   color: #d33c;
 }
+
+tp-canvas {
+  touch-action: none;
+  flex-basis: 100%;
+  max-width: 75vw;
+  max-height: 95vh;
+  aspect-ratio: 5/3;
+}
+
+
+#canvas-wrapper {
+  display: flex;
+  align-items: center;
+  gap:1rem;
+  justify-content: center
+}
+
+@media screen and (max-height:700px) {
+  tp-canvas {
+    max-height: 90vh;
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+}

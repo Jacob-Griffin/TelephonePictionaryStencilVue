@@ -70,6 +70,7 @@ const joinGame = async () => {
   store.setHosting(gameid);
   store.setUsername(username.value);
   store.setGameid(gameid);
+  store.setRejoinNumber(undefined);
   if (gameid > 999999) {
     location.href = `/game/${gameid}`;
   } else {

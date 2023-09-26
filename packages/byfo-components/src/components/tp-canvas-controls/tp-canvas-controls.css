@@ -1,17 +1,24 @@
 :host {
   display: block;
+  width: 10rem;
+  --block-size:4rem;
+  --icon-size: 2.5rem;
+  --spacing-size: 1rem;
+  --half-spacing: 0.5rem;
+  --squiggle-size: 3rem;
+  --double-size: 9rem;
 }
 
 section {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-size);
 }
 
 #button-container {
   flex-wrap: wrap;
   justify-content: center;
-  margin: 0.5rem;
-  padding: 1rem;
+  margin: var(--half-spacing);
+  padding: var(--spacing-size);
   container-type: inline-size;
 }
 
@@ -23,14 +30,8 @@ section section {
 #line-widths {
   flex-wrap: wrap;
   justify-content: center;
-  width: 9rem;
-  min-width: 9rem;
-}
-
-@container (min-width:19rem) {
-  #line-widths {
-    width: 19rem;
-  }
+  width: var(--double-size);
+  min-width: var(--double-size);
 }
 
 button {
@@ -39,10 +40,17 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0.5rem;
-  width: 4rem;
-  height: 4rem;
+  border-radius: var(--half-spacing);
+  width: var(--block-size);
+  height: var(--block-size);;
   border: none;
+  cursor: pointer;
+}
+
+#submit-button {
+  min-width: var(--double-size);
+  font-size: large;
+  font-weight: 600;
 }
 
 button:hover,
@@ -55,14 +63,14 @@ button:disabled {
 }
 
 button svg {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 
 tp-icon-fill-squiggle {
   --stroke-color: var(--color-button-text);
-  width: 3rem;
-  height: 3rem;
+  width: var(--squiggle-size);
+  height: var(--squiggle-size);
 }
 
 #white-clear,
@@ -80,4 +88,16 @@ tp-icon-fill-squiggle {
 
 #black-clear {
   color: black;
+}
+
+@media screen and (max-height: 450px) {
+  :host {
+    width: 7.5rem;
+    --block-size: 3rem;
+    --icon-size: 1.75rem;
+    --spacing-size: 0.6rem;
+    --half-spacing: 0.3rem;
+    --squiggle-size: 2.25rem;
+    --double-size: 6.6rem;
+  }
 }

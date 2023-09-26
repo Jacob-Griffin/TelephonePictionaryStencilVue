@@ -27,7 +27,7 @@ if (rejoinNumber) {
   const rejoined = await turnInMissing(gameid, rejoinNumber);
   if (!rejoined) {
     //If a rejoin number exists, but the data doesn't match, you're not supposed to be here
-    location.href = redirect = '/';
+    location.href = '/';
   }
 }
 

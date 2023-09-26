@@ -101,14 +101,14 @@ export class TpInputZone {
             </div>
           </div>
         ) : (
-          <div>
+          <div id="canvas-wrapper">
             <tp-canvas id="canvas" hostEl={this.el}></tp-canvas>
-            <tp-canvas-controls hostEl={this.el}></tp-canvas-controls>
+            <tp-canvas-controls submithandler={this.sendRound} hostEl={this.el}></tp-canvas-controls>
           </div>
         )}
-        <button onClick={this.sendRound} disabled={!this.canSend}>
+        {this.isTextRound ? <button onClick={this.sendRound} disabled={!this.canSend}>
           Send to <strong>{this.sendingTo}</strong>
-        </button>
+        </button> : null}
       </section>
     );
   }

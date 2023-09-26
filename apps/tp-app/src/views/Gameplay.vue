@@ -121,6 +121,10 @@ const addTime = e => {
   sendAddTime(gameid, timeValue * 1000);
 };
 
+const scrollToCanvas = e => {
+  window.scrollTo(0,2000)
+}
+
 //Add event listeners
 onMounted(() => {
   document.addEventListener('tp-submitted', ({ detail }) => {
@@ -184,9 +188,13 @@ onBeforeUnmount(() => {
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements">
+      <a id="canvas-link" @click="scrollToCanvas">Scroll to Canvas</a>
       <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
       <byfo-timer v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
-      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to" />
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
+    </section>
+    <section id="landscape-enforcer" v-if="roundnumber % 2 === 1 && !waiting">
+      <h2>Please rotate your device landscape</h2>
     </section>
   </section>
 </template>
@@ -202,7 +210,7 @@ section {
   gap: 1rem;
 }
 
-#gameplay-elements {
+#gameplay-elements byfo-content{
   max-width: 1100px;
 }
 
@@ -223,11 +231,41 @@ section {
   text-align: right;
 }
 
-tp-input-zone {
-  touch-action: none;
-}
-
 * {
   user-select: none;
+}
+
+#canvas-link {
+  position: absolute;
+  right: 2rem;
+  top: -2.5rem;
+  font-size: 1rem;
+  color: var(--color-button-text);
+  background-color: var(--color-button);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+#landscape-enforcer {
+  display: none;
+}
+@media screen and ((max-width: 600px) and (max-aspect-ratio:1)) {
+  #landscape-enforcer {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color: #000C;
+    color:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media screen and (min-height: 600px) {
+  #canvas-link {
+    display: none;
+  }
 }
 </style>

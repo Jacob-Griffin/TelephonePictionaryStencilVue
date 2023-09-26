@@ -10,6 +10,7 @@ export class TpCanvasControls {
   lineWidths = ['small', 'medium', 'large', 'xlarge'];
 
   @Prop() hostEl: HTMLElement;
+  @Prop() submithandler: (e:Event)=>void;
   @Element() el: HTMLElement;
   @State() drawing: boolean = true;
   @State() activeWidth: string = this.lineWidths[0];
@@ -102,6 +103,8 @@ export class TpCanvasControls {
           <button id="white-clear">{icons.trash}</button>
           <button id="black-clear">{icons.trash}</button>
         </section>
+
+        <button id='submit-button' onClick={this.submithandler}>Submit</button>
       </section>
     );
   }
