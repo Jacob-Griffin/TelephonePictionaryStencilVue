@@ -2,10 +2,10 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-'on':
+"on":
   push:
     branches:
-      - main
+      - release*
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -13,14 +13,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: Create ENV
         env:
-          VITE_APIKEY: '${{ secrets.APIKEY }}'
-          VITE_APPID: '${{ secrets.APPID }}'
-          VITE_AUTHDOMAIN: '${{ secrets.AUTHDOMAIN }}'
-          VITE_PROJECTID: '${{ secrets.PROJECTID }}'
-          VITE_STORAGEBUCKET: '${{ secrets.STORAGEBUCKET }}'
-          VITE_MESSAGINGSENDERID: '${{ secrets.MESSAGINGSENDERID }}'
-          VITE_MEASUREMENTID: '${{ secrets.MEASUREMENTID }}'
-          VITE_DATABASEURL: '${{ secrets.DATABASEURL }}'
+          VITE_APIKEY: "${{ secrets.APIKEY }}"
+          VITE_APPID: "${{ secrets.APPID }}"
+          VITE_AUTHDOMAIN: "${{ secrets.AUTHDOMAIN }}"
+          VITE_PROJECTID: "${{ secrets.PROJECTID }}"
+          VITE_STORAGEBUCKET: "${{ secrets.STORAGEBUCKET }}"
+          VITE_MESSAGINGSENDERID: "${{ secrets.MESSAGINGSENDERID }}"
+          VITE_MEASUREMENTID: "${{ secrets.MEASUREMENTID }}"
+          VITE_DATABASEURL: "${{ secrets.DATABASEURL }}"
         run: |
           touch ./apps/tp-app/firebase.secrets.js
           echo export const apiKey = \"$VITE_APIKEY\"\; >> ./apps/tp-app/firebase.secrets.js
@@ -36,9 +36,8 @@ jobs:
       - run: pnpm install && pnpm build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEW_TELEPHONE_PICTIONARY }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEW_TELEPHONE_PICTIONARY }}"
           channelId: live
           projectId: new-telephone-pictionary
-          entryPoint: './apps/tp-app'
-          
+          entryPoint: "./apps/tp-app"
