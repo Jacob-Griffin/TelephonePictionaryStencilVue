@@ -27,7 +27,7 @@ jobs:
           VITE_DATABASEURL: '${{ secrets.DATABASEURL }}'
         run: |
           touch ./apps/tp-app/firebase.secrets.js
-          echo export const firebaseConfig = { >> ./apps/tp-app/firebase.secrets.js
+          echo export const firebaseConfig = \{ >> ./apps/tp-app/firebase.secrets.js
           echo apiKey: \"$VITE_APIKEY\"\, >> ./apps/tp-app/firebase.secrets.js
           echo appId: \"$VITE_APPID\"\,  >> ./apps/tp-app/firebase.secrets.js
           echo authDomain: \"$VITE_AUTHDOMAIN\"\,  >> ./apps/tp-app/firebase.secrets.js
@@ -36,7 +36,7 @@ jobs:
           echo messagingSenderId: \"$VITE_MESSAGINGSENDERID\"\,  >> ./apps/tp-app/firebase.secrets.js
           echo measurementId: \"$VITE_MEASUREMENTID\"\,  >> ./apps/tp-app/firebase.secrets.js
           echo databaseURL: \"$VITE_DATABASEURL\"\  >> ./apps/tp-app/firebase.secrets.js
-          echo }; >> ./apps/tp-app/firebase.secrets.js
+          echo \}; >> ./apps/tp-app/firebase.secrets.js
       - run: cat ./apps/tp-app/firebase.secrets.js
       - uses: pnpm/action-setup@v2.2.4
       - run: pnpm install && pnpm build
