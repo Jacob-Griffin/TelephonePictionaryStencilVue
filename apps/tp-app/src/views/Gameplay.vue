@@ -27,6 +27,7 @@ const roundData = ref({
   endTime: -1,
 });
 const roundnumber = computed(() => roundData.value.roundnumber);
+const isText = computed(()=> roundnumber.value % 2 === 0);
 
 const content = ref({
   content: '',
@@ -130,10 +131,11 @@ onMounted(() => {
   document.addEventListener('tp-submitted', ({ detail }) => {
     const contentObject = {
       content: detail,
-      contentType: roundnumber.value % 2 == 0 ? 'text' : 'image',
+      contentType: isText.value ? 'text' : 'image',
     };
     submitRound(gameid, name, roundnumber.value, contentObject, staticRoundInfo);
     finishedRound.value = roundnumber.value;
+    window.scroll({top:0});
   });
 
   document.addEventListener('byfo-time-input', ({ detail }) => {
@@ -145,14 +147,13 @@ onMounted(() => {
   document.addEventListener('tp-stuck-signal', e => (stuckSignal.value = true));
 
   document.addEventListener('keydown', event => {
-    const isOddRound = !!(roundnumber.value % 2);
-    if (event.metaKey && event.key === 'z' && isOddRound) {
+    if (event.metaKey && event.key === 'z' && !isText.value) {
       //ctrl+z during a drawing round will send an undo input
       const undoEvent = new CustomEvent('undo-input');
       inputzone?.dispatchEvent(undoEvent);
       return;
     }
-    if (isOddRound && event.metaKey && event.key === 'Z') {
+    if (event.metaKey && event.key === 'Z' && !isText.value) {
       //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
       const redoEvent = new CustomEvent('redo-input');
       inputzone?.dispatchEvent(redoEvent);
@@ -171,7 +172,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section v-if="waiting">
+  <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
       Round {{ roundnumber }}
@@ -187,13 +188,13 @@ onBeforeUnmount(() => {
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
-    <section id="gameplay-elements">
-      <a id="canvas-link" @click="scrollToCanvas">Scroll to Canvas</a>
+    <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
+      <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
-      <byfo-timer v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
+      <byfo-timer class='needs-backdrop' v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
     </section>
-    <section id="landscape-enforcer" v-if="roundnumber % 2 === 1 && !waiting">
+    <section id="landscape-enforcer" v-if="!isText && !waiting">
       <h2>Please rotate your device landscape</h2>
     </section>
   </section>

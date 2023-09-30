@@ -30,7 +30,7 @@ const reviewGame = async () => {
         <byfo-icon icon="x"></byfo-icon>
       </button>
       <p>Game Id:</p>
-      <input type="text" v-model="gameid" />
+      <input type="text" inputmode="numeric" v-model="gameid" />
       <p class="error-text" v-if="findError">{{ findError }}</p>
       <button class="main-action" @click="reviewGame">View</button>
     </article>

@@ -31,7 +31,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', keyHandler));
     <ResultModal v-if="openModal == 'result'" @modal-closed="switchModal"></ResultModal>
   </main>
   <footer>
-    <p>Copyright ©2023 Jacob Griffin, Melinda Morang, Sarah Griffin. All rights reserved</p>
+    <p>Copyright ©2023 Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
   </footer>
 </template>
 
@@ -55,5 +55,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-inline: 1rem;
+  text-align: center;
 }
 </style>
