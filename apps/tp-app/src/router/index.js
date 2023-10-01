@@ -37,7 +37,7 @@ const router = createRouter({
       meta: {
         title: 'Review - Blow Your Face Off',
       },
-      component: () => import('../views/UpdatedReview.vue'),
+      component: () => import('../views/Review.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
