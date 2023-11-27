@@ -1,6 +1,6 @@
 <script setup>
 import { inject, ref } from 'vue';
-import { stopPropagation } from '../utils/event';
+import { stopPropagation } from 'byfo-utils';
 
 const store = inject('TpStore');
 

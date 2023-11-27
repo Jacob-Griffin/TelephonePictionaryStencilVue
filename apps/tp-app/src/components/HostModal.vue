@@ -1,8 +1,7 @@
 <script setup>
-import { validUsername, invalidCharactersList } from '../utils/expressions';
+import { stopPropagation, validUsername, invalidCharactersList } from 'byfo-utils';
 import { listGameStatus, createLobby, createDevGame } from '../firebase/rtdb';
 import { inject, ref, computed } from 'vue';
-import { stopPropagation } from '../utils/event';
 
 const store = inject('TpStore');
 

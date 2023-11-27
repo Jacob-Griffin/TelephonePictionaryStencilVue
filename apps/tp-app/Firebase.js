@@ -10,7 +10,9 @@ import { getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import firebaseConfig from './firebase.config.js';
+import { firebaseConfig } from './firebase.secrets.js';
+// People forking: simply create this file, and just put your firebase config {object} as a named export
+// ex: export const firebaseConfig = { <copy-pasted from the firebase console> }
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);

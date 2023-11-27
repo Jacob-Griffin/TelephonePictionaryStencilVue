@@ -1,6 +1,5 @@
 <script setup>
-import { validGameId, validUsername, invalidCharactersList } from '../utils/expressions.js';
-import { stopPropagation } from '../utils/event.js';
+import { stopPropagation, validGameId, validUsername, invalidCharactersList } from 'byfo-utils';
 import { addPlayerToLobby } from '../firebase/rtdb.js';
 import { ref, inject, computed } from 'vue';
 

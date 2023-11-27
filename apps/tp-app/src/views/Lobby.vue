@@ -3,9 +3,8 @@ import { rtdb } from '../../Firebase';
 import { ref as dbRef, get, onValue, onDisconnect } from 'firebase/database';
 import { beginGame, turnInMissing } from '../firebase/rtdb';
 import { onMounted, toRaw } from 'vue';
-import globalLimits from '../utils/globalLimits';
+import { config, sortNames } from 'byfo-utils';
 import { useRoute } from 'vue-router';
-import { sortNames } from '../utils/strings';
 import { ref, inject } from 'vue';
 
 const store = inject('TpStore');
@@ -99,7 +98,7 @@ onMounted(() => {
     </section>
     <div class="flex-col" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length:</p>
-      <byfo-time-input :max-minutes="globalLimits.maxRoundLength" init-value="3:00" placeholder="∞" />
+      <byfo-time-input :max-minutes="config.maxRoundLength" init-value="3:00" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength" @click="startGame">Start Game</button>
     </div>

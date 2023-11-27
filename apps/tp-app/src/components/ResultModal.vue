@@ -1,7 +1,7 @@
 <script setup>
 import { getGameStatus } from '../firebase/rtdb';
 import { ref } from 'vue';
-import { stopPropagation } from '../utils/event';
+import { stopPropagation } from 'byfo-utils';
 
 const gameid = ref('');
 const findError = ref('');

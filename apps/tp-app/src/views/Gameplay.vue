@@ -11,8 +11,7 @@ import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo
 import { onValue, onDisconnect, ref as dbRef } from 'firebase/database';
 import { rtdb } from '../../Firebase';
 
-import { sortNames, calculatePlayerNameWidth } from '../utils/strings';
-import globalLimits from '../utils/globalLimits';
+import { config, sortNames, calculatePlayerNameWidth } from 'byfo-utils';
 
 const store = inject('TpStore');
 
@@ -192,7 +191,7 @@ onBeforeUnmount(() => {
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
       <byfo-timer class='needs-backdrop' v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
-      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="globalLimits.textboxMaxCharacters" :sendingTo="people.to"/>
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to"/>
     </section>
     <section id="landscape-enforcer" v-if="!isText && !waiting">
       <h2>Please rotate your device landscape</h2>

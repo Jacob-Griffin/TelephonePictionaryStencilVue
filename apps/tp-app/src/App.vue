@@ -2,11 +2,10 @@
 import Logo from './components/Logo.vue';
 import { RouterView } from 'vue-router';
 import SettingsModal from './components/SettingsModal.vue';
-import { inGame, inHome } from './utils/expressions';
+import { inGame, inHome, TPStore } from 'byfo-utils';
 import { ref, onBeforeMount, provide } from 'vue';
 import 'byfo-native-components/byfo-icon';
 import 'byfo-native-components/byfo-time-input';
-import TPStore from './utils/Store';
 
 const isInGame = inGame(location);
 const isInHome = inHome(location);

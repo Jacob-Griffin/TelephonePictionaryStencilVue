@@ -13,6 +13,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "byfo-utils": "workspace:*",
     "firebase": "^9.21.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

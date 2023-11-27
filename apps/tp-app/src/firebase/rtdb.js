@@ -2,7 +2,7 @@ import { rtdb } from '../../Firebase';
 import { ref, get, set, onValue, remove } from 'firebase/database';
 import { storeGame } from './firestore';
 import { uploadImage } from './storage';
-import globalLimits from '../utils/globalLimits';
+import { config } from 'byfo-utils';
 
 function generatePriority(taken = undefined) {
   let priority = Math.floor(Math.random() * 1000);
@@ -68,7 +68,7 @@ export async function addPlayerToLobby(gameid, username) {
     return result;
   }
 
-  if (players.length > globalLimits.maxPlayers) {
+  if (players.length > config.maxPlayers) {
     result.detail = 'Too many players in game';
     return result;
   }

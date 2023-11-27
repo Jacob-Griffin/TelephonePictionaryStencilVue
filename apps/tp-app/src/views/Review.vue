@@ -2,7 +2,7 @@
 import 'byfo-components/dist/components/tp-content';
 import 'byfo-components/dist/components/tp-review-chat';
 import { getGameData } from '../firebase/firestore';
-import { sortNames } from '../utils/strings';
+import { sortNames } from 'byfo-utils';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
