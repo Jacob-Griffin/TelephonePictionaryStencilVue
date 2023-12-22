@@ -2,7 +2,7 @@
 
 This is an updated version of the online "telephone pictionary" app [blowyourfaceoff.com](https://blowyourfaceoff.com), using more modern tooling. The goal is to get away from php and the heartbeat model for syncing game state between players. I instead opted for firebase real-time database subscription.
 
-At it's core, this version is built on Vue.js in Vite, but in order to capture some older work, it also uses a Stencil.js component library. All this is wrapped up not so neatly into a turborepo with pnpm.
+This project started as a Vue+Vite app backed by some stencil.js webcomponents to capture some older work. In order to make future migrations easier, I'm moving the more reusable bits out into a typescript utils package.
 
 ## Running
 
@@ -15,7 +15,7 @@ At it's core, this version is built on Vue.js in Vite, but in order to capture s
 <hr>
 
 1. After cloning the repo, run `pnpm install` at the project root
-2. In /apps/tp-app, create a firebase.secrets.js and export your firebase variables individually
+2. In /apps/tp-app, create a firebase.secrets.js and export your firebase config object
    - This is just to keep my own keys private, and to support github action publishing.
 3. Run `pnpm build`, then `pnpm dev` at the root.
 
@@ -30,10 +30,11 @@ root (turbo)
     /packages
         /byfo-components (stencil.js)
         /byfo-native (raw js webcomponents)
+        /byfo-utils (typescript)
 ```
 
 All other folders are boilerplate and project setup for the turborepo
 
 ## Current State
 
-The app is pretty close to what I would consider "Minimum shippable" but still has glaring issues to take care of. Demo/Test builds are available at https://jacob-griffin.github.io/TelephonePictionary2.0
+The app is pretty close to what I would consider "Minimum shippable", plus a few easy wins, but still has a few minor issues to take care of. Demo/Test builds are available at https://jacob-griffin.github.io/TelephonePictionary2.0
