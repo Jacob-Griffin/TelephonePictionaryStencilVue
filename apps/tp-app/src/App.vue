@@ -1,5 +1,4 @@
 <script setup>
-import Logo from './components/Logo.vue';
 import { RouterView } from 'vue-router';
 import SettingsModal from './components/SettingsModal.vue';
 import { inGame, inHome, TPStore } from 'byfo-utils';
@@ -30,7 +29,7 @@ onBeforeMount(() => tp.useTheme());
       </div>
     </div>
     <div>
-      <Logo class="small logo" v-if="!isInHome"></Logo>
+      <div class="small icon logo" v-if="!isInHome"></div>
     </div>
     <div class="same-size"></div>
   </header>

@@ -20,7 +20,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', keyHandler));
 
 <template>
   <main>
-    <Logo></Logo>
+    <div class="icon"></div>
     <div class="buttonMenu">
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
