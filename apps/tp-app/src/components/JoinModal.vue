@@ -1,6 +1,6 @@
 <script setup>
 import { stopPropagation, validGameId, validUsername, invalidCharactersList } from 'byfo-utils';
-import { addPlayerToLobby } from '../firebase/rtdb.js';
+import { addPlayerToLobby } from 'byfo-utils/firebase';
 import { ref, inject, computed } from 'vue';
 
 const store = inject('TpStore');

@@ -261,11 +261,11 @@ export class TpCanvas {
     return !notBlank;
   }
 
-  @Method() exportDrawing(): Promise<string> {
-    const blankPromise = new Promise<string>(callback => callback(''));
+  @Method() exportDrawing(): Promise<Blob> {
+    const emptyPromise = new Promise<Blob>((resolve)=>resolve(new Blob()));
     //If there are no paths, guaranteed blank
     if (!(this.paths?.length > 0)) {
-      return blankPromise;
+      return emptyPromise;
     }
 
     const lastPath = this.paths.pop();
@@ -273,15 +273,15 @@ export class TpCanvas {
 
     if (lastPath.clear) {
       //If the last thing was a clear action, guaranteed blank
-      return blankPromise;
+      return emptyPromise;
     }
 
     //If we haven't shortcutted the blank status, double check if it's blank or not on color data
     if (this.isBlankCanvas()) {
-      return blankPromise;
+      return emptyPromise;
     }
     return new Promise(callback => {
-      this.canvasElement.toBlob(callback, 'image/png');
+      this.canvasElement.toBlob(callback);
     });
   }
 

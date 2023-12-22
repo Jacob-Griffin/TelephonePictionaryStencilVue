@@ -9,6 +9,11 @@ import Logo from './components/Logo.vue';
 
 import './assets/main.css';
 
+import { firebaseConfig } from '../firebase.secrets';
+import { setFirebaseConfig } from 'byfo-utils/firebase';
+
+setFirebaseConfig(firebaseConfig);
+
 const app = createApp(App);
 
 app.use(router);

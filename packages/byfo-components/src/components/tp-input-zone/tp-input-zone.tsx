@@ -76,13 +76,13 @@ export class TpInputZone {
   };
 
   sendRound = async () => {
-    let content = this.text;
+    let content:string|Blob = this.text;
     if (!this.isTextRound) {
       const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
-      content = (await canvas?.exportDrawing()) || '';
+      content = await canvas?.exportDrawing();
     }
 
-    const submitEvent = new CustomEvent<string>('tp-submitted', {
+    const submitEvent = new CustomEvent<string|Blob>('tp-submitted', {
       detail: content,
     });
     localStorage.removeItem('currentRoundData');

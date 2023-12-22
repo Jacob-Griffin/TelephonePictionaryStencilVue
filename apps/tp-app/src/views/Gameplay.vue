@@ -7,11 +7,9 @@ import 'byfo-components/dist/components/tp-input-zone';
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber, sendAddTime } from '../firebase/rtdb';
-import { onValue, onDisconnect, ref as dbRef } from 'firebase/database';
-import { rtdb } from '../../Firebase';
+import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber, sendAddTime, attachFinishedListener, attachRoundListener, attachMissingListener } from 'byfo-utils/firebase';
 
-import { config, sortNames, calculatePlayerNameWidth } from 'byfo-utils';
+import { config, sortNamesBy, calculatePlayerNameWidth } from 'byfo-utils';
 
 const store = inject('TpStore');
 
@@ -67,24 +65,22 @@ if (!status.started && store.hosting !== gameid) {
   }
 }
 
-const playerNumber = !redirect && (await getPlayerNumber(gameid, name));
-
-const statusref = playerNumber && dbRef(rtdb, `players/${gameid}/${playerNumber}/status`);
-if (statusref) onDisconnect(statusref).set('missing');
+const subscriptions = [];
 
 //Grab who you're sending to and recieving from (only need it once)
 const people = !redirect && (await getToAndFrom(gameid, name));
 const staticRoundInfo = !redirect && (await getStaticRoundInfo(gameid));
 
 //Subscribe to changes in roundnumber
-const roundRef = !redirect && dbRef(rtdb, `game/${gameid}/round`);
-const roundSubscription =
-  roundRef &&
-  onValue(roundRef, async snapshot => {
+if(!redirect){
+  const playerNumber = await getPlayerNumber(gameid, name);
+  const missingListener = attachMissingListener(gameid,playerNumber);
+
+  subscriptions.push(attachRoundListener(gameid, async snapshot => {
     const newRound = snapshot.val();
     if (newRound === null) {
       //If the data no longer exists, go to the review page
-      onDisconnect(statusref).cancel(); // This is an expected navigation, don't give "missing"
+      missingListener.cancel(); // This is an expected navigation, don't give "missing"
       location.href = `/review/${gameid}`;
       return;
     }
@@ -97,13 +93,11 @@ const roundSubscription =
 
     //Grab the data of your "from" player using pre-updated round#
     content.value = await fetchCard(gameid, people?.from, roundnumber.value - 1);
-  });
+  }));
 
-//Subscribe to see when the game gets finished
-const finishedRef = !redirect && dbRef(rtdb, `game/${gameid}/finished`);
-const finishedSubscription =
-  finishedRef &&
-  onValue(finishedRef, snapshot => {
+
+  //Subscribe to see when the game gets finished
+  subscriptions.push(attachFinishedListener(gameid,snapshot => {
     const result = [];
     const pulledData = snapshot.val();
     for (let name in pulledData) {
@@ -112,62 +106,50 @@ const finishedSubscription =
         lastRound: pulledData[name],
       });
     }
-    finishedPlayers.value = sortNames(result, 'name');
+    finishedPlayers.value = sortNamesBy(result, 'name');
     widthVar.value = calculatePlayerNameWidth(finishedPlayers.value);
+  }));
+
+  //Add event listeners
+  onMounted(() => {
+    document.addEventListener('tp-submitted', ({ detail }) => {
+      submitRound(gameid, name, roundnumber.value, detail, staticRoundInfo);
+      finishedRound.value = roundnumber.value;
+      window.scroll({top:0});
+    });
+
+    //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
+    document.addEventListener('tp-stuck-signal', e => (stuckSignal.value = true));
+
+    document.addEventListener('keydown', event => {
+      if (event.metaKey && event.key === 'z' && !isText.value) {
+        //ctrl+z during a drawing round will send an undo input
+        const undoEvent = new CustomEvent('undo-input');
+        inputzone?.dispatchEvent(undoEvent);
+        return;
+      }
+      if (event.metaKey && event.key === 'Z' && !isText.value) {
+        //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
+        const redoEvent = new CustomEvent('redo-input');
+        inputzone?.dispatchEvent(redoEvent);
+        return;
+      }
+    });
   });
 
-const timeValue = 30; //Seconds to be added on "add time"
+  //Wrap up firebase subscriptions on unmount
+  onBeforeUnmount(() => {
+    subscriptions.forEach(unsub => unsub?.());
+  });
+}
+
 const addTime = e => {
-  sendAddTime(gameid, timeValue * 1000);
+  sendAddTime(gameid);
 };
 
 const scrollToCanvas = e => {
   window.scrollTo(0,2000)
 }
-
-//Add event listeners
-onMounted(() => {
-  document.addEventListener('tp-submitted', ({ detail }) => {
-    const contentObject = {
-      content: detail,
-      contentType: isText.value ? 'text' : 'image',
-    };
-    submitRound(gameid, name, roundnumber.value, contentObject, staticRoundInfo);
-    finishedRound.value = roundnumber.value;
-    window.scroll({top:0});
-  });
-
-  document.addEventListener('byfo-time-input', ({ detail }) => {
-    timeError.value = detail.timeError;
-    timeValue.value = detail.value;
-  });
-
-  //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
-  document.addEventListener('tp-stuck-signal', e => (stuckSignal.value = true));
-
-  document.addEventListener('keydown', event => {
-    if (event.metaKey && event.key === 'z' && !isText.value) {
-      //ctrl+z during a drawing round will send an undo input
-      const undoEvent = new CustomEvent('undo-input');
-      inputzone?.dispatchEvent(undoEvent);
-      return;
-    }
-    if (event.metaKey && event.key === 'Z' && !isText.value) {
-      //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
-      const redoEvent = new CustomEvent('redo-input');
-      inputzone?.dispatchEvent(redoEvent);
-      return;
-    }
-  });
-});
-
-//Wrap up firebase subscriptions on unmount
-onBeforeUnmount(() => {
-  const unsub = unsubFunction => unsubFunction?.();
-
-  unsub(roundSubscription);
-  unsub(finishedSubscription);
-});
 </script>
 
 <template>

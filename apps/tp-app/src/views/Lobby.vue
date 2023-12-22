@@ -1,9 +1,7 @@
 <script setup>
-import { rtdb } from '../../Firebase';
-import { ref as dbRef, get, onValue, onDisconnect } from 'firebase/database';
-import { beginGame, turnInMissing } from '../firebase/rtdb';
-import { onMounted, toRaw } from 'vue';
-import { config, sortNames } from 'byfo-utils';
+import { beginGame, turnInMissing, getWaitingPlayers, attachGameStatusListener, attachMissingListener, attachPlayerListener } from 'byfo-utils/firebase';
+import { onMounted } from 'vue';
+import { config, sortNamesBy } from 'byfo-utils';
 import { useRoute } from 'vue-router';
 import { ref, inject } from 'vue';
 
@@ -30,24 +28,22 @@ if (rejoinNumber) {
   }
 }
 
-const playerListRef = dbRef(rtdb, `players/${gameid}`);
-const playerList = await get(playerListRef).then(list => list.val());
-const rawPlayers = Object.values(toRaw(playerList));
+const playerList = await getWaitingPlayers(gameid);
+const rawPlayers = Object.values(playerList);
 //Players by default are sorted by their priority. That is, the player order is generated as they join
 //This realphabetizes the players for displaying in the lobby's list
-players.value = sortNames(rawPlayers, 'username');
+players.value = sortNamesBy(rawPlayers, 'username');
 
 for (const playerNumber in playerList) {
   if (playerList[playerNumber]?.username === store.username) {
-    const myStatusRef = dbRef(rtdb, `players/${gameid}/${playerNumber}/status`);
-    onDisconnect(myStatusRef).set('missing');
+    attachMissingListener(gameid,playerNumber);
   }
 }
 
-onValue(playerListRef, snapshot => {
+attachPlayerListener(gameid, snapshot => {
   const playerList = snapshot.val();
-  const rawPlayers = Object.values(toRaw(playerList));
-  players.value = sortNames(rawPlayers, 'username');
+  const rawPlayers = Object.values(playerList);
+  players.value = sortNamesBy(rawPlayers, 'username');
 
   let isInGame = false;
 
@@ -64,10 +60,8 @@ onValue(playerListRef, snapshot => {
   }
 });
 
-const gameStatusRef = dbRef(rtdb, `game-statuses/${gameid}`);
-
 //Subscribe to the game's status to see if it started
-onValue(gameStatusRef, snapshot => {
+attachGameStatusListener(gameid, snapshot => {
   const status = snapshot.val();
   //On the off chance that you jumped into a lobby of a finished game, redirect to the results
   if (status.finished) {

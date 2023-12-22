@@ -1,5 +1,5 @@
 <script setup>
-import { getGameStatus } from '../firebase/rtdb';
+import { getGameStatus } from 'byfo-utils/firebase';
 import { ref } from 'vue';
 import { stopPropagation } from 'byfo-utils';
 

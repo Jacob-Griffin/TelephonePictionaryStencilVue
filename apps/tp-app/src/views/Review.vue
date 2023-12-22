@@ -1,7 +1,7 @@
 <script setup>
 import 'byfo-components/dist/components/tp-content';
 import 'byfo-components/dist/components/tp-review-chat';
-import { getGameData } from '../firebase/firestore';
+import { getGameData } from 'byfo-utils/firebase';
 import { sortNames } from 'byfo-utils';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';

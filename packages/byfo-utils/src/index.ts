@@ -6,11 +6,20 @@ export const config = conf;
 export const stopPropagation = (e:Event) => e.stopPropagation();
 
 //#region Strings
-export function sortNames(names:string[]|{[key:string]:string}[], key:string) {
-  const newBase:string[] = names.map((user:string|{[key:string]:string}) => {
-    return typeof user === 'string' ? user : user[key];
-  })
-  return newBase.sort((a:string, b:string) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+export function sortNames(names:string[]) {
+  return names.sort((a:string, b:string) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+}
+
+type inObject = {[key:string]:string}
+export function sortNamesBy(names:inObject[], sortKey:keyof inObject){
+  const keyMap = new Map<string,inObject>();
+  const nameArray:string[] = [];
+  names.forEach((obj:inObject) => {
+    nameArray.push(obj[sortKey]);
+    keyMap.set(obj[sortKey],obj);
+  });
+  const keyOrder = nameArray.sort((a:string, b:string) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+  return keyOrder.map(name => keyMap.get(name));
 }
 
 export function calculatePlayerNameWidth(players:{name:string,[other:string]:string|number}[]) {

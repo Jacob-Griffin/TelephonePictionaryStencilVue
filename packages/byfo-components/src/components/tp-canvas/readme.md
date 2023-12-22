@@ -24,13 +24,13 @@ Type: `Promise<string>`
 
 
 
-### `exportDrawing() => Promise<string>`
+### `exportDrawing() => Promise<Blob>`
 
 
 
 #### Returns
 
-Type: `Promise<string>`
+Type: `Promise<Blob>`
 
 
 
