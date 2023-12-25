@@ -231,7 +231,12 @@ section {
 #landscape-enforcer {
   display: none;
 }
-@media screen and ((max-width: 600px) and (max-aspect-ratio:1)) {
+
+tp-input-zone {
+  max-width: 100rem;
+}
+
+@media screen and (((max-width: 500px) and (max-aspect-ratio:0.9))) {
   #landscape-enforcer {
     position: fixed;
     top:0;
@@ -245,6 +250,16 @@ section {
     align-items: center;
   }
 }
+
+@media screen and ((max-aspect-ratio:1.6) and (max-width:1200px)) {
+  tp-input-zone {
+    --flip-pos:column;
+    --horizontal: center;
+    --flip-height: 10rem;
+    --full-width: 100%;
+  }
+}
+
 @media screen and (min-height: 600px) {
   #canvas-link {
     display: none;

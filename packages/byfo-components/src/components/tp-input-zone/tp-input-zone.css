@@ -90,7 +90,8 @@ tp-canvas {
   display: flex;
   align-items: center;
   gap:1rem;
-  justify-content: center
+  justify-content: center;
+  flex-direction: var(--flip-pos,row);
 }
 
 @media screen and (max-height:700px) {

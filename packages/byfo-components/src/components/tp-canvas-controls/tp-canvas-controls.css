@@ -1,6 +1,6 @@
 :host {
   display: block;
-  width: 10rem;
+  width: var(--full-width, 10rem);
   --block-size:4rem;
   --icon-size: 2.5rem;
   --spacing-size: 1rem;
@@ -20,6 +20,9 @@ section {
   margin: var(--half-spacing);
   padding: var(--spacing-size);
   container-type: inline-size;
+  align-content: var(--horizontal,initial);
+  flex-direction: var(--flip-pos, row);
+  height: var(--flip-height, initial);
 }
 
 section section {
