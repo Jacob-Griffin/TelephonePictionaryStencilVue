@@ -1,5 +1,6 @@
 :host {
   display: block;
+  margin-top: -0.5rem;
   width: var(--full-width, 10rem);
   --block-size:4rem;
   --icon-size: 2.5rem;
@@ -95,8 +96,9 @@ tp-icon-fill-squiggle {
 
 @media screen and (max-height: 450px) {
   :host {
-    width: 7.5rem;
-    --block-size: 3rem;
+    margin-top: -0.3rem;
+    width: 7.25rem;
+    --block-size: 2.75rem;
     --icon-size: 1.75rem;
     --spacing-size: 0.6rem;
     --half-spacing: 0.3rem;

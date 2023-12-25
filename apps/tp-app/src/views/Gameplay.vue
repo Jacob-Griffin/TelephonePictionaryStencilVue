@@ -142,9 +142,9 @@ if(!redirect){
     subscriptions.forEach(unsub => unsub?.());
   });
 }
-
+const timeValue = config.addTimeIncrement;
 const addTime = e => {
-  sendAddTime(gameid);
+  sendAddTime(gameid,timeValue*1000);
 };
 
 const scrollToCanvas = e => {
@@ -172,8 +172,10 @@ const scrollToCanvas = e => {
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
-      <byfo-timer class='needs-backdrop' v-if="roundData.endTime !== -1" :endtime="roundData.endTime"></byfo-timer>
-      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to"/>
+      <byfo-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></byfo-timer>
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to">
+        <byfo-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></byfo-timer>
+      </tp-input-zone>
     </section>
     <section id="landscape-enforcer" v-if="!isText && !waiting">
       <h2>Please rotate your device landscape</h2>

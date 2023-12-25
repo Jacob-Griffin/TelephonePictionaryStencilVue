@@ -94,6 +94,10 @@ tp-canvas {
   flex-direction: var(--flip-pos,row);
 }
 
+#control-wrapper {
+  text-align: center;
+}
+
 @media screen and (max-height:700px) {
   tp-canvas {
     max-height: 90vh;

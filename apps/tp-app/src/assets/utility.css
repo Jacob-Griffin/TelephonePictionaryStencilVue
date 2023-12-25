@@ -42,6 +42,11 @@
   color: rgb(218, 129, 28);
 }
 
+/* Used as a combinator for "really needs backdrop"*/
+/* This way it can be passed on in themes where needs backdrop is not universal */
+.really {
+  --optional-text-backdrop: var(--color-backdrop);
+}
 .needs-backdrop {
   background-color: var(--optional-text-backdrop);
   border-radius: 1rem;

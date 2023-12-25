@@ -406,7 +406,7 @@ function generatePriority(taken?:Set<number>):number {
 
   //#region Storage
 export async function uploadImage(gameid:number, player:string, round:number, imgData:Blob|false) {
-  if (!imgData) {
+  if (!imgData || imgData.size === 0) {
     return '/default.png';
   }
   const imgref = storageRef(storage, `/games/${gameid}/${round}/${player}.png`);

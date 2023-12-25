@@ -103,7 +103,10 @@ export class TpInputZone {
         ) : (
           <div id="canvas-wrapper">
             <tp-canvas id="canvas" hostEl={this.el}></tp-canvas>
-            <tp-canvas-controls submithandler={this.sendRound} hostEl={this.el}></tp-canvas-controls>
+            <div id="control-wrapper">
+              <slot name="timer"/>
+              <tp-canvas-controls submithandler={this.sendRound} hostEl={this.el}></tp-canvas-controls>
+            </div>
           </div>
         )}
         {this.isTextRound ? <button onClick={this.sendRound} disabled={!this.canSend}>
