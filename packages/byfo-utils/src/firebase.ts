@@ -200,6 +200,23 @@ export function createLobby(gameid: number, username: string): void {
 }
 
 /**
+ * Gets the game status of a specified game
+ * @param gameid - The game to get the status of
+ * @returns Game status (if any)
+ */
+export async function getGameStatus(gameid: number): Promise<GameStatus> {
+  return getRef(`game-statuses/${gameid}`);
+}
+
+/**
+ * Gets the list of all game statuses
+ * @returns An object pairing gameids to statuses
+ */
+export async function listGameStatus(): Promise<{ [id: number]: GameStatus }> {
+  return getRef('game-statuses');
+}
+
+/**
  * Creates a special game for testing that's meant to never end and jump right into a certain state
  * @param devMatch - a short array with the regex match data for a dev game username
  * @param gameid - The game being created
