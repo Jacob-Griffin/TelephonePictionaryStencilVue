@@ -358,21 +358,7 @@ export async function submitRound(gameid: number, name: string, round: number, r
  * @returns Card data, or null if it doesn't exist
  */
 export async function fetchCard(gameid: number, target: string, round: number) {
-  //Try in a new commit
-  //return getRef(`game/${gameid}/stacks/${target}/${round}`);
-  const cardRef = ref(`game/${gameid}/stacks/${target}/${round}`);
-  let value = new Promise(resolve => {
-    const unsub = onValue(cardRef, snapshot => {
-      const newvalue = snapshot.val();
-      if (newvalue !== null) {
-        unsub();
-        resolve(newvalue);
-      }
-    });
-  });
-
-  //value is a promise that will resolve to the eventual card
-  return value;
+  return getRef(`game/${gameid}/stacks/${target}/${round}`);
 }
 
 /**
