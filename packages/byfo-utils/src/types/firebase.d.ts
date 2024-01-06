@@ -1,54 +1,64 @@
+import { Database } from 'firebase/database';
+import { Firestore } from 'firebase/firestore';
+import { FirebaseStorage } from 'firebase/storage';
+
 export type ActionResponse = {
-    action?:string, // The action being done
-    detail?:string, // The return message, if applicable
-    dest?:  string  // The page to redirect to
-}
+  action?: string; // The action being done
+  detail?: string; // The return message, if applicable
+  dest?: string; // The page to redirect to
+};
 
 export type Player = {
-    username:string,
-    status:  string
-}
+  username: string;
+  status: string;
+};
 
 export type PlayerList = {
-    [key:number]:Player
-}
+  [key: number]: Player;
+};
 
 export type RoundContent = {
-    contentType: 'text' | 'image',
-    content?: string
-}
+  contentType: 'text' | 'image';
+  content?: string;
+};
 
 export type GameStatus = {
-    started:boolean,
-    finished:boolean
-}
+  started: boolean;
+  finished: boolean;
+};
 
 export type Game = {
-    players: GamePlayers,
-    round: RoundData,
-    staticRoundInfo: StaticRoundInfo,
-    stacks: GameStacks
-}
+  players: GamePlayers;
+  round: RoundData;
+  staticRoundInfo: StaticRoundInfo;
+  stacks: GameStacks;
+};
 
 export type GamePlayers = {
-    [name:string]:{
-        to:string,
-        from:string,
-    }
-}
+  [name: string]: {
+    to: string;
+    from: string;
+  };
+};
 
 export type RoundData = {
-    roundnumber: number,
-    endTime:number // unix timestamp
-}
+  roundnumber: number;
+  endTime: number; // unix timestamp
+};
 
-export type StaticRoundInfo  = {
-    lastRound: number,
-    roundLength: number //in ms
-}
+export type StaticRoundInfo = {
+  lastRound: number;
+  roundLength: number; //in ms
+};
 
 export type GameStacks = {
-    [author:string]:{
-        [roundnumber:string]: RoundContent
-    }
-}
+  [author: string]: {
+    [roundnumber: string]: RoundContent;
+  };
+};
+
+export type FirebaseConnections = {
+  db: Firestore | null;
+  rtdb: Database | null;
+  storage: FirebaseStorage | null;
+};
