@@ -1,50 +1,26 @@
-/* color palette from <https://github.com/vuejs/theme> */
+@import './theme-adapter.css';
+
+/* color variables for this project, defaults to "light mode" */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --color-brand: rgb(50, 78, 163);
+  --color-button-text: white;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
-
-  --vt-c-indigo: #2c3e50;
-
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-}
-
-/* semantic color variables for this project, defaults to "light mode" */
-:root {
-  --color-brand: rgb(50, 78, 163); /* Header */
-  --color-button-text: white; /* The color that goes on top of the brand color*/
-
-  --color-background: var(--vt-c-white-mute);
+  --color-background: #f2f2f2;
 
   --color-backdrop: rgba(210, 210, 210, 0.85);
-  --color-darker-backdrop: #a4a4a4;
-  --color-backdrop-text: var(--vt-c-black-soft);
-  /* This is the color used when text is put right on a backdrop */
+  --color-backdrop-text: #222222;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: rgb(100, 116, 139);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: #2c3e50;
+  --color-text: #2c3e50;
 
   --color-link: rgb(101, 116, 252);
   --color-link-hover: rgb(70, 70, 200);
 
   --color-button: rgb(60, 90, 190);
-  --color-button-hover: rgb(47, 155, 72);
   /* hover also applies to the selected state of toggled buttons*/
+  --color-button-hover: rgb(47, 155, 72); 
   --color-button-disabled: #889;
 
   --color-important: #f28705;
@@ -53,66 +29,12 @@
   --small-icon: url('/byfo-logo.png');
 
   --scroll-color: var(--color-text);
-}
 
-/* other themes only need overrides from "light" theme */
-/* themes can extend other non-light themes, but require each class of the chain on :root */
-.dark {
-  --color-background: var(--vt-c-black);
-  --color-background-soft: var(--vt-c-black-soft);
-  --color-background-mute: var(--vt-c-black-mute);
+  --color-toggle-handle: #f2f2f2;
 
-  --color-border: var(--vt-c-divider-dark-2);
-  --color-border-hover: var(--vt-c-divider-dark-1);
-
-  --color-heading: var(--vt-c-text-dark-1);
-  --color-text: var(--vt-c-text-dark-2);
-
-  --color-link: rgb(70, 70, 200);
-  --color-link-hover: rgb(80, 80, 220);
-
-  --icon: url('/byfo-logo.png');
-
-  --scroll-color: #999;
-}
-
-.classic {
-  --color-brand: #2c33bf;
-  --color-button: var(--color-brand);
-  --color-button-hover: #8cc63f;
-  --image-background: url('/basic-bkgd.jpg');
-  --icon: url('/byfo-logo.png');
-}
-
-.candy {
-  --color-brand: #f42f65;
-  --color-button: var(--color-brand);
-  --color-button-hover: #8a43db;
-  --color-important: #8a43db;
-  --image-background: url('/candyCarnival-bkgd.jpg');
-  --icon: url('/byfo-logo2.png');
-
-  --optional-text-backdrop: var(--color-backdrop);
-}
-
-tp-inputzone {
-  --color-button: var(--color-button);
-  --color-button-hover: var(--color-button-hover);
-  --color-button-disabled: var(--color-button-disabled);
-}
-
-tp-review-chat {
   --chat-background: var(--color-background);
   --chat-bubble: var(--color-backdrop);
   --chat-text: var(--color-backdrop-text);
-  --chat-from-backdrop: var(--color-darker-backdrop);
+  --chat-from-backdrop: #a4a4a4;
   --chat-from-text: var(--color-backdrop-text);
-}
-
-.candy tp-review-chat {
-  --chat-background: #888b;
-}
-
-.classic tp-review-chat {
-  --chat-background: #888b;
 }

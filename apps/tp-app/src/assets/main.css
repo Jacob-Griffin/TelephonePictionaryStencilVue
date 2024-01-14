@@ -134,3 +134,20 @@ body {
   height: 3rem;
   background-image: var(--small-icon);
 }
+
+::-webkit-scrollbar {
+  background: none;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  background-color: var(--scroll-color);
+}

@@ -1,5 +1,6 @@
 export * from './Store';
 import conf from './config';
+export { themes } from './config';
 
 export const config = conf;
 

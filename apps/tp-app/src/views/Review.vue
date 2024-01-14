@@ -131,7 +131,6 @@ store.clearGameData();
   overflow-y: hidden;
 }
 
-
 #playerSelector > p{
   cursor: pointer;
   position:absolute;
@@ -139,32 +138,13 @@ store.clearGameData();
   left: 0;
   transform:rotate(90deg);
 }
-
 #playerSelector.collapsed > p{
   transform:rotate(0);
 }
 
-
 #playerSelector > button:not(:first-child) {
   margin: auto;
   margin-left: 0.5rem;
-}
-
-::-webkit-scrollbar {
-  background: none;
-}
-
-::-webkit-scrollbar-track {
-  background: none;
-}
-
-::-webkit-scrollbar-button {
-  display: none;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 0.5rem;
-  background-color: var(--scroll-color);
 }
 
 .stack {

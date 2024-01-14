@@ -40,7 +40,7 @@ button:disabled {
 }
 
 #text-input-wrapper {
-  border: 1px solid var(--color-light-border, rgb(100, 116, 139));
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   user-select: text;
   color: var(--color-input-text, black);

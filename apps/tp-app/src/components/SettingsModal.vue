@@ -1,6 +1,6 @@
 <script setup>
 import { inject, ref } from 'vue';
-import { stopPropagation } from 'byfo-utils';
+import { stopPropagation, themes } from 'byfo-utils';
 
 const store = inject('TpStore');
 
@@ -48,7 +48,7 @@ const passClick = e => {
         <div>
           <h2 class="label">Theme</h2>
           <select @input="changeTheme" :value="store.theme">
-            <option v-for="theme in store.themes" :value="theme.name">
+            <option v-for="theme in themes" :value="theme.key">
               {{ theme.displayName }}
             </option>
           </select>

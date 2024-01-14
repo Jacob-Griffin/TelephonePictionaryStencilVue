@@ -1,0 +1,7 @@
+.classic {
+    --color-brand: #2c33bf;
+    --color-button: var(--color-brand);
+    --color-button-hover: #8cc63f;
+    --image-background: url('/basic-bkgd.jpg');
+    --chat-background: #888b;
+  }
