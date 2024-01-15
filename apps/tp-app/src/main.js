@@ -11,6 +11,9 @@ import './assets/main.css';
 import { firebaseConfig } from '../firebase.secrets';
 import { setFirebaseConfig } from 'byfo-utils/firebase';
 
+import { injectThemes } from 'byfo-themes';
+injectThemes();
+
 setFirebaseConfig(firebaseConfig);
 
 const app = createApp(App);

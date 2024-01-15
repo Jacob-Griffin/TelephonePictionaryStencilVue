@@ -17,6 +17,9 @@ importers:
 
   apps/tp-app:
     dependencies:
+      byfo-themes:
+        specifier: workspace:*
+        version: link:../../packages/byfo-themes
       byfo-utils:
         specifier: workspace:*
         version: link:../../packages/byfo-utils
@@ -73,8 +76,17 @@ importers:
 
   packages/byfo-native: {}
 
+  packages/byfo-themes:
+    dependencies:
+      typescript:
+        specifier: '5'
+        version: 5.3.2
+
   packages/byfo-utils:
     dependencies:
+      byfo-themes:
+        specifier: workspace:*
+        version: link:../byfo-themes
       firebase:
         specifier: ^9.21.0
         version: 9.21.0

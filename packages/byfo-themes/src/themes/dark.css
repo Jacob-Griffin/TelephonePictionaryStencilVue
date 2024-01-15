@@ -1,0 +1,15 @@
+/* @display-name: "Dark" */
+/* @extends: "light" */
+.dark {
+  --color-background: #181818;
+
+  --color-heading: #ffffff;
+  --color-text: rgba(235, 235, 235, 0.64);
+
+  --color-link: rgb(70, 70, 200);
+  --color-link-hover: rgb(80, 80, 220);
+
+  --icon: url('/byfo-logo.png');
+
+  --scroll-color: #999;
+}

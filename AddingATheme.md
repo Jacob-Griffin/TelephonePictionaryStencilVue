@@ -1,56 +1,35 @@
 # Adding a theme
 
-Themes in this repo are _fairly_ modular, but there's a few things that have to be changed to add one
+Themes are handled entirely by the byfo-themes package in a pretty simplistic way. To add a theme, simply add a css file to themes, and run pnpm build.
 
-## The theme data
+## What do I need to put in the css file?
 
-You must come up with a **key**, a **display name**, and whether or not it **extends**/builds on top of an existing theme. For example, the candy vomit theme uses:
+You need to write a css declaration containing definitions for the theme's css variables. See [Theme Considerations](./ThemeConsiderations.md) for details on what these are.
+The selectors for this declaration do not matter, the build process will parse the variable definitions only and add its own selector based on the filename.
 
-```json
-{
-  "key": "candy",
-  "displayName": "Candy Vomit",
-  "extends": "light"
-}
-```
+There are a few metadata properties you can add as comments too:
 
-Keep in mind, **extends** is referring to the **key** of a theme it's extending.
+`/* @default-name: "My Theme" */` is primarily used for the UI of the theme selector
+`/* @extends: "other-theme" */` is used to build themes on top of other themes. When extends is not set, it defaults to whatever the default theme is (Currently "light")
 
-This data will be put into the utils package, at `packages/byfo-utils/src/config.ts`, in the themes object. Lets say we have an example theme that extends dark theme:
+## Example
 
-```typescript
-export const themes: TypeStuff = {
-  /*
-    ...Existing themes
-    },   */
-  example: {
-    // ⬉ This should match your "key" property you came up with
-    key: 'example',
-    displayName: 'Example Theme',
-    extends: 'dark',
-  },
-};
-```
-
-## The actual theme
-
-Once the data is in to tell the app that your theme exists, you then need to actually build the theme. This will be a css file under `apps/tp-app/src/assets/themes/`. Your theme should use your **key** as a title, just have one class named after your **key**, and contain the color overrides you're using. See [ThemeConsiderations.md](./ThemeConsiderations.md) for a list of things to be overridden. Example:
+dark.css
 
 ```css
-/* file name example.css. You should call it the same thing as your key */
-.example {
-  /* <- This also has to match your "key" property */
-  --color-background: #123123;
-  --color-brand: #555555;
+/* @display-name: "Dark" */
+/* @extends: "light" */
+.dark {
+  --color-background: #181818;
+
+  --color-heading: #ffffff;
+  --color-text: rgba(235, 235, 235, 0.64);
+
+  --color-link: rgb(70, 70, 200);
+  --color-link-hover: rgb(80, 80, 220);
+
+  --icon: url('/byfo-logo.png');
+
+  --scroll-color: #999;
 }
-```
-
-## Making sure it gets imported
-
-Finally, once the theme is noted, and has an associated file, make sure this theme gets imported somewhere. There's a really simple file to consolidate theme imports at `apps/tp-app/src/assets/theme-adapter.css`. Go in and just add one line to import `./themes/[your-theme-key].css`. Example:
-
-```css
-/* Leave the other imports alone
-...    */
-@import './themes/example.css';
 ```

@@ -1,6 +1,7 @@
 <script setup>
 import { inject, ref } from 'vue';
-import { stopPropagation, themes } from 'byfo-utils';
+import { stopPropagation } from 'byfo-utils';
+import { themes } from 'byfo-themes';
 
 const store = inject('TpStore');
 

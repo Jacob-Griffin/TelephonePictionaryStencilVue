@@ -1,6 +1,6 @@
 export * from './Store';
 import conf from './config';
-export { themes } from './config';
+export { themes } from 'byfo-themes';
 
 export const config = conf;
 

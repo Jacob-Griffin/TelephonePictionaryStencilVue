@@ -1,4 +1,4 @@
-import { themes } from './config';
+import { themes } from 'byfo-themes';
 export class TPStore {
   changeEvent = (setting: string, value: string) => new CustomEvent('tp-settings-changed', { detail: { setting, value } });
 
