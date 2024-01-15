@@ -1,8 +1,8 @@
 <script setup>
 //These are auto-imports for the stencil/native components
 import 'byfo-native-components/byfo-timer';
-import 'byfo-native-components/byfo-content';
 import 'byfo-components/dist/components/tp-input-zone';
+import 'byfo-components/dist/components/tp-content';
 
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
@@ -171,7 +171,7 @@ const scrollToCanvas = e => {
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
-      <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></byfo-content>
+      <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></tp-content>
       <byfo-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></byfo-timer>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to">
         <byfo-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></byfo-timer>
@@ -194,7 +194,7 @@ section {
   gap: 1rem;
 }
 
-#gameplay-elements byfo-content{
+#gameplay-elements tp-content{
   max-width: 1100px;
 }
 
