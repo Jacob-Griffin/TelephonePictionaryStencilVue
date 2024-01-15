@@ -31,6 +31,14 @@ export namespace Components {
         "showAll": any;
         "stackProxy": any;
     }
+    interface TpTimeInput {
+        "initialValue": any;
+        "maxMinutes": any;
+        "maxSeconds": any;
+        "placeholder": any;
+        "timeError": string;
+        "value": number;
+    }
     interface TpTimer {
         "endtime": number;
     }
@@ -66,6 +74,12 @@ declare global {
         prototype: HTMLTpReviewChatElement;
         new (): HTMLTpReviewChatElement;
     };
+    interface HTMLTpTimeInputElement extends Components.TpTimeInput, HTMLStencilElement {
+    }
+    var HTMLTpTimeInputElement: {
+        prototype: HTMLTpTimeInputElement;
+        new (): HTMLTpTimeInputElement;
+    };
     interface HTMLTpTimerElement extends Components.TpTimer, HTMLStencilElement {
     }
     var HTMLTpTimerElement: {
@@ -78,6 +92,7 @@ declare global {
         "tp-content": HTMLTpContentElement;
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-review-chat": HTMLTpReviewChatElement;
+        "tp-time-input": HTMLTpTimeInputElement;
         "tp-timer": HTMLTpTimerElement;
     }
 }
@@ -104,6 +119,14 @@ declare namespace LocalJSX {
         "showAll"?: any;
         "stackProxy"?: any;
     }
+    interface TpTimeInput {
+        "initialValue"?: any;
+        "maxMinutes"?: any;
+        "maxSeconds"?: any;
+        "placeholder"?: any;
+        "timeError"?: string;
+        "value"?: number;
+    }
     interface TpTimer {
         "endtime"?: number;
     }
@@ -113,6 +136,7 @@ declare namespace LocalJSX {
         "tp-content": TpContent;
         "tp-input-zone": TpInputZone;
         "tp-review-chat": TpReviewChat;
+        "tp-time-input": TpTimeInput;
         "tp-timer": TpTimer;
     }
 }
@@ -125,6 +149,7 @@ declare module "@stencil/core" {
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
+            "tp-time-input": LocalJSX.TpTimeInput & JSXBase.HTMLAttributes<HTMLTpTimeInputElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
         }
     }

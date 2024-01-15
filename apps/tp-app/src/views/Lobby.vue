@@ -76,7 +76,7 @@ attachGameStatusListener(gameid, snapshot => {
 });
 
 onMounted(() => {
-  document.addEventListener('byfo-time-input', ({ detail }) => {
+  document.addEventListener('tp-time-input', ({ detail }) => {
     console.log(detail);
     roundLength.value = detail.value;
     timeError.value = detail.timeError;
@@ -92,7 +92,7 @@ onMounted(() => {
     </section>
     <div class="flex-col" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length:</p>
-      <byfo-time-input :max-minutes="config.maxRoundLength" init-value="3:00" placeholder="∞" />
+      <tp-time-input :max-minutes="config.maxRoundLength" init-value="3:00" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength" @click="startGame">Start Game</button>
     </div>
