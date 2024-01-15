@@ -27,7 +27,7 @@ const reviewGame = async () => {
     <article @click="stopPropagation">
       <h1>Review game results</h1>
       <button class="close" @click="$emit('modal-closed')">
-        <byfo-icon icon="x"></byfo-icon>
+        <tp-icon icon="x"></tp-icon>
       </button>
       <p>Game Id:</p>
       <input type="text" inputmode="numeric" v-model="gameid" />

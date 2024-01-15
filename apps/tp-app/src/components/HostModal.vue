@@ -84,7 +84,7 @@ const joinGame = async () => {
     <article @click="stopPropagation">
       <h1>Host a game</h1>
       <button class="close" @click="$emit('modal-closed')">
-        <byfo-icon icon="x"></byfo-icon>
+        <tp-icon icon="x"></tp-icon>
       </button>
       <p>Name:</p>
       <input id="name-input" type="text" v-model="username" />

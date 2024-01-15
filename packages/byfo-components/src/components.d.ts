@@ -22,6 +22,9 @@ export namespace Components {
         "content": string;
         "type": string;
     }
+    interface TpIcon {
+        "icon": any;
+    }
     interface TpInputZone {
         "characterLimit": number;
         "round": number;
@@ -62,6 +65,12 @@ declare global {
         prototype: HTMLTpContentElement;
         new (): HTMLTpContentElement;
     };
+    interface HTMLTpIconElement extends Components.TpIcon, HTMLStencilElement {
+    }
+    var HTMLTpIconElement: {
+        prototype: HTMLTpIconElement;
+        new (): HTMLTpIconElement;
+    };
     interface HTMLTpInputZoneElement extends Components.TpInputZone, HTMLStencilElement {
     }
     var HTMLTpInputZoneElement: {
@@ -90,6 +99,7 @@ declare global {
         "tp-canvas": HTMLTpCanvasElement;
         "tp-canvas-controls": HTMLTpCanvasControlsElement;
         "tp-content": HTMLTpContentElement;
+        "tp-icon": HTMLTpIconElement;
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-review-chat": HTMLTpReviewChatElement;
         "tp-time-input": HTMLTpTimeInputElement;
@@ -109,6 +119,9 @@ declare namespace LocalJSX {
     interface TpContent {
         "content"?: string;
         "type"?: string;
+    }
+    interface TpIcon {
+        "icon"?: any;
     }
     interface TpInputZone {
         "characterLimit"?: number;
@@ -134,6 +147,7 @@ declare namespace LocalJSX {
         "tp-canvas": TpCanvas;
         "tp-canvas-controls": TpCanvasControls;
         "tp-content": TpContent;
+        "tp-icon": TpIcon;
         "tp-input-zone": TpInputZone;
         "tp-review-chat": TpReviewChat;
         "tp-time-input": TpTimeInput;
@@ -147,6 +161,7 @@ declare module "@stencil/core" {
             "tp-canvas": LocalJSX.TpCanvas & JSXBase.HTMLAttributes<HTMLTpCanvasElement>;
             "tp-canvas-controls": LocalJSX.TpCanvasControls & JSXBase.HTMLAttributes<HTMLTpCanvasControlsElement>;
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
+            "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
             "tp-time-input": LocalJSX.TpTimeInput & JSXBase.HTMLAttributes<HTMLTpTimeInputElement>;

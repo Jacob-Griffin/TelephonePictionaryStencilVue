@@ -29,7 +29,7 @@ root (turbo)
         /tp-app   (vue + vite)
     /packages
         /byfo-components (stencil.js)
-        /byfo-native (raw js webcomponents)
+        /byfo-theme (css + typescript)
         /byfo-utils (typescript)
 ```
 

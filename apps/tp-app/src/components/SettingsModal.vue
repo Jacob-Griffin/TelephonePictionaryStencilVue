@@ -42,7 +42,7 @@ const passClick = e => {
     <article @click="stopPropagation">
       <h1>Settings</h1>
       <button class="close" @click="$emit('modal-closed')">
-        <byfo-icon icon="x"></byfo-icon>
+        <tp-icon icon="x"></tp-icon>
       </button>
 
       <section class="settings">
@@ -56,7 +56,7 @@ const passClick = e => {
         </div>
 
         <div>
-          <h2 class="label">Always "Show all" <byfo-icon title="Applies to review page" icon="info"></byfo-icon></h2>
+          <h2 class="label">Always "Show all" <tp-icon title="Applies to review page" icon="info"></tp-icon></h2>
           <div id="showAll-toggle" class="toggle-wrapper" @click="passClick" :class="store.alwaysShowAll ? 'checked' : ''">
             <input type="checkbox" id="showAllInput" @input="e => handleToggle('showAll', store.setShowAll, e)" :checked="store.alwaysShowAll" />
             <label for="showAllInput"></label>

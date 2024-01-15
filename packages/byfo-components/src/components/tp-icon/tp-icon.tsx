@@ -1,4 +1,5 @@
-//#region template
+import { Component, Host, Prop, Element, h } from '@stencil/core';
+
 const icons = {
   //Credits: Ionicons, licensed under the MIT license
   gear: /*svg*/ `
@@ -25,24 +26,22 @@ const icons = {
     </svg>
   `,
 };
-//#endregion
 
-class BYFOIcon extends HTMLElement {
-  constructor() {
-    super();
+@Component({
+  tag: 'tp-icon',
+  styleUrl: 'tp-icon.css',
+  shadow: false,
+})
+export class TpIcon {
+  @Prop({reflect:true, attribute: 'icon'}) icon;
+  @Element() host;
+
+  render() {
+    this.host.innerHTML = icons[this.icon]?.trim();
+    return (
+      <Host>
+      </Host>
+    );
   }
 
-  static get observedAttributes() {
-    return ['icon'];
-  }
-  attributeChangedCallback(name, old, value) {
-    this.innerHTML = icons[value]?.trim() || '';
-  }
-
-  connectedCallback() {
-    const icon = this.getAttribute('icon');
-    this.innerHTML = icons[icon]?.trim() || '';
-  }
 }
-
-customElements.define('byfo-icon', BYFOIcon);

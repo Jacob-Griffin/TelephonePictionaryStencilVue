@@ -3,7 +3,7 @@ import { RouterView } from 'vue-router';
 import SettingsModal from './components/SettingsModal.vue';
 import { inGame, inHome, TPStore } from 'byfo-utils';
 import { ref, onBeforeMount, provide } from 'vue';
-import 'byfo-native-components/byfo-icon';
+import 'byfo-components/dist/components/tp-icon';
 import 'byfo-components/dist/components/tp-time-input';
 
 const isInGame = inGame(location);
@@ -25,7 +25,7 @@ onBeforeMount(() => tp.useTheme());
   <header :class="isInHome ? 'invisible' : ''">
     <div class="same-size">
       <div class="menu-button" @click="goHome" v-if="!isInHome && !isInGame">
-        <byfo-icon icon="home"></byfo-icon>
+        <tp-icon icon="home"></tp-icon>
       </div>
     </div>
     <div>
@@ -35,7 +35,7 @@ onBeforeMount(() => tp.useTheme());
   </header>
   <div id="settings-control">
     <div class="menu-button" @click="showingSettings = true">
-      <byfo-icon icon="gear"></byfo-icon>
+      <tp-icon icon="gear"></tp-icon>
     </div>
   </div>
   <Suspense>
@@ -95,7 +95,7 @@ header .logo {
   justify-content: center;
 }
 
-.menu-button byfo-icon {
+.menu-button tp-icon {
   stroke: var(--color-button-text);
   fill: var(--color-button-text);
 }

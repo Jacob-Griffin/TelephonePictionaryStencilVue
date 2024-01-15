@@ -45,9 +45,6 @@ importers:
       byfo-components:
         specifier: workspace:^
         version: link:../../packages/byfo-components
-      byfo-native-components:
-        specifier: workspace:^
-        version: link:../../packages/byfo-native
       eslint:
         specifier: ^8.39.0
         version: 8.39.0
@@ -73,8 +70,6 @@ importers:
       typescript:
         specifier: ^4.7.4
         version: 4.7.4
-
-  packages/byfo-native: {}
 
   packages/byfo-themes:
     dependencies:

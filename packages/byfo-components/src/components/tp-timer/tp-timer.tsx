@@ -1,8 +1,5 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
 
-//Deprecated in favor of byfo-timer (byfo-native folder)
-//Simple components are best without stencil bloat
-
 @Component({
   tag: 'tp-timer',
   styleUrl: 'tp-timer.css',
