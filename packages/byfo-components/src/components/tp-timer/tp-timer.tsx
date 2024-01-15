@@ -6,7 +6,7 @@ import { Component, Host, h, Prop, State } from '@stencil/core';
 @Component({
   tag: 'tp-timer',
   styleUrl: 'tp-timer.css',
-  shadow: true,
+  shadow: false,
 })
 export class TpTimer {
   @Prop() endtime: number;

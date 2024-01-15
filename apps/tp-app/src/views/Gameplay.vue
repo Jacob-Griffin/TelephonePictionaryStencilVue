@@ -1,6 +1,6 @@
 <script setup>
 //These are auto-imports for the stencil/native components
-import 'byfo-native-components/byfo-timer';
+import 'byfo-components/dist/components/tp-timer';
 import 'byfo-components/dist/components/tp-input-zone';
 import 'byfo-components/dist/components/tp-content';
 
@@ -157,7 +157,7 @@ const scrollToCanvas = e => {
     <h1 class="needs-backdrop">Waiting for next round</h1>
     <section class="playerlist">
       Round {{ roundnumber }}
-      <byfo-timer v-if="roundData.endTime !== -1 && !stuck" :endtime="roundData.endTime"></byfo-timer>
+      <tp-timer v-if="roundData.endTime !== -1 && !stuck" :endtime="roundData.endTime"></tp-timer>
       <p v-if="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
       <div v-for="player in finishedPlayers">
         <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
@@ -172,9 +172,9 @@ const scrollToCanvas = e => {
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType"></tp-content>
-      <byfo-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></byfo-timer>
+      <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></tp-timer>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to">
-        <byfo-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></byfo-timer>
+        <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></tp-timer>
       </tp-input-zone>
     </section>
     <section id="landscape-enforcer" v-if="!isText && !waiting">
