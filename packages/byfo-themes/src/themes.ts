@@ -1,6 +1,5 @@
 // This file is auto generated. Run 'pnpm build' to regenerate based on the themes in the folder
-import type { Theme } from "./types";
-export const themes: { [key: string]: Theme } = {
+export const themes = {
   candy: {
     key: 'candy',
     displayName: 'Candy Vomit',

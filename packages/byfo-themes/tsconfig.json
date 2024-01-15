@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "typeRoots": ["./src/types"],
+    "lib": ["dom","es2017.object","es2017"],
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
     "rootDir": "./src",
+    "outDir": "./dist",
+    "declaration": true,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types/**/*"],
+  "exclude": ["node_modules"]
 }

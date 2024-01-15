@@ -24,9 +24,9 @@ const themes = {
 writeMessage('Building theme object','good');
 let defaultTheme = ''
 try {
-    const files = await readdir('./src/themes/');
+    const files = await readdir('./themes/');
     for(const file of files){
-        const contents = await readFile(`./src/themes/${file}`, {encoding:'utf8'});
+        const contents = await readFile(`./themes/${file}`, {encoding:'utf8'});
         const key = file.match(/^(.+)\.css$/)[1];
 
         const displayName = contents.match(/@display-name: ?"([^"]+)"/)?.[1];
@@ -98,8 +98,7 @@ try {
 
     writeMessage('Generating file contents');
     const output = `// This file is auto generated. Run 'pnpm build' to regenerate based on the themes in the folder
-import type { Theme } from "./types";
-export const themes: { [key: string]: Theme } = ${writeObj(themes,1)}`;
+export const themes = ${writeObj(themes,1)}`;
 
     writeMessage('Writing File');
     writeFile('./src/themes.ts', output, {encoding:'utf8'});

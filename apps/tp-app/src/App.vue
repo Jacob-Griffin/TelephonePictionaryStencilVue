@@ -2,9 +2,10 @@
 import { RouterView } from 'vue-router';
 import SettingsModal from './components/SettingsModal.vue';
 import { inGame, inHome, TPStore } from 'byfo-utils';
-import { ref, onBeforeMount, provide } from 'vue';
+import { ref, onBeforeMount, provide, onMounted } from 'vue';
 import 'byfo-components/dist/components/tp-icon';
 import 'byfo-components/dist/components/tp-time-input';
+import 'byfo-components/dist/components/tp-modal';
 
 const isInGame = inGame(location);
 const isInHome = inHome(location);
@@ -14,11 +15,14 @@ const goHome = () => {
   location.href = '/';
 };
 
-const showingSettings = ref(false);
+const settingsmodal = ref(null);
 
 const tp = new TPStore();
 provide('TpStore', tp);
 onBeforeMount(() => tp.useTheme());
+onMounted(()=>{
+  settingsmodal.value.store = tp;
+})
 </script>
 
 <template>
@@ -34,14 +38,14 @@ onBeforeMount(() => tp.useTheme());
     <div class="same-size"></div>
   </header>
   <div id="settings-control">
-    <div class="menu-button" @click="showingSettings = true">
+    <div class="menu-button" @click="settingsmodal.enabled = true">
       <tp-icon icon="gear"></tp-icon>
     </div>
   </div>
   <Suspense>
     <RouterView />
   </Suspense>
-  <SettingsModal v-if="showingSettings" @modal-closed="showingSettings = false"></SettingsModal>
+  <tp-modal type="settings" ref="settingsmodal"></tp-modal>
 </template>
 
 <style scoped>

@@ -1,5 +1,13 @@
 import { themes as themeobj } from './themes';
-export const themes = themeobj;
+export type Theme = {
+  key: string;
+  displayName: string;
+  extends?: string;
+  css: string;
+  default?: boolean;
+};
+
+export const themes: { [key: string]: Theme } = themeobj;
 
 export function injectThemes() {
   let styleTag = document.getElementById('themes');
@@ -9,7 +17,7 @@ export function injectThemes() {
     document.head.appendChild(styleTag);
   }
   let innerHTML = '';
-  Object.values(themes).forEach(theme => {
+  Object.values(themeobj).forEach(theme => {
     innerHTML += theme.css + '\n';
   });
   styleTag.innerHTML = innerHTML;

@@ -38,6 +38,12 @@ Type: `Promise<Blob>`
 
 
 
+#### Parameters
+
+| Name          | Type  | Description |
+| ------------- | ----- | ----------- |
+| `pathsString` | `any` |             |
+
 #### Returns
 
 Type: `Promise<void>`

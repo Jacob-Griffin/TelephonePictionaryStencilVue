@@ -30,6 +30,11 @@ export namespace Components {
         "round": number;
         "sendingTo": string;
     }
+    interface TpModal {
+        "contentType": string;
+        "enabled": boolean;
+        "store": any;
+    }
     interface TpReviewChat {
         "showAll": any;
         "stackProxy": any;
@@ -77,6 +82,12 @@ declare global {
         prototype: HTMLTpInputZoneElement;
         new (): HTMLTpInputZoneElement;
     };
+    interface HTMLTpModalElement extends Components.TpModal, HTMLStencilElement {
+    }
+    var HTMLTpModalElement: {
+        prototype: HTMLTpModalElement;
+        new (): HTMLTpModalElement;
+    };
     interface HTMLTpReviewChatElement extends Components.TpReviewChat, HTMLStencilElement {
     }
     var HTMLTpReviewChatElement: {
@@ -101,6 +112,7 @@ declare global {
         "tp-content": HTMLTpContentElement;
         "tp-icon": HTMLTpIconElement;
         "tp-input-zone": HTMLTpInputZoneElement;
+        "tp-modal": HTMLTpModalElement;
         "tp-review-chat": HTMLTpReviewChatElement;
         "tp-time-input": HTMLTpTimeInputElement;
         "tp-timer": HTMLTpTimerElement;
@@ -128,6 +140,11 @@ declare namespace LocalJSX {
         "round"?: number;
         "sendingTo"?: string;
     }
+    interface TpModal {
+        "contentType"?: string;
+        "enabled"?: boolean;
+        "store"?: any;
+    }
     interface TpReviewChat {
         "showAll"?: any;
         "stackProxy"?: any;
@@ -149,6 +166,7 @@ declare namespace LocalJSX {
         "tp-content": TpContent;
         "tp-icon": TpIcon;
         "tp-input-zone": TpInputZone;
+        "tp-modal": TpModal;
         "tp-review-chat": TpReviewChat;
         "tp-time-input": TpTimeInput;
         "tp-timer": TpTimer;
@@ -163,6 +181,7 @@ declare module "@stencil/core" {
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
+            "tp-modal": LocalJSX.TpModal & JSXBase.HTMLAttributes<HTMLTpModalElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
             "tp-time-input": LocalJSX.TpTimeInput & JSXBase.HTMLAttributes<HTMLTpTimeInputElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
