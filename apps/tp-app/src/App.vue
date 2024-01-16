@@ -1,6 +1,5 @@
 <script setup>
 import { RouterView } from 'vue-router';
-import SettingsModal from './components/SettingsModal.vue';
 import { inGame, inHome, TPStore } from 'byfo-utils';
 import { ref, onBeforeMount, provide, onMounted } from 'vue';
 import 'byfo-components/dist/components/tp-icon';

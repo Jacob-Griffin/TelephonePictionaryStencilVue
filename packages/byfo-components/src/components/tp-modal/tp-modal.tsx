@@ -1,4 +1,4 @@
-import { Component, Host, Prop, h } from '@stencil/core';
+import { Component, Host, Prop, Element, h } from '@stencil/core';
 import { themes } from 'byfo-themes';
 
 @Component({
@@ -11,6 +11,12 @@ export class TpModal {
   @Prop({reflect:true, attribute:'modal-enabled'}) enabled:boolean;
   @Prop() store;
 
+  @Element() el;
+
+  get root(){
+    return this.el.shadowRoot;
+  }
+
   //# region Settings
   changeTheme = e => {
     const name = e.target.value;
@@ -19,13 +25,13 @@ export class TpModal {
   passClick = e => {
     const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
     if (target) {
-      document.getElementById(`${target}Input`).click();
+      this.root.getElementById(`${target}Input`).click();
     }
   }
   handleToggle = (prop,setter,e) => {
     const enabled = e.target.checked;
     setter(enabled);
-    const div = document.getElementById(`${prop}-toggle`);
+    const div = this.root.getElementById(`${prop}-toggle`);
     if (enabled && !div.classList.contains('checked')) {
       div.classList.add('checked');
       return;
