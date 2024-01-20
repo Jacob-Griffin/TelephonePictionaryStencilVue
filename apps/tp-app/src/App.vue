@@ -4,7 +4,7 @@ import { inGame, inHome, TPStore } from 'byfo-utils';
 import { ref, onBeforeMount, provide, onMounted } from 'vue';
 import 'byfo-components/dist/components/tp-icon';
 import 'byfo-components/dist/components/tp-time-input';
-import 'byfo-components/dist/components/tp-modal';
+import 'byfo-components/dist/components/tp-settings-modal';
 
 const isInGame = inGame(location);
 const isInHome = inHome(location);
@@ -44,7 +44,7 @@ onMounted(()=>{
   <Suspense>
     <RouterView />
   </Suspense>
-  <tp-modal type="settings" ref="settingsmodal"></tp-modal>
+  <tp-settings-modal ref="settingsmodal"></tp-settings-modal>
 </template>
 
 <style scoped>

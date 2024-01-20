@@ -30,14 +30,13 @@ export namespace Components {
         "round": number;
         "sendingTo": string;
     }
-    interface TpModal {
-        "contentType": string;
-        "enabled": boolean;
-        "store": any;
-    }
     interface TpReviewChat {
         "showAll": any;
         "stackProxy": any;
+    }
+    interface TpSettingsModal {
+        "enabled": boolean;
+        "store": any;
     }
     interface TpTimeInput {
         "initialValue": any;
@@ -82,17 +81,17 @@ declare global {
         prototype: HTMLTpInputZoneElement;
         new (): HTMLTpInputZoneElement;
     };
-    interface HTMLTpModalElement extends Components.TpModal, HTMLStencilElement {
-    }
-    var HTMLTpModalElement: {
-        prototype: HTMLTpModalElement;
-        new (): HTMLTpModalElement;
-    };
     interface HTMLTpReviewChatElement extends Components.TpReviewChat, HTMLStencilElement {
     }
     var HTMLTpReviewChatElement: {
         prototype: HTMLTpReviewChatElement;
         new (): HTMLTpReviewChatElement;
+    };
+    interface HTMLTpSettingsModalElement extends Components.TpSettingsModal, HTMLStencilElement {
+    }
+    var HTMLTpSettingsModalElement: {
+        prototype: HTMLTpSettingsModalElement;
+        new (): HTMLTpSettingsModalElement;
     };
     interface HTMLTpTimeInputElement extends Components.TpTimeInput, HTMLStencilElement {
     }
@@ -112,8 +111,8 @@ declare global {
         "tp-content": HTMLTpContentElement;
         "tp-icon": HTMLTpIconElement;
         "tp-input-zone": HTMLTpInputZoneElement;
-        "tp-modal": HTMLTpModalElement;
         "tp-review-chat": HTMLTpReviewChatElement;
+        "tp-settings-modal": HTMLTpSettingsModalElement;
         "tp-time-input": HTMLTpTimeInputElement;
         "tp-timer": HTMLTpTimerElement;
     }
@@ -140,14 +139,13 @@ declare namespace LocalJSX {
         "round"?: number;
         "sendingTo"?: string;
     }
-    interface TpModal {
-        "contentType"?: string;
-        "enabled"?: boolean;
-        "store"?: any;
-    }
     interface TpReviewChat {
         "showAll"?: any;
         "stackProxy"?: any;
+    }
+    interface TpSettingsModal {
+        "enabled"?: boolean;
+        "store"?: any;
     }
     interface TpTimeInput {
         "initialValue"?: any;
@@ -166,8 +164,8 @@ declare namespace LocalJSX {
         "tp-content": TpContent;
         "tp-icon": TpIcon;
         "tp-input-zone": TpInputZone;
-        "tp-modal": TpModal;
         "tp-review-chat": TpReviewChat;
+        "tp-settings-modal": TpSettingsModal;
         "tp-time-input": TpTimeInput;
         "tp-timer": TpTimer;
     }
@@ -181,8 +179,8 @@ declare module "@stencil/core" {
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
-            "tp-modal": LocalJSX.TpModal & JSXBase.HTMLAttributes<HTMLTpModalElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
+            "tp-settings-modal": LocalJSX.TpSettingsModal & JSXBase.HTMLAttributes<HTMLTpSettingsModalElement>;
             "tp-time-input": LocalJSX.TpTimeInput & JSXBase.HTMLAttributes<HTMLTpTimeInputElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
         }
