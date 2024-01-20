@@ -7,7 +7,6 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface TpCanvas {
-        "backupPaths": () => Promise<string>;
         "exportDrawing": () => Promise<Blob>;
         "height": number;
         "hostEl": HTMLElement;

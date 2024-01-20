@@ -13,9 +13,9 @@ export class TpCanvas {
 
   //Static Properties (elements and such)
   @Element() el: HTMLElement;
-  canvasElement;
-  ctx;
-  dotPos;
+  canvasElement: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  dotPos: number[];
 
   lineWidthSets = {
     draw: {
@@ -35,8 +35,7 @@ export class TpCanvas {
   lineWidths = this.lineWidthSets.draw;
 
   //Canvas State
-  currentPath; //The current line that's actively being drawn                  :(Path2D)
-  currentSaveablePath; //SVG string equivalent of current path                  :(String)
+  currentPath: string; //SVG string equivalent of current path                 :(String)
   paths = []; //List of paths drawn (support for undo/redo)                    :(Path2D[])
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                   :(String)
@@ -109,9 +108,9 @@ export class TpCanvas {
     //We only want to start a line if there already isn't a line
     if (!this.currentPath) {
       const point = this.transformCoordinates(event);
-      this.currentPath = new Path2D();
-      this.currentSaveablePath = `M ${point[0]} ${point[1]}`;
-      this.currentPath.moveTo(...point);
+      this.currentPath = `M ${point[0]} ${point[1]}`;
+      this.ctx.beginPath();
+      this.ctx.moveTo(...point);
       //Canvas API no longer accepts "Line to" on an exact point
       this.dotPos = point;
     }
@@ -122,14 +121,14 @@ export class TpCanvas {
     if (this.currentPath) {
       let point = this.transformCoordinates(event);
       // If this is a dot (No lineTos yet, and the point is the same)
-      if (point[0] == this.dotPos[0] && point[1] == this.dotPos[1] && /^M [0-9.]+ [0-9.]+$/.test(this.currentSaveablePath)) {
+      if (point[0] == this.dotPos[0] && point[1] == this.dotPos[1]) {
         // Adjust the point just barely so it renders
         point[0] += 0.1;
         point[1] += 0.1;
       }
-      this.currentPath.lineTo(...point);
-      this.currentSaveablePath = `${this.currentSaveablePath} L ${point[0]} ${point[1]}`;
-      this.ctx.stroke(this.currentPath);
+      this.currentPath = this.currentPath + ` L ${point[0]} ${point[1]}`;
+      this.ctx.lineTo(...point);
+      this.ctx.stroke();
     }
     return true;
   };
@@ -137,11 +136,19 @@ export class TpCanvas {
   finishLine = event => {
     //Only add the path if there is one
     if (this.currentPath) {
-      this.draw(event);
+      if (event.fromRedo) {
+        const path = new Path2D(this.currentPath);
+        this.ctx.stroke(path);
+      } else {
+        this.draw(event);
+      }
       //Push the current Path to the path list and final drawing
-      this.paths.push({ path: this.currentSaveablePath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle });
+      this.paths.push({ path: this.currentPath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle });
 
       this.currentPath = undefined;
+
+      const backupEvent = new CustomEvent<string>('tp-canvas-line', { detail: JSON.stringify(this.paths) });
+      this.hostEl.dispatchEvent(backupEvent);
 
       if (!event.fromRedo) {
         this.redoStack = [];
@@ -162,7 +169,7 @@ export class TpCanvas {
         let backupWidth = this.ctx.lineWidth;
         let backupColor = this.ctx.strokeStyle;
 
-        this.currentPath = new Path2D(currentItem.path);
+        this.currentPath = currentItem.path;
         this.ctx.lineWidth = currentItem.size;
         this.ctx.strokeStyle = currentItem.color;
         this.finishLine({ fromRedo: true });
@@ -178,6 +185,9 @@ export class TpCanvas {
       return;
     }
     this.redoStack.push(this.paths.pop());
+
+    const backupEvent = new CustomEvent<string>('tp-canvas-line', { detail: JSON.stringify(this.paths) });
+    this.hostEl.dispatchEvent(backupEvent);
 
     this.redraw();
   };
@@ -262,7 +272,7 @@ export class TpCanvas {
   }
 
   @Method() exportDrawing(): Promise<Blob> {
-    const emptyPromise = new Promise<Blob>((resolve)=>resolve(new Blob()));
+    const emptyPromise = new Promise<Blob>(resolve => resolve(new Blob()));
     //If there are no paths, guaranteed blank
     if (!(this.paths?.length > 0)) {
       return emptyPromise;
@@ -285,10 +295,6 @@ export class TpCanvas {
     });
   }
 
-  @Method() backupPaths(): Promise<string> {
-    return new Promise(resolve => resolve(JSON.stringify(this.paths)));
-  }
-
   @Method() restoreBackup(pathsString): Promise<void> {
     this.paths = JSON.parse(pathsString);
     if (this.ctx) {
@@ -298,6 +304,6 @@ export class TpCanvas {
   }
 
   render() {
-    return <canvas height={this.height} width={this.width} ref={el => (this.canvasElement = el as HTMLElement)}></canvas>;
+    return <canvas height={this.height} width={this.width} ref={el => (this.canvasElement = el)}></canvas>;
   }
 }

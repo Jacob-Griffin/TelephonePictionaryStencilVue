@@ -38,15 +38,17 @@ export class TpInputZone {
     this.sendRound();
   }
 
+  @Listen('tp-canvas-line')
+  backupCanvas(e: CustomEvent<string>) {
+    localStorage.setItem('currentRoundData', e.detail);
+  }
+
   componentDidLoad() {
     this.loadedBackup = localStorage.getItem('currentRoundData');
-    this.saveInterval = setInterval(async () => {
-      let v = this.text;
-      if (!this.isTextRound) {
-        const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
-        v = await canvas.backupPaths();
+    this.saveInterval = setInterval(() => {
+      if (this.isTextRound) {
+        localStorage.setItem('currentRoundData', this.text);
       }
-      localStorage.setItem('currentRoundData', v);
     }, 4000);
   }
 
@@ -76,13 +78,13 @@ export class TpInputZone {
   };
 
   sendRound = async () => {
-    let content:string|Blob = this.text;
+    let content: string | Blob = this.text;
     if (!this.isTextRound) {
       const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
       content = await canvas?.exportDrawing();
     }
 
-    const submitEvent = new CustomEvent<string|Blob>('tp-submitted', {
+    const submitEvent = new CustomEvent<string | Blob>('tp-submitted', {
       detail: content,
     });
     localStorage.removeItem('currentRoundData');
@@ -104,14 +106,16 @@ export class TpInputZone {
           <div id="canvas-wrapper">
             <tp-canvas id="canvas" hostEl={this.el}></tp-canvas>
             <div id="control-wrapper">
-              <slot name="timer"/>
+              <slot name="timer" />
               <tp-canvas-controls submithandler={this.sendRound} hostEl={this.el}></tp-canvas-controls>
             </div>
           </div>
         )}
-        {this.isTextRound ? <button onClick={this.sendRound} disabled={!this.canSend}>
-          Send to <strong>{this.sendingTo}</strong>
-        </button> : null}
+        {this.isTextRound ? (
+          <button onClick={this.sendRound} disabled={!this.canSend}>
+            Send to <strong>{this.sendingTo}</strong>
+          </button>
+        ) : null}
       </section>
     );
   }
