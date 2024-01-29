@@ -6,19 +6,20 @@ import { Component, Host, Prop, State, h } from '@stencil/core';
   shadow: false,
 })
 export class TpTimeInput {
-  @Prop({reflect:true, attribute: 'init-value'}) initialValue;
-  @Prop({reflect:true, attribute: 'max-minutes'}) maxMinutes;
-  @Prop({reflect:true, attribute: 'max-seconds'}) maxSeconds;
-  @Prop({reflect:true, attribute: 'placeholder'}) placeholder;
-  @Prop() value:number;
-  @Prop() timeError:string;
+  @Prop({ reflect: true, attribute: 'init-value' }) initialValue;
+  @Prop({ reflect: true, attribute: 'max-minutes' }) maxMinutes;
+  @Prop({ reflect: true, attribute: 'max-seconds' }) maxSeconds;
+  @Prop({ reflect: true, attribute: 'placeholder' }) placeholder;
+  @Prop() value: number;
+  @Prop() timeError: string;
 
   @State() inputEl: HTMLInputElement;
 
-  setInputEl = (el:HTMLInputElement) => {
+  setInputEl = (el: HTMLInputElement) => {
     this.inputEl = el;
-    this.inputEl.addEventListener('input',this.handleInput);
-  }
+    this.inputEl.value = this.initialValue;
+    this.inputEl.addEventListener('input', this.handleInput);
+  };
 
   sendEvent = () => {
     const e = new CustomEvent('tp-time-input', {
@@ -30,47 +31,40 @@ export class TpTimeInput {
     document.dispatchEvent(e);
   };
 
-  handleInput= () => {
-    const maxRoundLength = this.maxMinutes || this.maxSeconds;
+  handleInput = () => {
+    const maxRoundLength = this.maxMinutes;
     const input = this.inputEl.value;
     if (input.length === 0) {
       this.timeError = '';
       this.value = -1;
       return this.sendEvent();
     }
-    const matches = input.match(/^([0-9]+)(:[0-5][0-9])?$/);
-    if (matches === null) {
-      this.timeError = 'Improper format. Must be ss or mm:ss';
+    if (!/^[0-9]+(\.[0-9]+)?$/.test(input) && !/^\.[0-9]+$/.test(input)) {
+      this.timeError = 'Please enter a valid number';
       this.value = undefined;
       return this.sendEvent();
     }
-    let seconds = parseInt(matches[1]);
-    if (matches[2]) {
-      const secondString = matches[2].replace(/:/, '');
-      let minutes = seconds;
-      seconds = parseInt(secondString) + minutes * 60;
-    }
-    if (seconds > maxRoundLength * 60) {
-      this.timeError = `Cannot add more than ${maxRoundLength} minutes or ${maxRoundLength * 60} seconds`;
+    const minutes = parseFloat(input);
+    if (minutes > maxRoundLength) {
+      this.timeError = `Cannot add more than ${maxRoundLength} minutes`;
       this.value = undefined;
       return this.sendEvent();
-    } else if (seconds < 5) {
+    } else if (minutes < 5 / 60) {
       this.timeError = 'Must add at least 5 seconds';
       this.value = undefined;
       return this.sendEvent();
     } else {
       this.timeError = '';
     }
-    this.value = seconds * 1000; //Unix timestamps, like we use are in ms
+    this.value = minutes * 60000; //Unix timestamps, like we use are in ms
     this.sendEvent();
-  }
+  };
 
   render() {
     return (
       <Host>
-        <input type='text' ref={this.setInputEl} placeholder={this.placeholder}>{this.initialValue}</input>
+        <input type="text" ref={this.setInputEl} placeholder={this.placeholder}></input>
       </Host>
     );
   }
-
 }

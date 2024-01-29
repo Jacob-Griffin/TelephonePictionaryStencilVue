@@ -3,19 +3,19 @@ export const themes = {
   candy: {
     key: 'candy',
     displayName: 'Candy Vomit',
-    css: '.candy{--color-brand: #f42f65;--color-button: var(--color-brand);--color-button-hover: #8a43db;--color-important: #8a43db;--image-background: url(\'/candyCarnival-bkgd.jpg\');--icon: url(\'/byfo-logo2.png\');--chat-background: #888b;--optional-text-backdrop: var(--color-backdrop);}',
+    css: 'body.candy{--color-brand: #f42f65;--color-button: var(--color-brand);--color-button-hover: #8a43db;--color-important: #8a43db;--image-background: url(\'/candyCarnival-bkgd.jpg\');--icon: url(\'/byfo-logo2.png\');--chat-background: #888b;--optional-text-backdrop: var(--color-backdrop);}',
     extends: 'light'
   },
   classic: {
     key: 'classic',
     displayName: 'Classic',
-    css: '.classic{--color-brand: #2c33bf;--color-button: var(--color-brand);--color-button-hover: #8cc63f;--image-background: url(\'/basic-bkgd.jpg\');--chat-background: #888b;}',
+    css: 'body.classic{--color-brand: #2c33bf;--color-button: var(--color-brand);--color-button-hover: #8cc63f;--image-background: url(\'/basic-bkgd.jpg\');--chat-background: #888b;}',
     extends: 'light'
   },
   dark: {
     key: 'dark',
     displayName: 'Dark',
-    css: '.dark{--color-background: #181818;--color-heading: #ffffff;--color-text: rgba(235, 235, 235, 0.64);--color-link: rgb(70, 70, 200);--color-link-hover: rgb(80, 80, 220);--icon: url(\'/byfo-logo.png\');--scroll-color: #999;}',
+    css: 'body.dark{--color-background: #181818;--color-heading: #ffffff;--color-text: rgba(235, 235, 235, 0.64);--color-link: rgb(70, 70, 200);--color-link-hover: rgb(80, 80, 220);--icon: url(\'/byfo-logo.png\');--scroll-color: #999;}',
     extends: 'light'
   },
   light: {

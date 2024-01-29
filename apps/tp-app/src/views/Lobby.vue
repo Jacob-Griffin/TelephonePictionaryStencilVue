@@ -90,13 +90,10 @@ onMounted(() => {
       <p v-for="player in players">{{ player.username }}</p>
     </section>
     <div class="flex-col" v-if="store.hosting == gameid">
-      <p class="needs-backdrop">Round length:</p>
-      <tp-time-input :max-minutes="config.maxRoundLength" init-value="3:00" placeholder="∞" />
+      <p class="needs-backdrop">Round length in minutes:</p>
+      <tp-time-input :max-minutes="config.maxRoundLength" init-value="3.0" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength" @click="startGame">Start Game</button>
-    </div>
-    <div class="flex-col needs-backdrop" v-else>
-      <p>Waiting for host</p>
     </div>
   </main>
 </template>

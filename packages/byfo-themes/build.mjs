@@ -59,7 +59,6 @@ try {
             const inherited = [];
             declarations = declarations.filter(dec => {
                 if(/var\(/.test(dec)){
-                    console.log(dec);
                     inherited.push(dec);
                     return false;
                 }
@@ -68,7 +67,8 @@ try {
             themeObj.css = `:root{${declarations.join('')}} .${key}{${inherited.join('')}}`
 
         } else {
-            themeObj.css = `.${key}{${declarations.join('')}}`;
+            //Add body.[class] so that it's one step more specific than the default theme
+            themeObj.css = `body.${key}{${declarations.join('')}}`;
         }
         
 
