@@ -5,10 +5,11 @@
 
 ## Properties
 
-| Property  | Attribute | Description | Type     | Default     |
-| --------- | --------- | ----------- | -------- | ----------- |
-| `content` | `content` |             | `string` | `undefined` |
-| `type`    | `type`    |             | `string` | `undefined` |
+| Property    | Attribute    | Description | Type     | Default     |
+| ----------- | ------------ | ----------- | -------- | ----------- |
+| `content`   | `content`    |             | `string` | `undefined` |
+| `sendingTo` | `sending-to` |             | `string` | `undefined` |
+| `type`      | `type`       |             | `string` | `undefined` |
 
 
 ----------------------------------------------
