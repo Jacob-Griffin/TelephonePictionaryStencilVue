@@ -43,21 +43,36 @@ try {
         }
         const themeExtends = contents.match(/@extends: ?"([^"]+)"/)?.[1] || (isDefault ? undefined : 'light');
 
-        const declarations = [...contents.matchAll(/\-\-[a-z\-]+:[^;]+;/g)].map(match => match[0]);
+        let declarations = [...contents.matchAll(/\-\-[a-z\-]+:[^;]+;/g)].map(match => match[0]);
         declarations.forEach(d => {
             const varName = d.match(/^(.+):/)?.[1];
             if(!varLookup.has(varName)){
                 writeMessage(`Theme ${key} is using an unknown variable ${varName}`,'warn');
             }
         });
-        const cssDef = declarations.join('')
-        const css = isDefault ? `:root{${cssDef}}` : `.${key}{${cssDef}}`;
-
+        
         const themeObj = {
             key,
             displayName,
-            css,
         }
+        if(isDefault){
+            const inherited = [];
+            declarations = declarations.filter(dec => {
+                if(/var\(/.test(dec)){
+                    console.log(dec);
+                    inherited.push(dec);
+                    return false;
+                }
+                return true;
+            });
+            themeObj.css = `:root{${declarations.join('')}} .${key}{${inherited.join('')}}`
+
+        } else {
+            themeObj.css = `.${key}{${declarations.join('')}}`;
+        }
+        
+
+        
         if(themeExtends){
             themeObj.extends = themeExtends;
         }

@@ -7,11 +7,10 @@ import 'byfo-components/dist/components/tp-content';
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { getGameStatus, submitRound, fetchCard, getToAndFrom, getStaticRoundInfo, turnInMissing, getPlayerNumber, sendAddTime, attachFinishedListener, attachRoundListener, attachMissingListener } from 'byfo-utils/firebase';
-
-import { config, sortNamesBy, calculatePlayerNameWidth } from 'byfo-utils';
+import { config, sortNamesBy, calculatePlayerNameWidth } from 'byfo-utils/rollup';
 
 const store = inject('TpStore');
+const firebase = inject('Firebase');
 
 const name = store.username;
 const gameid = useRoute().params.gameid;
@@ -49,7 +48,7 @@ const widthVar = ref('');
 
 let redirect = false;
 //Check the game status and redirect if necessary
-const status = await getGameStatus(gameid);
+const status = await firebase.getGameStatus(gameid);
 if (!status.started && store.hosting !== gameid) {
   location.href = redirect = `/lobby/${gameid}`;
 } else if (status.finished) {
@@ -58,7 +57,7 @@ if (!status.started && store.hosting !== gameid) {
   //Check if the current game was exited improperly
   const rejoinNumber = store.rejoinNumber;
   if (rejoinNumber) {
-    const rejoined = await turnInMissing(gameid, rejoinNumber);
+    const rejoined = await firebase.turnInMissing(gameid, rejoinNumber);
     if (!rejoined) {
       location.href = redirect = '/';
     }
@@ -68,15 +67,15 @@ if (!status.started && store.hosting !== gameid) {
 const subscriptions = [];
 
 //Grab who you're sending to and recieving from (only need it once)
-const people = !redirect && (await getToAndFrom(gameid, name));
-const staticRoundInfo = !redirect && (await getStaticRoundInfo(gameid));
+const people = !redirect && (await firebase.getToAndFrom(gameid, name));
+const staticRoundInfo = !redirect && (await firebase.getStaticRoundInfo(gameid));
 
 //Subscribe to changes in roundnumber
 if(!redirect){
-  const playerNumber = await getPlayerNumber(gameid, name);
-  const missingListener = attachMissingListener(gameid,playerNumber);
+  const playerNumber = await firebase.getPlayerNumber(gameid, name);
+  const missingListener = firebase.attachMissingListener(gameid,playerNumber);
 
-  subscriptions.push(attachRoundListener(gameid, async snapshot => {
+  subscriptions.push(firebase.attachRoundListener(gameid, async snapshot => {
     const newRound = snapshot.val();
     if (newRound === null) {
       //If the data no longer exists, go to the review page
@@ -92,12 +91,12 @@ if(!redirect){
     if (newRound.roundnumber === 0) return;
 
     //Grab the data of your "from" player using pre-updated round#
-    content.value = await fetchCard(gameid, people?.from, roundnumber.value - 1);
+    content.value = await firebase.fetchCard(gameid, people?.from, roundnumber.value - 1);
   }));
 
 
   //Subscribe to see when the game gets finished
-  subscriptions.push(attachFinishedListener(gameid,snapshot => {
+  subscriptions.push(firebase.attachFinishedListener(gameid,snapshot => {
     const result = [];
     const pulledData = snapshot.val();
     for (let name in pulledData) {
@@ -113,7 +112,7 @@ if(!redirect){
   //Add event listeners
   onMounted(() => {
     document.addEventListener('tp-submitted', ({ detail }) => {
-      submitRound(gameid, name, roundnumber.value, detail, staticRoundInfo);
+      firebase.submitRound(gameid, name, roundnumber.value, detail, staticRoundInfo);
       finishedRound.value = roundnumber.value;
       window.scroll({top:0});
     });
@@ -144,7 +143,7 @@ if(!redirect){
 }
 const timeValue = config.addTimeIncrement;
 const addTime = e => {
-  sendAddTime(gameid,timeValue*1000);
+  firebase.sendAddTime(gameid,timeValue*1000);
 };
 
 const scrollToCanvas = e => {

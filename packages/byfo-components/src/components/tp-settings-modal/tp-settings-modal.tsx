@@ -1,5 +1,6 @@
-import { Component, Host, Prop, Element, h } from '@stencil/core';
+import { Component, Prop, Element, h } from '@stencil/core';
 import { themes } from 'byfo-themes';
+import { renderModal } from '../../globals/modal';
 
 @Component({
   tag: 'tp-settings-modal',
@@ -38,8 +39,8 @@ export class TpSettingsModal {
       div.classList.remove('checked');
     }
   };
-  renderSettings(): Element[] {
-    const header = <h1>Settings</h1>;
+  renderBody(): Element[] {
+    const header = <h2>Settings</h2>;
     const body = (
       <section class="settings">
         <div>
@@ -75,27 +76,7 @@ export class TpSettingsModal {
     return [header, body, info];
   }
 
-  checkClose = (e: Event) => {
-    const clicked = e.target as HTMLElement;
-    if (clicked.classList.contains('background') || clicked.closest('.close')) {
-      this.enabled = false;
-    }
-  };
   render() {
-    if (!this.enabled) {
-      return <Host></Host>;
-    }
-    return (
-      <Host>
-        <section class="background" onClick={this.checkClose}>
-          <article>
-            <button class="close" onClick={this.checkClose}>
-              <tp-icon icon="x"></tp-icon>
-            </button>
-            {...this.renderSettings()}
-          </article>
-        </section>
-      </Host>
-    );
+    return renderModal(this);
   }
 }

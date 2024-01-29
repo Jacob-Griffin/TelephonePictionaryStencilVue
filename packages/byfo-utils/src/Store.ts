@@ -74,6 +74,14 @@ export class TPStore {
     this.rejoinNumber = v;
   };
 
+  getRejoinData() {
+    if (!this.gameid || !this.username) return null;
+    return {
+      gameid: this.gameid,
+      name: this.username,
+    };
+  }
+
   clearGameData() {
     this.setUsername(undefined);
     this.setGameid(undefined);

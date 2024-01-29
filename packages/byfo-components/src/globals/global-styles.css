@@ -1,0 +1,75 @@
+tp-icon {
+  stroke: var(--color-text);
+  fill: var(--color-text);
+  width: 100%;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  font-weight: normal;
+  overscroll-behavior: none;
+}
+
+button {
+  width: 100%;
+  max-width: 24rem;
+  height: 4rem;
+  line-height: 2rem;
+  font-size: 1.5rem;
+  background-color: var(--color-button);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-family: inherit !important;
+}
+
+button:hover,
+.selected {
+  background-color: var(--color-button-hover);
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: var(--color-button-disabled);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-link);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+input[type='text'] {
+  height: 3rem;
+  width: 100%;
+  max-width: 20rem;
+  border-radius: 1rem;
+  border: none;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+/* add an outline to text boxes if the theme is some variation of light, or the input is focused */
+input[type='text']:focus,
+.light input[type='text'] {
+  outline: solid 1px;
+  outline-color: var(--color-brand);
+}
+
+.really {
+  --optional-text-backdrop: var(--color-backdrop);
+}
+.needs-backdrop {
+  background-color: var(--optional-text-backdrop);
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin: -0.25rem;
+}

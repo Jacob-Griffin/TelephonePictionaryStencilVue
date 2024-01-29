@@ -14,16 +14,6 @@
 
 ## Methods
 
-### `backupPaths() => Promise<string>`
-
-
-
-#### Returns
-
-Type: `Promise<string>`
-
-
-
 ### `exportDrawing() => Promise<Blob>`
 
 

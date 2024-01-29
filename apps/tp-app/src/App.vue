@@ -1,10 +1,11 @@
 <script setup>
 import { RouterView } from 'vue-router';
-import { inGame, inHome, TPStore } from 'byfo-utils';
+import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted } from 'vue';
 import 'byfo-components/dist/components/tp-icon';
 import 'byfo-components/dist/components/tp-time-input';
 import 'byfo-components/dist/components/tp-settings-modal';
+import { firebaseConfig } from '../firebase.secrets';
 
 const isInGame = inGame(location);
 const isInHome = inHome(location);
@@ -18,6 +19,10 @@ const settingsmodal = ref(null);
 
 const tp = new TPStore();
 provide('TpStore', tp);
+
+const firebase = new BYFOFirebaseAdapter(firebaseConfig);
+provide('Firebase',firebase);
+
 onBeforeMount(() => tp.useTheme());
 onMounted(()=>{
   settingsmodal.value.store = tp;

@@ -46,6 +46,7 @@
 /* This way it can be passed on in themes where needs backdrop is not universal */
 .really {
   --optional-text-backdrop: var(--color-backdrop);
+  color: var(--color-backdrop-text);
 }
 .needs-backdrop {
   background-color: var(--optional-text-backdrop);

@@ -5,6 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { BYFOFirebaseAdapter } from "byfo-utils";
+import { RejoinData } from "byfo-utils/dist/types";
+export { BYFOFirebaseAdapter } from "byfo-utils";
+export { RejoinData } from "byfo-utils/dist/types";
 export namespace Components {
     interface TpCanvas {
         "exportDrawing": () => Promise<Blob>;
@@ -32,6 +36,12 @@ export namespace Components {
     interface TpReviewChat {
         "showAll": any;
         "stackProxy": any;
+    }
+    interface TpRoutingModal {
+        "enabled": boolean;
+        "firebase": BYFOFirebaseAdapter;
+        "rejoin"?: RejoinData | null;
+        "type": 'host' | 'join' | 'result' | undefined;
     }
     interface TpSettingsModal {
         "enabled": boolean;
@@ -86,6 +96,12 @@ declare global {
         prototype: HTMLTpReviewChatElement;
         new (): HTMLTpReviewChatElement;
     };
+    interface HTMLTpRoutingModalElement extends Components.TpRoutingModal, HTMLStencilElement {
+    }
+    var HTMLTpRoutingModalElement: {
+        prototype: HTMLTpRoutingModalElement;
+        new (): HTMLTpRoutingModalElement;
+    };
     interface HTMLTpSettingsModalElement extends Components.TpSettingsModal, HTMLStencilElement {
     }
     var HTMLTpSettingsModalElement: {
@@ -111,6 +127,7 @@ declare global {
         "tp-icon": HTMLTpIconElement;
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-review-chat": HTMLTpReviewChatElement;
+        "tp-routing-modal": HTMLTpRoutingModalElement;
         "tp-settings-modal": HTMLTpSettingsModalElement;
         "tp-time-input": HTMLTpTimeInputElement;
         "tp-timer": HTMLTpTimerElement;
@@ -142,6 +159,12 @@ declare namespace LocalJSX {
         "showAll"?: any;
         "stackProxy"?: any;
     }
+    interface TpRoutingModal {
+        "enabled"?: boolean;
+        "firebase"?: BYFOFirebaseAdapter;
+        "rejoin"?: RejoinData | null;
+        "type"?: 'host' | 'join' | 'result' | undefined;
+    }
     interface TpSettingsModal {
         "enabled"?: boolean;
         "store"?: any;
@@ -164,6 +187,7 @@ declare namespace LocalJSX {
         "tp-icon": TpIcon;
         "tp-input-zone": TpInputZone;
         "tp-review-chat": TpReviewChat;
+        "tp-routing-modal": TpRoutingModal;
         "tp-settings-modal": TpSettingsModal;
         "tp-time-input": TpTimeInput;
         "tp-timer": TpTimer;
@@ -179,6 +203,7 @@ declare module "@stencil/core" {
             "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
+            "tp-routing-modal": LocalJSX.TpRoutingModal & JSXBase.HTMLAttributes<HTMLTpRoutingModalElement>;
             "tp-settings-modal": LocalJSX.TpSettingsModal & JSXBase.HTMLAttributes<HTMLTpSettingsModalElement>;
             "tp-time-input": LocalJSX.TpTimeInput & JSXBase.HTMLAttributes<HTMLTpTimeInputElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;

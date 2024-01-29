@@ -1,21 +1,55 @@
 <script setup>
-import { ref, onBeforeUnmount } from 'vue';
-const openModal = ref('');
+import { inject, onBeforeUnmount, ref } from 'vue';
+import 'byfo-components/dist/components/tp-routing-modal';
+
+const store = inject('TpStore');
+const firebase = inject('Firebase');
+const modalEl = ref(null);
 
 const switchModal = event => {
-  openModal.value = event?.target.getAttribute('modal') ?? '';
+  modalEl.value.rejoin = store.getRejoinData();
+  modalEl.value.type = event?.target.getAttribute('modal') ?? '';
+  modalEl.value.enabled = true;
 };
 
-const keyHandler = event => {
-  if (event.key !== 'Enter') return;
-  const target = document.querySelector('.main-action');
-  if (!target) return;
+document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
+  store.setHosting(gameid);
+  store.setUsername(name);
+  store.setGameid(gameid);
+  store.setRejoinNumber(undefined);
+  if (gameid > 999999) {
+    location.href = `/game/${gameid}`;
+  } else {
+    location.href = `/lobby/${gameid}`;
+  }
+});
 
-  target.click();
-};
+document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,name}})=>{
+  if(dest === 'lobby'){
+    store.setRejoinNumber(undefined);
+    store.setUsername(name);
+    store.setGameid(gameid);
+    location.href = `/lobby/${gameid}`;
+    return;
+  }
+  if(dest === 'game') {
+    store.setRejoinNumber(gameid);
+    store.setUsername(name);
+    store.setGameid(gameid);
+    location.href = `/game/${gameid}`;
+    return;
+  }
+})
 
-document.addEventListener('keydown', keyHandler);
-onBeforeUnmount(() => document.removeEventListener('keydown', keyHandler));
+document.addEventListener('tp-modal-action-result',({detail:{gameid}})=>{
+  location.href = `/review/${gameid}`;
+  return;
+});
+onBeforeUnmount(()=>{
+  document.removeEventListener('tp-modal-action-host');
+  document.removeEventListener('tp-modal-action-join');
+  document.removeEventListener('tp-modal-action-result');
+})
 </script>
 
 <template>
@@ -26,9 +60,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', keyHandler));
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
     </div>
-    <HostModal v-if="openModal == 'host'" @modal-closed="switchModal"></HostModal>
-    <JoinModal v-if="openModal == 'join'" @modal-closed="switchModal"></JoinModal>
-    <ResultModal v-if="openModal == 'result'" @modal-closed="switchModal"></ResultModal>
+    <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
   </main>
   <footer>
     <p>Copyright ©2023 Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>

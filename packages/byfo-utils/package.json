@@ -2,21 +2,25 @@
   "name": "byfo-utils",
   "version": "0.5.0",
   "private": true,
-  "main": "./src/index",
-  "types": "./src/types",
+  "main": "./dist/index.js",
+  "typings": "./dist/index",
   "exports": {
-    ".":"./src/index",
-    "./firebase":"./src/firebase",
-    "./config":"./src/config",
-    "./types":"./src/types/index.ts"
+    ".": "./dist/index",
+    "./firebase": "./dist/firebase",
+    "./config": "./dist/config",
+    "./rollup": "./src/index",
+    "./rollup/firebase": "./src/firebase"
   },
   "engines": {
     "node": ">=14.0.0"
   },
+  "scripts": {
+    "build": "tsc && cp ./src/types.d.ts ./dist/types.d.ts"
+  },
   "packageManager": "pnpm@8.6.2",
   "dependencies": {
-    "firebase": "^9.21.0",
-    "typescript": "5",
-    "byfo-themes": "workspace:*"
+    "byfo-themes": "workspace:*",
+    "firebase": "^9.23.0",
+    "typescript": "^5.3.3"
   }
 }

@@ -1,15 +1,15 @@
 <script setup>
 import 'byfo-components/dist/components/tp-content';
 import 'byfo-components/dist/components/tp-review-chat';
-import { getGameData } from 'byfo-utils/firebase';
-import { sortNames } from 'byfo-utils';
+import { sortNames } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const store = inject('TpStore');
+const firebase = inject('Firebase');
 const gameid = useRoute().params.gameid;
 
-const stacks = await getGameData(gameid);
+const stacks = await firebase.getGameData(gameid);
 const players = sortNames(Object.keys(stacks));
 const imagesCached = new Set();
 
@@ -21,7 +21,6 @@ const showCollapse = computed(() => {
   if(!playerSelector.value) return false;
   const height = playerSelector.value.getBoundingClientRect().height;
   const screenHeight = window.innerHeight;
-  console.log(height,screenHeight);
   return height/screenHeight > 0.16;
 });
 const collapsed = ref(false);

@@ -1,11 +1,11 @@
 <script setup>
-import { beginGame, turnInMissing, getWaitingPlayers, attachGameStatusListener, attachMissingListener, attachPlayerListener } from 'byfo-utils/firebase';
 import { onMounted } from 'vue';
-import { config, sortNamesBy } from 'byfo-utils';
+import { config, sortNamesBy } from 'byfo-utils/rollup';
 import { useRoute } from 'vue-router';
 import { ref, inject } from 'vue';
 
 const store = inject('TpStore');
+const firebase = inject('Firebase');
 
 const players = ref([]);
 const gameid = useRoute().params.gameid;
@@ -14,21 +14,21 @@ const roundLength = ref(180000);
 const timeError = ref('');
 
 const startGame = async () => {
-  await beginGame(gameid, roundLength.value);
+  await firebase.beginGame(gameid, roundLength.value);
   location.href = `/game/${gameid}`;
 };
 
 //Before Mount
 const rejoinNumber = store.rejoinNumber;
 if (rejoinNumber) {
-  const rejoined = await turnInMissing(gameid, rejoinNumber);
+  const rejoined = await firebase.turnInMissing(gameid, rejoinNumber);
   if (!rejoined) {
     //If a rejoin number exists, but the data doesn't match, you're not supposed to be here
     location.href = '/';
   }
 }
 
-const playerList = await getWaitingPlayers(gameid);
+const playerList = await firebase.getWaitingPlayers(gameid);
 const rawPlayers = Object.values(playerList);
 //Players by default are sorted by their priority. That is, the player order is generated as they join
 //This realphabetizes the players for displaying in the lobby's list
@@ -36,11 +36,11 @@ players.value = sortNamesBy(rawPlayers, 'username');
 
 for (const playerNumber in playerList) {
   if (playerList[playerNumber]?.username === store.username) {
-    attachMissingListener(gameid,playerNumber);
+    firebase.attachMissingListener(gameid,playerNumber);
   }
 }
 
-attachPlayerListener(gameid, snapshot => {
+firebase.attachPlayerListener(gameid, snapshot => {
   const playerList = snapshot.val();
   const rawPlayers = Object.values(playerList);
   players.value = sortNamesBy(rawPlayers, 'username');
@@ -61,7 +61,7 @@ attachPlayerListener(gameid, snapshot => {
 });
 
 //Subscribe to the game's status to see if it started
-attachGameStatusListener(gameid, snapshot => {
+firebase.attachGameStatusListener(gameid, snapshot => {
   const status = snapshot.val();
   //On the off chance that you jumped into a lobby of a finished game, redirect to the results
   if (status.finished) {
@@ -77,7 +77,6 @@ attachGameStatusListener(gameid, snapshot => {
 
 onMounted(() => {
   document.addEventListener('tp-time-input', ({ detail }) => {
-    console.log(detail);
     roundLength.value = detail.value;
     timeError.value = detail.timeError;
   });

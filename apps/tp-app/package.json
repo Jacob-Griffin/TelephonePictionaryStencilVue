@@ -13,20 +13,20 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "byfo-utils": "workspace:*",
     "byfo-themes": "workspace:*",
-    "firebase": "^9.21.0",
-    "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "byfo-utils": "workspace:*",
+    "firebase": "^9.23.0",
+    "vue": "^3.4.15",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.2.0",
-    "@vitejs/plugin-vue": "^4.2.1",
+    "@rushstack/eslint-patch": "^1.7.2",
+    "@vitejs/plugin-vue": "^4.6.2",
     "@vue/eslint-config-prettier": "^7.1.0",
     "byfo-components": "workspace:^",
-    "eslint": "^8.39.0",
-    "eslint-plugin-vue": "^9.11.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.20.1",
     "prettier": "^2.8.8",
-    "vite": "^4.3.9"
+    "vite": "^4.5.2"
   }
 }

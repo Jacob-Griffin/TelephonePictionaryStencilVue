@@ -3,12 +3,14 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "typeRoots": ["./src/types"],
+    "typeRoots": ["./types"],
     "rootDir": "./src",
+    "outDir": "./dist",
+    "declaration": true,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": true
+    "inlineSourceMap": true
   },
   "include": ["src/**/*"],
 }

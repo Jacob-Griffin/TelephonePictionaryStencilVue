@@ -4,14 +4,14 @@
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files":[
+  "files": [
     "/dist"
   ],
   "engines": {
     "node": ">=14.0.0"
   },
   "scripts": {
-    "build": "node ./build.mjs",
+    "build": "node ./build.mjs && tsc",
     "build:ts": "tsc"
   },
   "packageManager": "pnpm@8.6.2",

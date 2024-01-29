@@ -20,14 +20,17 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "^4.9.1",
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@stencil/core": "^4.11.0",
     "byfo-themes": "workspace:^",
+    "byfo-utils": "workspace:^",
+    "rollup": "2.56.3",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^16.18.11",
-    "typescript": "^5.3.2"
+    "@types/node": "^16.18.76",
+    "typescript": "^5.3.3"
   },
   "license": "MIT"
 }
