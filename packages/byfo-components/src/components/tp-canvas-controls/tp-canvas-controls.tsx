@@ -100,8 +100,8 @@ export class TpCanvasControls {
 
         {/* Clear */}
         <section>
-          <button id="white-clear">{icons.trash}</button>
-          <button id="black-clear">{icons.trash}</button>
+          <button id="white-clear">{icons.droplet}</button>
+          <button id="black-clear">{icons.droplet}</button>
         </section>
 
         <button id="submit-button" onClick={this.submithandler}>

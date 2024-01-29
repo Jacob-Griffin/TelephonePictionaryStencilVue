@@ -2,7 +2,7 @@
   display: block;
   margin-top: -0.5rem;
   width: var(--full-width, 10rem);
-  --block-size:4rem;
+  --block-size: 4rem;
   --icon-size: 2.5rem;
   --spacing-size: 1rem;
   --half-spacing: 0.5rem;
@@ -21,7 +21,7 @@ section {
   margin: var(--half-spacing);
   padding: var(--spacing-size);
   container-type: inline-size;
-  align-content: var(--horizontal,initial);
+  align-content: var(--horizontal, initial);
   flex-direction: var(--flip-pos, row);
   height: var(--flip-height, initial);
 }
@@ -46,7 +46,7 @@ button {
   align-items: center;
   border-radius: var(--half-spacing);
   width: var(--block-size);
-  height: var(--block-size);;
+  height: var(--block-size);
   border: none;
   cursor: pointer;
 }
