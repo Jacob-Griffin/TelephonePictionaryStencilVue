@@ -19,10 +19,11 @@ export namespace Components {
     }
     interface TpCanvasControls {
         "hostEl": HTMLElement;
-        "submithandler": (e:Event)=>void;
+        "submithandler": (e: Event) => void;
     }
     interface TpContent {
         "content": string;
+        "sendingTo": string;
         "type": string;
     }
     interface TpIcon {
@@ -141,10 +142,11 @@ declare namespace LocalJSX {
     }
     interface TpCanvasControls {
         "hostEl"?: HTMLElement;
-        "submithandler"?: (e:Event)=>void;
+        "submithandler"?: (e: Event) => void;
     }
     interface TpContent {
         "content"?: string;
+        "sendingTo"?: string;
         "type"?: string;
     }
     interface TpIcon {

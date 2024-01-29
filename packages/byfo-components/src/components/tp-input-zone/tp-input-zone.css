@@ -85,20 +85,19 @@ tp-canvas {
   aspect-ratio: 5/3;
 }
 
-
 #canvas-wrapper {
   display: flex;
   align-items: center;
-  gap:1rem;
+  gap: 1rem;
   justify-content: center;
-  flex-direction: var(--flip-pos,row);
+  flex-direction: var(--flip-pos, row);
 }
 
 #control-wrapper {
   text-align: center;
 }
 
-@media screen and (max-height:700px) {
+@media screen and (max-height: 700px) {
   tp-canvas {
     max-height: 90vh;
     flex-shrink: 1;
