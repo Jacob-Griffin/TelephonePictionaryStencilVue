@@ -66,7 +66,6 @@ export class ModalContent {
     let newError: string | boolean = false;
     this.fields.some(field => {
       const result = field.isValid(this.fieldValues[field.key]);
-      console.log(result);
       if (typeof result === 'string') {
         newError = result;
         return true;

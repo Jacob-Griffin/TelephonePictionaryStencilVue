@@ -1,16 +1,22 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
 import 'byfo-components/dist/components/tp-routing-modal';
+import 'byfo-components/dist/components/tp-tutorial-modal';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
 const modalEl = ref(null);
+const tutorialModal = ref(null);
 
 const switchModal = event => {
   modalEl.value.rejoin = store.getRejoinData();
   modalEl.value.type = event?.target.getAttribute('modal') ?? '';
   modalEl.value.enabled = true;
 };
+
+const viewTutorial = () => {
+  tutorialModal.value.enabled = true;
+}
 
 document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
   store.setHosting(gameid);
@@ -59,8 +65,10 @@ onBeforeUnmount(()=>{
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
+      <button @click="viewTutorial">How to play</button>
     </div>
     <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
+    <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
   </main>
   <footer>
     <p>Copyright ©2023 Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>

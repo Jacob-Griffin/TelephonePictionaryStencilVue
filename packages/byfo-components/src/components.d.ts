@@ -59,6 +59,9 @@ export namespace Components {
     interface TpTimer {
         "endtime": number;
     }
+    interface TpTutorialModal {
+        "enabled": boolean;
+    }
 }
 declare global {
     interface HTMLTpCanvasElement extends Components.TpCanvas, HTMLStencilElement {
@@ -121,6 +124,12 @@ declare global {
         prototype: HTMLTpTimerElement;
         new (): HTMLTpTimerElement;
     };
+    interface HTMLTpTutorialModalElement extends Components.TpTutorialModal, HTMLStencilElement {
+    }
+    var HTMLTpTutorialModalElement: {
+        prototype: HTMLTpTutorialModalElement;
+        new (): HTMLTpTutorialModalElement;
+    };
     interface HTMLElementTagNameMap {
         "tp-canvas": HTMLTpCanvasElement;
         "tp-canvas-controls": HTMLTpCanvasControlsElement;
@@ -132,6 +141,7 @@ declare global {
         "tp-settings-modal": HTMLTpSettingsModalElement;
         "tp-time-input": HTMLTpTimeInputElement;
         "tp-timer": HTMLTpTimerElement;
+        "tp-tutorial-modal": HTMLTpTutorialModalElement;
     }
 }
 declare namespace LocalJSX {
@@ -182,6 +192,9 @@ declare namespace LocalJSX {
     interface TpTimer {
         "endtime"?: number;
     }
+    interface TpTutorialModal {
+        "enabled"?: boolean;
+    }
     interface IntrinsicElements {
         "tp-canvas": TpCanvas;
         "tp-canvas-controls": TpCanvasControls;
@@ -193,6 +206,7 @@ declare namespace LocalJSX {
         "tp-settings-modal": TpSettingsModal;
         "tp-time-input": TpTimeInput;
         "tp-timer": TpTimer;
+        "tp-tutorial-modal": TpTutorialModal;
     }
 }
 export { LocalJSX as JSX };
@@ -209,6 +223,7 @@ declare module "@stencil/core" {
             "tp-settings-modal": LocalJSX.TpSettingsModal & JSXBase.HTMLAttributes<HTMLTpSettingsModalElement>;
             "tp-time-input": LocalJSX.TpTimeInput & JSXBase.HTMLAttributes<HTMLTpTimeInputElement>;
             "tp-timer": LocalJSX.TpTimer & JSXBase.HTMLAttributes<HTMLTpTimerElement>;
+            "tp-tutorial-modal": LocalJSX.TpTutorialModal & JSXBase.HTMLAttributes<HTMLTpTutorialModalElement>;
         }
     }
 }

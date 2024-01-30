@@ -1,0 +1,64 @@
+@import '../../globals/modal.css';
+@import '../../globals/global-styles.css';
+
+:host {
+  display: block;
+  text-align: center;
+}
+
+img,
+.image-placeholder {
+  height: 15rem;
+  width: auto;
+  max-width: 90%;
+}
+
+strong {
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border);
+  border-radius: 5px;
+  width: 100%;
+}
+
+.dot-container {
+  display: flex;
+  line-height: 0.75rem;
+  font-size: 1.7rem;
+  cursor: pointer;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: var(--color-border);
+  & > .current {
+    color: var(--color-text);
+  }
+}
+
+.tutorial-main {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  & > p {
+    flex-basis: 2ch;
+    height: 1em;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  & > section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: center;
+  }
+}
