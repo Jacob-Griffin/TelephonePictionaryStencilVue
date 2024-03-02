@@ -29,6 +29,14 @@ export class TPStore {
     document.dispatchEvent(e);
   };
 
+  landscapeDismissed = !!sessionStorage.getItem('landscapeDismissed');
+  setLandscapeDismissed = (v: boolean) => {
+    sessionStorage.setItem('landscapeDismissed', !v ? '' : 'true');
+    this.landscapeDismissed = true;
+    const e = this.changeEvent('landscapeDismissed', `${!!v}`);
+    document.dispatchEvent(e);
+  };
+
   //#region gamedata
   username = localStorage.getItem('username');
   setUsername = (v: string) => {

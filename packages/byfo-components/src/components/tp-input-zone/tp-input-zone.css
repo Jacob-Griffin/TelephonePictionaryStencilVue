@@ -80,7 +80,7 @@ button:disabled {
 tp-canvas {
   touch-action: none;
   flex-basis: 100%;
-  max-width: 75vw;
+  max-width: var(--tp-canvas-width-override, 75vw);
   max-height: 95vh;
   aspect-ratio: 5/3;
 }

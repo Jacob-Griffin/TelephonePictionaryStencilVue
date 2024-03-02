@@ -17,6 +17,12 @@ const gameid = useRoute().params.gameid;
 const isHosting = store.hosting === gameid;
 
 const inputzone = ref(null);
+const landscapeDismissed = ref(store.landscapeDismissed ?? false);
+
+const dismissLandscapeMode = () => {
+  store.setLandscapeDismissed(true);
+  landscapeDismissed.value = true;
+}
 
 const roundData = ref({
   roundnumber: 0,
@@ -176,8 +182,9 @@ const scrollToCanvas = e => {
         <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></tp-timer>
       </tp-input-zone>
     </section>
-    <section id="landscape-enforcer" v-if="!isText && !waiting">
-      <h2>Please rotate your device landscape</h2>
+    <section id="landscape-enforcer" v-if="!isText && !waiting && !landscapeDismissed">
+      <h2>We recommend rotating your device to landscape mode for a better drawing experience</h2>
+      <a @click="dismissLandscapeMode">No thanks</a>
     </section>
   </section>
 </template>
@@ -249,6 +256,12 @@ tp-input-zone {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  #not-waiting {
+    padding-inline: 0;
+    --tp-canvas-width-override: 95vw;
+    --tp-controls-gap: 0.25rem;
   }
 }
 

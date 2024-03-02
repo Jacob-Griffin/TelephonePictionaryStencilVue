@@ -8,6 +8,8 @@ export declare class TPStore {
     useTheme: (theme?: string) => void;
     alwaysShowAll: boolean;
     setShowAll: (v: boolean) => void;
+    landscapeDismissed: boolean;
+    setLandscapeDismissed: (v: boolean) => void;
     username: string;
     setUsername: (v: string) => void;
     gameid: string;
