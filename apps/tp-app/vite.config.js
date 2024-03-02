@@ -14,6 +14,20 @@ const watcherPlugin = {
   },
 };
 
+const createDateString = () => {
+  const date = new Date();
+
+  const year = date.getFullYear();
+  let month = date.getMonth();
+  if(month.length === 1) month = `0${month}`;
+  let day = date.getDay();
+  if(day.length === 1) day = `0${day}`;
+
+  const full = `${year}-${month}-${day}`;
+
+  return {year,full};
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -37,5 +51,8 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['byfo-components/dist/components/tp-input-zone'],
+  },
+  define: {
+    __BUILD_DATE__: createDateString(),
   },
 });

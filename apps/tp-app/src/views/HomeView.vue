@@ -7,6 +7,7 @@ const store = inject('TpStore');
 const firebase = inject('Firebase');
 const modalEl = ref(null);
 const tutorialModal = ref(null);
+const buildDate = ref(__BUILD_DATE__);
 
 const switchModal = event => {
   modalEl.value.rejoin = store.getRejoinData();
@@ -71,7 +72,8 @@ onBeforeUnmount(()=>{
     <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
   </main>
   <footer>
-    <p>Copyright ©2023 Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
+    <p>Copyright ©{{buildDate.year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
+    <p>Updated: {{buildDate.full}}</p>
   </footer>
 </template>
 
@@ -91,8 +93,9 @@ footer {
   color: var(--color-button-text);
   width: 100vw;
   box-sizing: border-box;
-  height: 4rem;
+  height: 6rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-inline: 1rem;
