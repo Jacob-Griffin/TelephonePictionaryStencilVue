@@ -36,9 +36,12 @@ export class BYFOFirebaseAdapter {
    * @param stacks - The full stack data object with all players and rounds
    * @returns true if successful, otherwise void
    */
-  async storeGame(gameid: number, stacks: BYFO.GameStacks): Promise<boolean> {
+  async storeGame(gameid: number, stacks: BYFO.GameStacks, metadata: BYFO.Metadata): Promise<boolean> {
     const docRef = doc(this.connection.db, `games/${gameid}`);
     await setDoc(docRef, stacks);
+
+    const metadataRef = doc(this.connection.db, `metadata/${gameid}`);
+    await setDoc(metadataRef, metadata);
     return true;
   }
 
@@ -540,6 +543,12 @@ export class BYFOFirebaseAdapter {
   async finalizeGame(gameid: number) {
     const stackData = await this.getRef(`game/${gameid}/stacks`);
     const playerOrder: BYFO.GamePlayers = await this.getRef(`game/${gameid}/players`);
+    const roundLength: number = await this.getRef(`game/${gameid}/staticRoundInfo/roundLength`);
+
+    const metadata = {
+      date: new Date().toString(),
+      roundLength,
+    };
 
     const finalStackData: BYFO.GameStacks = {};
     for (let player in stackData) {
@@ -554,7 +563,7 @@ export class BYFOFirebaseAdapter {
     const gameFinishedRef = this.ref(`game-statuses/${gameid}/finished`);
     set(gameFinishedRef, true);
 
-    this.storeGame(gameid, finalStackData).then(
+    this.storeGame(gameid, finalStackData, metadata).then(
       success => {
         //Delete the game from the realtime database
         remove(this.ref(`game/${gameid}`));

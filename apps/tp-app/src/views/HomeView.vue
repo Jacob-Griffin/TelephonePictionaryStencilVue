@@ -73,7 +73,6 @@ onBeforeUnmount(()=>{
   </main>
   <footer>
     <p>Copyright ©{{buildDate.year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
-    <p>Updated: {{buildDate.full}}</p>
   </footer>
 </template>
 
@@ -93,7 +92,7 @@ footer {
   color: var(--color-button-text);
   width: 100vw;
   box-sizing: border-box;
-  height: 6rem;
+  height: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

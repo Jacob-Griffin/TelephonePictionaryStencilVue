@@ -10,6 +10,7 @@ import { renderModal } from '../../globals/modal';
 export class TpSettingsModal {
   @Prop({ reflect: true, attribute: 'modal-enabled' }) enabled: boolean;
   @Prop() store;
+  @Prop() buildDate: { year: string; full: string; date: Date };
 
   @Element() el;
 
@@ -73,7 +74,13 @@ export class TpSettingsModal {
         Looking for help? Check our <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">knowlege base</a>
       </h4>
     );
-    return [header, body, info];
+    const build = (
+      <p>
+        Built on {this.buildDate.full}
+        <br>{this.buildDate.date.toString()}</br>
+      </p>
+    );
+    return [header, body, info, build];
   }
 
   render() {

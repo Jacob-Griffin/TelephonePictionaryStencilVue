@@ -16,6 +16,7 @@ const goHome = () => {
 };
 
 const settingsmodal = ref(null);
+const buildDate = ref(__BUILD_DATE__);
 
 const tp = new TPStore();
 provide('TpStore', tp);
@@ -49,7 +50,7 @@ onMounted(()=>{
   <Suspense>
     <RouterView />
   </Suspense>
-  <tp-settings-modal ref="settingsmodal"></tp-settings-modal>
+  <tp-settings-modal ref="settingsmodal" :buildDate="buildDate"></tp-settings-modal>
 </template>
 
 <style scoped>
