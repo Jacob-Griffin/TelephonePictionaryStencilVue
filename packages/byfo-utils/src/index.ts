@@ -4,3 +4,4 @@ export const config = conf;
 export { themes } from 'byfo-themes';
 export * from './general';
 export * from './firebase';
+export type * from './types';

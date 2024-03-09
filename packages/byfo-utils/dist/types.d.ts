@@ -67,3 +67,8 @@ export declare type FirebaseConnections = {
   rtdb: Database | null;
   storage: FirebaseStorage | null;
 };
+
+export declare type Metadata = {
+  date: string;
+  roundLength: number;
+};

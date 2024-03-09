@@ -46,7 +46,7 @@ export class BYFOFirebaseAdapter {
   }
 
   /**
-   *
+   * Fetches the stacks from a completed game
    * @param gameid
    * @returns
    */
@@ -55,6 +55,18 @@ export class BYFOFirebaseAdapter {
     const snapshot = await getDocFromServer(docRef);
     const gameData = snapshot.data() as BYFO.Game;
     return gameData;
+  }
+
+  /**
+   * Fetches the metadata from a completed game
+   * @param gameid
+   * @returns
+   */
+  async getGameMetadata(gameid: number): Promise<BYFO.Metadata> {
+    const docRef = doc(this.connection.db, `metadata/${gameid}`);
+    const snapshot = await getDocFromServer(docRef);
+    const metadata = (snapshot.data() as BYFO.Metadata | undefined) ?? { roundLength: 180000, date: 'unknown' };
+    return metadata;
   }
   //#endregion
 

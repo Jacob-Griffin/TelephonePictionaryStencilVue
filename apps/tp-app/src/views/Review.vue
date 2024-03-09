@@ -1,6 +1,8 @@
 <script setup>
 import 'byfo-components/dist/components/tp-content';
 import 'byfo-components/dist/components/tp-review-chat';
+import 'byfo-components/dist/components/tp-icon';
+import 'byfo-components/dist/components/tp-metadata-modal';
 import { sortNames } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -12,6 +14,15 @@ const gameid = useRoute().params.gameid;
 const stacks = await firebase.getGameData(gameid);
 const players = sortNames(Object.keys(stacks));
 const imagesCached = new Set();
+
+const metadata = await firebase.getGameMetadata(gameid);
+const metadataModal = ref(null);
+
+const openMetadata = () => {
+  metadataModal.value.metadata = metadata;
+  metadataModal.value.gameid = gameid;
+  metadataModal.value.enabled ||= true;
+}
 
 const selected = ref('');
 const showAllFlag = ref(!!store.alwaysShowAll);
@@ -96,6 +107,7 @@ store.clearGameData();
 </script>
 
 <template>
+  <h2>Game {{ gameid }}<tp-icon icon='info' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
     <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
@@ -108,6 +120,7 @@ store.clearGameData();
   <section class="stack" v-else>
     <h4>Select a stack to begin viewing</h4>
   </section>
+  <tp-metadata-modal ref="metadataModal"></tp-metadata-modal>
 </template>
 
 <style>
@@ -169,5 +182,23 @@ h4 {
 
 .dark h4 {
   background-color: var(--selector-backdrop);
+}
+tp-icon[icon='info']{
+  position: absolute;
+  top: 0.48rem;
+  right: -1.5rem;
+  display: block;
+  height: 1.32rem;
+  width: 1.32rem;
+  &:hover {
+    cursor: pointer;
+    top: 0.5rem;
+    right: -1.55rem;
+    height: 1.4rem;
+    width: 1.4rem;
+  }
+  & > svg {
+    top: -0.35rem;
+  }
 }
 </style>

@@ -4,8 +4,9 @@ import * as BYFO from './types';
 export declare class BYFOFirebaseAdapter {
     connection: BYFO.FirebaseConnections;
     constructor(config: FirebaseOptions);
-    storeGame(gameid: number, stacks: BYFO.GameStacks): Promise<boolean>;
+    storeGame(gameid: number, stacks: BYFO.GameStacks, metadata: BYFO.Metadata): Promise<boolean>;
     getGameData(gameid: number): Promise<BYFO.Game>;
+    getGameMetadata(gameid: number): Promise<BYFO.Metadata>;
     ref(path: string): import("firebase/database").DatabaseReference;
     getRef(path: string): Promise<any>;
     generatePriority(taken?: Set<number>): number;

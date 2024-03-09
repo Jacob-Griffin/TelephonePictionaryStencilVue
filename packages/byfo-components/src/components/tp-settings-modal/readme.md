@@ -7,10 +7,11 @@
 
 ## Properties
 
-| Property  | Attribute       | Description | Type      | Default     |
-| --------- | --------------- | ----------- | --------- | ----------- |
-| `enabled` | `modal-enabled` |             | `boolean` | `undefined` |
-| `store`   | `store`         |             | `any`     | `undefined` |
+| Property    | Attribute       | Description | Type                                          | Default     |
+| ----------- | --------------- | ----------- | --------------------------------------------- | ----------- |
+| `buildDate` | --              |             | `{ year: string; full: string; date: Date; }` | `undefined` |
+| `enabled`   | `modal-enabled` |             | `boolean`                                     | `undefined` |
+| `store`     | `store`         |             | `any`                                         | `undefined` |
 
 
 ## Dependencies

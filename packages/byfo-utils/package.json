@@ -8,6 +8,7 @@
     ".": "./dist/index",
     "./firebase": "./dist/firebase",
     "./config": "./dist/config",
+    "./types": "./dist/types",
     "./rollup": "./src/index",
     "./rollup/firebase": "./src/firebase"
   },
