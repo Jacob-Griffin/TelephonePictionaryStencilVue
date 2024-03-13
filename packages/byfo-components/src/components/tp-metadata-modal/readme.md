@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property   | Attribute       | Description | Type                                     | Default     |
-| ---------- | --------------- | ----------- | ---------------------------------------- | ----------- |
-| `enabled`  | `modal-enabled` |             | `boolean`                                | `undefined` |
-| `gameid`   | `gameid`        |             | `number`                                 | `undefined` |
-| `metadata` | --              |             | `{ date: string; roundLength: number; }` | `undefined` |
+| Property   | Attribute       | Description | Type                                     | Default                         |
+| ---------- | --------------- | ----------- | ---------------------------------------- | ------------------------------- |
+| `enabled`  | `modal-enabled` |             | `boolean`                                | `undefined`                     |
+| `gameid`   | `gameid`        |             | `string`                                 | `undefined`                     |
+| `metadata` | --              |             | `{ date: string; roundLength: number; }` | `{ date: '', roundLength: -1 }` |
 
 
 ## Dependencies
