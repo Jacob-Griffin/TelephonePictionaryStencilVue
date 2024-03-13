@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router';
 import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted } from 'vue';
 import 'byfo-components/dist/components/tp-icon';
+import 'byfo-components/dist/components/tp-logo';
 import 'byfo-components/dist/components/tp-time-input';
 import 'byfo-components/dist/components/tp-settings-modal';
 import { firebaseConfig } from '../firebase.secrets';
@@ -32,15 +33,13 @@ onMounted(()=>{
 
 <template>
   <header :class="isInHome ? 'invisible' : ''">
-    <div class="same-size">
+    <div>
       <div class="menu-button" @click="goHome" v-if="!isInHome && !isInGame">
         <tp-icon icon="home"></tp-icon>
       </div>
     </div>
-    <div>
-      <div class="small icon logo" v-if="!isInHome"></div>
-    </div>
-    <div class="same-size"></div>
+    <tp-logo small v-if="!isInHome"/>
+    <div></div>
   </header>
   <div id="settings-control">
     <div class="menu-button" @click="settingsmodal.enabled = true">
@@ -54,8 +53,7 @@ onMounted(()=>{
 </template>
 
 <style scoped>
-header,
-#settings-control {
+header {
   display: flex;
   justify-content: space-between;
   line-height: 1.5;
@@ -63,23 +61,30 @@ header,
   width: 100%;
   padding: 0.75rem 1.25rem;
   margin-bottom: 1.25rem;
-  box-sizing: border-box;
   background-color: var(--color-brand);
   user-select: none;
+
+  &.invisible {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  & > * {
+    /* make sure the even distribution is actually even */
+    min-width: 6rem;
+  }
 }
 
-header.invisible {
-  background-color: rgba(0, 0, 0, 0);
-}
+.menu-button {
+  cursor: pointer;
+  color: var(--color-button-text);
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: xx-large;
 
-header > div {
-  display: flex;
-  flex-direction: row;
-}
-
-header .logo {
-  align-self: center;
-  justify-self: center;
+  & > tp-icon {
+    stroke: var(--color-button-text);
+    fill: var(--color-button-text);
+  }
 }
 
 #settings-control {
@@ -91,27 +96,7 @@ header .logo {
   top: 0;
   right: 0;
   border-radius: 0 0 0 1rem;
-}
-
-.menu-button {
-  cursor: pointer;
-  color: var(--color-button-text);
-  height: 2.5rem;
-  width: 2.5rem;
-  font-size: xx-large;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-}
-
-.menu-button tp-icon {
-  stroke: var(--color-button-text);
-  fill: var(--color-button-text);
-}
-
-div.same-size {
-  width: 40%;
-  display: flex;
-  align-items: center;
+  background-color: var(--color-brand);
+  user-select: none;
 }
 </style>

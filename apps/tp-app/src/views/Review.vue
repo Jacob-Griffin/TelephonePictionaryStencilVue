@@ -107,7 +107,7 @@ store.clearGameData();
 </script>
 
 <template>
-  <h2>Game {{ gameid }}<tp-icon icon='info' @click="openMetadata"/></h2> 
+  <h2>Game {{ gameid }}<tp-icon icon='info' title='Game details' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
     <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
@@ -117,8 +117,8 @@ store.clearGameData();
   <section class="stack" v-if="selected">
     <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
-  <section class="stack" v-else>
-    <h4>Select a stack to begin viewing</h4>
+  <section class="unselected stack" v-else>
+    <h3 class='really needs-backdrop'>Select a stack to begin viewing</h3>
   </section>
   <tp-metadata-modal ref="metadataModal"></tp-metadata-modal>
 </template>
@@ -137,66 +137,52 @@ store.clearGameData();
   margin-bottom: 1rem;
   user-select: none;
   text-align: center;
-}
-#playerSelector.collapsed {
-  height:3rem;
-  overflow-y: hidden;
-}
+  
+  & > p{
+    cursor: pointer;
+    position:absolute;
+    top: 0;
+    left: 0;
+    transform:rotate(90deg);
+  }
 
-#playerSelector > p{
-  cursor: pointer;
-  position:absolute;
-  top: 0;
-  left: 0;
-  transform:rotate(90deg);
-}
-#playerSelector.collapsed > p{
-  transform:rotate(0);
-}
+  &.collapsed {
+    height:3rem;
+    overflow-y: hidden;
 
-#playerSelector > button:not(:first-child) {
-  margin: auto;
-  margin-left: 0.5rem;
+    & > p{
+      transform:rotate(0);
+    }
+  }
+
+  & > button:not(:first-child) {
+    margin: auto;
+    margin-left: 0.5rem;
+  }
 }
 
 .stack {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 1;
   height: 100vh;
-  min-height: 0;
   align-items: center;
   width: 100%;
   max-width: 900px;
-  gap: 1rem;
   margin-bottom: 1.5rem;
+
+  &.unselected > h3 {
+    line-height: 3.5rem;
+    text-align: center;
+  }
 }
 
-h4 {
-  font-size: large;
-  font-weight: 500;
-  background-color: var(--color-backdrop);
-  padding: 0.5rem 1.5rem;
-  border-radius: 1rem;
-}
-
-.dark h4 {
-  background-color: var(--selector-backdrop);
-}
 tp-icon[icon='info']{
   position: absolute;
   top: 0.48rem;
   right: -1.5rem;
-  display: block;
+
   height: 1.32rem;
   width: 1.32rem;
-  &:hover {
-    cursor: pointer;
-    top: 0.5rem;
-    right: -1.55rem;
-    height: 1.4rem;
-    width: 1.4rem;
-  }
+  cursor: pointer;
+
   & > svg {
     top: -0.35rem;
   }

@@ -1,5 +1,6 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
+import 'byfo-components/dist/components/tp-logo';
 import 'byfo-components/dist/components/tp-routing-modal';
 import 'byfo-components/dist/components/tp-tutorial-modal';
 
@@ -61,7 +62,7 @@ onBeforeUnmount(()=>{
 
 <template>
   <main>
-    <div class="icon"></div>
+    <tp-logo/>
     <div class="buttonMenu">
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
@@ -91,7 +92,6 @@ footer {
   background-color: var(--color-brand);
   color: var(--color-button-text);
   width: 100vw;
-  box-sizing: border-box;
   height: 4rem;
   display: flex;
   flex-direction: column;

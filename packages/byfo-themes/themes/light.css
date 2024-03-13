@@ -2,7 +2,6 @@
 /* @default */
 :root {
     --color-brand: rgb(50, 78, 163);
-    --color-button-text: white;
   
     --color-background: #f2f2f2;
   
@@ -18,6 +17,7 @@
     --color-link-hover: rgb(70, 70, 200);
   
     --color-button: rgb(60, 90, 190);
+    --color-button-text: white;
     /* hover also applies to the selected state of toggled buttons*/
     --color-button-hover: rgb(47, 155, 72); 
     --color-button-disabled: #889;

@@ -84,12 +84,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="page-wrapper">
+  <main>
     <h2 class="needs-backdrop">Game {{ gameid }}</h2>
     <section class="playerlist">
       <p v-for="player in players">{{ player.username }}</p>
     </section>
-    <div class="flex-col" v-if="store.hosting == gameid">
+    <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
       <tp-time-input :max-minutes="config.maxRoundLength" init-value="3.0" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
@@ -99,8 +99,17 @@ onMounted(() => {
 </template>
 
 <style>
-.page-wrapper {
+main {
   justify-content: center;
   gap: 2rem;
+}
+
+#host-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-//These are auto-imports for the stencil/native components
+//These are auto-imports for the stencil components
 import 'byfo-components/dist/components/tp-timer';
 import 'byfo-components/dist/components/tp-input-zone';
 import 'byfo-components/dist/components/tp-content';
@@ -190,10 +190,13 @@ const scrollToCanvas = e => {
 </template>
 
 <style scoped>
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 section {
   width: 100%;
   padding-inline: 2rem;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;

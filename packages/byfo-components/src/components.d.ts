@@ -34,6 +34,8 @@ export namespace Components {
         "round": number;
         "sendingTo": string;
     }
+    interface TpLogo {
+    }
     interface TpMetadataModal {
         "enabled": boolean;
         "gameid": string;
@@ -100,6 +102,12 @@ declare global {
         prototype: HTMLTpInputZoneElement;
         new (): HTMLTpInputZoneElement;
     };
+    interface HTMLTpLogoElement extends Components.TpLogo, HTMLStencilElement {
+    }
+    var HTMLTpLogoElement: {
+        prototype: HTMLTpLogoElement;
+        new (): HTMLTpLogoElement;
+    };
     interface HTMLTpMetadataModalElement extends Components.TpMetadataModal, HTMLStencilElement {
     }
     var HTMLTpMetadataModalElement: {
@@ -148,6 +156,7 @@ declare global {
         "tp-content": HTMLTpContentElement;
         "tp-icon": HTMLTpIconElement;
         "tp-input-zone": HTMLTpInputZoneElement;
+        "tp-logo": HTMLTpLogoElement;
         "tp-metadata-modal": HTMLTpMetadataModalElement;
         "tp-review-chat": HTMLTpReviewChatElement;
         "tp-routing-modal": HTMLTpRoutingModalElement;
@@ -179,6 +188,8 @@ declare namespace LocalJSX {
         "characterLimit"?: number;
         "round"?: number;
         "sendingTo"?: string;
+    }
+    interface TpLogo {
     }
     interface TpMetadataModal {
         "enabled"?: boolean;
@@ -220,6 +231,7 @@ declare namespace LocalJSX {
         "tp-content": TpContent;
         "tp-icon": TpIcon;
         "tp-input-zone": TpInputZone;
+        "tp-logo": TpLogo;
         "tp-metadata-modal": TpMetadataModal;
         "tp-review-chat": TpReviewChat;
         "tp-routing-modal": TpRoutingModal;
@@ -238,6 +250,7 @@ declare module "@stencil/core" {
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
+            "tp-logo": LocalJSX.TpLogo & JSXBase.HTMLAttributes<HTMLTpLogoElement>;
             "tp-metadata-modal": LocalJSX.TpMetadataModal & JSXBase.HTMLAttributes<HTMLTpMetadataModalElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
             "tp-routing-modal": LocalJSX.TpRoutingModal & JSXBase.HTMLAttributes<HTMLTpRoutingModalElement>;

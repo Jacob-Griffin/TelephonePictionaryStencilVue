@@ -1,20 +1,3 @@
-.align-end {
-  justify-content: flex-end;
-}
-
-.flex-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
 .playerlist {
   width: 100%;
   max-width: 30rem;
@@ -28,18 +11,19 @@
   align-items: center;
   border-radius: 1rem;
   font-size: large;
-}
-.playerlist > div {
-  display: flex;
-  justify-content: space-around;
-  gap: 2rem;
-  width: 100%;
-}
-.playerlist .ready {
-  color: green;
-}
-.playerlist .pending {
-  color: rgb(218, 129, 28);
+
+  & > div {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    width: 100%;
+  }
+  & .ready {
+    color: green;
+  }
+  & .pending {
+    color: rgb(218, 129, 28);
+  }
 }
 
 /* Used as a combinator for "really needs backdrop"*/

@@ -10,7 +10,7 @@ import type { Metadata } from 'byfo-utils';
 export class TpMetadataModal {
   @Prop({ reflect: true, attribute: 'modal-enabled' }) enabled: boolean;
   @Prop() gameid: string;
-  @Prop() metadata: Metadata = { date: '', roundLength: -1 };
+  @Prop() metadata: Metadata = { date: 'unknown', roundLength: 180000 };
 
   timeString(ms: number) {
     if (ms < 0) {
@@ -31,6 +31,9 @@ export class TpMetadataModal {
   }
 
   formatDate(date: string) {
+    if(date === 'unknown'){
+      return 'Unknown'
+    }
     const datePattern = /(?<day>\w{3} \w{3} \d{2} \d{4}) (?<time>[\d:]+) (?<offset>\w{3}[+\-]\d{4}) \((?<timezone>.+)\)/;
     const { groups: parsed } = datePattern.exec(date);
     return [`${parsed.day} @${parsed.time} `, <abbr title={parsed.offset}>{parsed.timezone}</abbr>];

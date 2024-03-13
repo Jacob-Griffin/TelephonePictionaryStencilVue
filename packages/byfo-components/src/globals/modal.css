@@ -1,7 +1,6 @@
 :host > section {
   width: 100vw;
   height: 100vh;
-  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +15,6 @@
   position: relative;
   height: fit-content;
   max-width: 960px;
-  box-sizing: border-box;
   padding: 2rem;
   display: flex;
   flex-direction: column;
