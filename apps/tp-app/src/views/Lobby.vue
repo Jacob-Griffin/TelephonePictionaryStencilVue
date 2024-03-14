@@ -1,4 +1,5 @@
 <script setup>
+import 'byfo-components/dist/components/tp-player-list';
 import { onMounted } from 'vue';
 import { config, sortNamesBy } from 'byfo-utils/rollup';
 import { useRoute } from 'vue-router';
@@ -86,9 +87,7 @@ onMounted(() => {
 <template>
   <main>
     <h2 class="needs-backdrop">Game {{ gameid }}</h2>
-    <section class="playerlist">
-      <p v-for="player in players">{{ player.username }}</p>
-    </section>
+    <tp-player-list :players="players"/>
     <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
       <tp-time-input :max-minutes="config.maxRoundLength" init-value="3.0" placeholder="∞" />

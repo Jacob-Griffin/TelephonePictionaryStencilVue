@@ -2,6 +2,7 @@
 //These are auto-imports for the stencil components
 import 'byfo-components/dist/components/tp-timer';
 import 'byfo-components/dist/components/tp-input-zone';
+import 'byfo-components/dist/components/tp-player-list';
 import 'byfo-components/dist/components/tp-content';
 
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
@@ -18,6 +19,8 @@ const isHosting = store.hosting === gameid;
 
 const inputzone = ref(null);
 const landscapeDismissed = ref(store.landscapeDismissed ?? false);
+
+const playerlist = ref([]);
 
 const dismissLandscapeMode = () => {
   store.setLandscapeDismissed(true);
@@ -49,7 +52,6 @@ const stuck = computed(() => {
   return roundData.value.endTime !== -1 && timeDiff > 4000;
 });
 //Which players are done with the current round
-const finishedPlayers = ref([]);
 const widthVar = ref('');
 
 let redirect = false;
@@ -105,14 +107,13 @@ if(!redirect){
   subscriptions.push(firebase.attachFinishedListener(gameid,snapshot => {
     const result = [];
     const pulledData = snapshot.val();
-    for (let name in pulledData) {
+    for (let username in pulledData) {
       result.push({
-        name,
-        lastRound: pulledData[name],
+        username,
+        lastRound: pulledData[username],
       });
     }
-    finishedPlayers.value = sortNamesBy(result, 'name');
-    widthVar.value = calculatePlayerNameWidth(finishedPlayers.value);
+    playerlist.value = sortNamesBy(result, 'username');
   }));
 
   //Add event listeners
@@ -160,16 +161,7 @@ const scrollToCanvas = e => {
 <template>
   <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
-    <section class="playerlist">
-      Round {{ roundnumber }}
-      <tp-timer v-if="roundData.endTime !== -1 && !stuck" :endtime="roundData.endTime"></tp-timer>
-      <p v-if="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
-      <div v-for="player in finishedPlayers">
-        <span :class="player.lastRound < roundData.roundnumber ? 'pending' : 'ready'">{{ player.lastRound < roundData.roundnumber ? '•' : '✓' }}</span>
-        <p>{{ player.name }}</p>
-      </div>
-      <button @click="addTime" class="small" v-if="isHosting && roundData.endTime > 0">Add {{ timeValue }}s</button>
-    </section>
+    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :stuck="stuck" :addTime="addTime"></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
@@ -211,18 +203,6 @@ section {
   display: none;
 }
 
-.playerlist > div {
-  max-width: 600px;
-}
-
-.playerlist > div > p {
-  width: v-bind('widthVar');
-  text-align: left;
-}
-.playerlist > div > span {
-  flex: 1;
-  text-align: right;
-}
 
 * {
   user-select: none;

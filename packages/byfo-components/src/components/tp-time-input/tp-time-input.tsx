@@ -3,7 +3,7 @@ import { Component, Host, Prop, State, h } from '@stencil/core';
 @Component({
   tag: 'tp-time-input',
   styleUrl: 'tp-time-input.css',
-  shadow: false,
+  shadow: true,
 })
 export class TpTimeInput {
   @Prop({ reflect: true, attribute: 'init-value' }) initialValue;

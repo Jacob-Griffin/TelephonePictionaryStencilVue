@@ -38,6 +38,16 @@ button:disabled {
   background-color: var(--color-button-disabled);
 }
 
+button.small {
+  white-space: nowrap;
+  width: fit-content;
+  height: 2.5rem;
+  line-height: 1.5rem;
+  padding: 0 1rem;
+  font-size: 1rem;
+  box-sizing: content-box;
+}
+
 a {
   text-decoration: none;
   color: var(--color-link);
@@ -53,6 +63,8 @@ input[type='text'] {
   max-width: 20rem;
   border-radius: 1rem;
   border: none;
+  outline: solid 1px;
+  outline-color: var(--color-border);
   font-size: 1.4rem;
   text-align: center;
 }
@@ -60,7 +72,6 @@ input[type='text'] {
 /* add an outline to text boxes if the theme is some variation of light, or the input is focused */
 input[type='text']:focus,
 .light input[type='text'] {
-  outline: solid 1px;
   outline-color: var(--color-brand);
 }
 

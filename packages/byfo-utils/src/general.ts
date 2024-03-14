@@ -35,11 +35,11 @@ export function sortNamesBy(names: inObject[], sortKey: keyof inObject) {
  * @param players - a list of player objects
  * @returns The css width for the player section of a list, such as between rounds
  */
-export function calculatePlayerNameWidth(players: { name: string; [other: string]: string | number }[]) {
+export function calculatePlayerNameWidth(players: { username: string; [other: string]: string | number }[]) {
   let max = 0;
   players.forEach(player => {
-    if (player.name?.length > max) {
-      max = player.name?.length;
+    if (player.username?.length > max) {
+      max = player.username?.length;
     }
   });
   const value = 50 + (40 * max) / 32;

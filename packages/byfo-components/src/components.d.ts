@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { BYFOFirebaseAdapter, Metadata } from "byfo-utils";
+import { BYFOFirebaseAdapter, Metadata, Player, RoundData } from "byfo-utils";
 import { RejoinData } from "byfo-utils/dist/types";
-export { BYFOFirebaseAdapter, Metadata } from "byfo-utils";
+export { BYFOFirebaseAdapter, Metadata, Player, RoundData } from "byfo-utils";
 export { RejoinData } from "byfo-utils/dist/types";
 export namespace Components {
     interface TpCanvas {
@@ -40,6 +40,13 @@ export namespace Components {
         "enabled": boolean;
         "gameid": string;
         "metadata": Metadata;
+    }
+    interface TpPlayerList {
+        "addTime"?: ()=>void;
+        "isHosting"?: boolean;
+        "players": Player[];
+        "roundData"?: RoundData;
+        "stuck"?: boolean;
     }
     interface TpReviewChat {
         "showAll": any;
@@ -114,6 +121,12 @@ declare global {
         prototype: HTMLTpMetadataModalElement;
         new (): HTMLTpMetadataModalElement;
     };
+    interface HTMLTpPlayerListElement extends Components.TpPlayerList, HTMLStencilElement {
+    }
+    var HTMLTpPlayerListElement: {
+        prototype: HTMLTpPlayerListElement;
+        new (): HTMLTpPlayerListElement;
+    };
     interface HTMLTpReviewChatElement extends Components.TpReviewChat, HTMLStencilElement {
     }
     var HTMLTpReviewChatElement: {
@@ -158,6 +171,7 @@ declare global {
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-logo": HTMLTpLogoElement;
         "tp-metadata-modal": HTMLTpMetadataModalElement;
+        "tp-player-list": HTMLTpPlayerListElement;
         "tp-review-chat": HTMLTpReviewChatElement;
         "tp-routing-modal": HTMLTpRoutingModalElement;
         "tp-settings-modal": HTMLTpSettingsModalElement;
@@ -196,6 +210,13 @@ declare namespace LocalJSX {
         "gameid"?: string;
         "metadata"?: Metadata;
     }
+    interface TpPlayerList {
+        "addTime"?: ()=>void;
+        "isHosting"?: boolean;
+        "players"?: Player[];
+        "roundData"?: RoundData;
+        "stuck"?: boolean;
+    }
     interface TpReviewChat {
         "showAll"?: any;
         "stackProxy"?: any;
@@ -233,6 +254,7 @@ declare namespace LocalJSX {
         "tp-input-zone": TpInputZone;
         "tp-logo": TpLogo;
         "tp-metadata-modal": TpMetadataModal;
+        "tp-player-list": TpPlayerList;
         "tp-review-chat": TpReviewChat;
         "tp-routing-modal": TpRoutingModal;
         "tp-settings-modal": TpSettingsModal;
@@ -252,6 +274,7 @@ declare module "@stencil/core" {
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-logo": LocalJSX.TpLogo & JSXBase.HTMLAttributes<HTMLTpLogoElement>;
             "tp-metadata-modal": LocalJSX.TpMetadataModal & JSXBase.HTMLAttributes<HTMLTpMetadataModalElement>;
+            "tp-player-list": LocalJSX.TpPlayerList & JSXBase.HTMLAttributes<HTMLTpPlayerListElement>;
             "tp-review-chat": LocalJSX.TpReviewChat & JSXBase.HTMLAttributes<HTMLTpReviewChatElement>;
             "tp-routing-modal": LocalJSX.TpRoutingModal & JSXBase.HTMLAttributes<HTMLTpRoutingModalElement>;
             "tp-settings-modal": LocalJSX.TpSettingsModal & JSXBase.HTMLAttributes<HTMLTpSettingsModalElement>;

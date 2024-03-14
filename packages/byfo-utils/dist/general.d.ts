@@ -5,7 +5,7 @@ type inObject = {
 };
 export declare function sortNamesBy(names: inObject[], sortKey: keyof inObject): inObject[];
 export declare function calculatePlayerNameWidth(players: {
-    name: string;
+    username: string;
     [other: string]: string | number;
 }[]): string;
 export declare function validGameId(input: string): boolean;

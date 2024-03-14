@@ -15,7 +15,8 @@ export declare type RejoinData = {
 
 export declare type Player = {
   username: string;
-  status: string;
+  status?: string;
+  lastRound?: number;
 };
 
 export declare type PlayerList = {
