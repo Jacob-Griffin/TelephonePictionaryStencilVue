@@ -1,14 +1,14 @@
 <script setup>
 //These are auto-imports for the stencil components
-import 'byfo-components/dist/components/tp-timer';
-import 'byfo-components/dist/components/tp-input-zone';
-import 'byfo-components/dist/components/tp-player-list';
-import 'byfo-components/dist/components/tp-content';
+import 'byfo-components/tp-timer';
+import 'byfo-components/tp-input-zone';
+import 'byfo-components/tp-player-list';
+import 'byfo-components/tp-content';
 
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { config, sortNamesBy, calculatePlayerNameWidth } from 'byfo-utils/rollup';
+import { config, sortNamesBy } from 'byfo-utils/rollup';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');

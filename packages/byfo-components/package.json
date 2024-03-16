@@ -11,8 +11,14 @@
   "collection:main": "dist/collection/index.js",
   "unpkg": "dist/byfo-components/byfo-components.esm.js",
   "files": [
-    "dist/"
+    "dist/",
+    "src/globals/css"
   ],
+  "exports": {
+    ".":"./dist/index.js",
+    "./*": "./dist/components/*",
+    "./css/*":"./src/globals/css/*.css"
+  },
   "scripts": {
     "build": "stencil build --docs",
     "dev": "stencil build --watch",

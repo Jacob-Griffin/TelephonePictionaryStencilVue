@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 
-const router = createRouter({
+export const routerConfig = {
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
@@ -45,9 +45,11 @@ const router = createRouter({
       meta: {
         title: 'Redirecting - Blow Your Face Off',
       },
-      component: () => import('../views/RedirectHome.vue'),
+      redirect: '/'
     },
   ],
-});
+}
+
+const router = createRouter(routerConfig);
 
 export default router;

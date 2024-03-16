@@ -1,8 +1,8 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
-import 'byfo-components/dist/components/tp-logo';
-import 'byfo-components/dist/components/tp-routing-modal';
-import 'byfo-components/dist/components/tp-tutorial-modal';
+import 'byfo-components/tp-logo';
+import 'byfo-components/tp-routing-modal';
+import 'byfo-components/tp-tutorial-modal';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
@@ -78,6 +78,10 @@ onBeforeUnmount(()=>{
 </template>
 
 <style>
+main tp-logo {
+  margin-top: -1.5rem;
+}
+
 .buttonMenu {
   display: flex;
   flex-direction: column;

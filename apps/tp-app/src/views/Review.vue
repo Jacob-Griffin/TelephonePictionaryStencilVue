@@ -1,8 +1,8 @@
 <script setup>
-import 'byfo-components/dist/components/tp-content';
-import 'byfo-components/dist/components/tp-review-chat';
-import 'byfo-components/dist/components/tp-icon';
-import 'byfo-components/dist/components/tp-metadata-modal';
+import 'byfo-components/tp-content';
+import 'byfo-components/tp-review-chat';
+import 'byfo-components/tp-icon';
+import 'byfo-components/tp-metadata-modal';
 import { sortNames } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';

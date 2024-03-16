@@ -11,6 +11,6 @@ export declare function calculatePlayerNameWidth(players: {
 export declare function validGameId(input: string): boolean;
 export declare function validUsername(input: string): string | true;
 export declare function invalidCharactersList(input: string): string;
-export declare function inGame(location: Location): boolean;
-export declare function inHome(location: Location): boolean;
+export declare function inGame(path: string): boolean;
+export declare function inHome(path: string): boolean;
 export {};

@@ -1,5 +1,5 @@
-@import '../../globals/modal.css';
-@import '../../globals/global-styles.css';
+@import '../../globals/css/modal.css';
+@import '../../globals/css/global-styles.css';
 
 :host {
   display: block;

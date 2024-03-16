@@ -108,8 +108,8 @@ export function invalidCharactersList(input: string) {
  * @param location - The window.Location in question
  * @returns True if the location is in game
  */
-export function inGame(location: Location) {
-  return /\/game\/[0-9]{1,7}\/?$/.test(location.href);
+export function inGame(path:string) {
+  return /\/game\/[0-9]{1,7}\/?$/.test(path);
 }
 
 /**
@@ -117,8 +117,7 @@ export function inGame(location: Location) {
  * @param location - The window.Location in question
  * @returns True if the location is in home
  */
-export function inHome(location: Location) {
-  const pattern = new RegExp(location.origin + '/?$');
-  return pattern.test(location.href);
+export function inHome(path:string) {
+  return path === '/';
 }
 //#endregion Regexp

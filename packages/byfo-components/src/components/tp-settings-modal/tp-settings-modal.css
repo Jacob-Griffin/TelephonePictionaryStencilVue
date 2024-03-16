@@ -1,6 +1,6 @@
-@import '../../globals/modal.css';
-@import '../../globals/toggle.css';
-@import '../../globals/global-styles.css';
+@import '../../globals/css/modal.css';
+@import '../../globals/css/toggle.css';
+@import '../../globals/css/global-styles.css';
 
 [icon='info'] {
   display: inline-block;

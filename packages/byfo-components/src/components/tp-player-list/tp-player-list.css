@@ -1,4 +1,4 @@
-@import '../../globals/global-styles.css';
+@import '../../globals/css/global-styles.css';
 
 :host {
   width: 100%;
@@ -31,7 +31,7 @@ section {
     }
 
     & > div {
-      display:flex;
+      display: flex;
       flex: 1;
       justify-content: flex-end;
       & > div {

@@ -1,5 +1,5 @@
 <script setup>
-import 'byfo-components/dist/components/tp-player-list';
+import 'byfo-components/tp-player-list';
 import { onMounted } from 'vue';
 import { config, sortNamesBy } from 'byfo-utils/rollup';
 import { useRoute } from 'vue-router';
