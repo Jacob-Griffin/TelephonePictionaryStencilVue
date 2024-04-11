@@ -24,6 +24,14 @@ export const routerConfig = {
       component: () => import('../views/Gameplay.vue'),
     },
     {
+      path: '/join/:gameid',
+      name: 'join',
+      meta: {
+        title: 'Join Game - Blow Your Face Off',
+      },
+      component: () => import('../views/Join.vue'),
+    },
+    {
       path: '/lobby/:gameid',
       name: 'lobby',
       meta: {

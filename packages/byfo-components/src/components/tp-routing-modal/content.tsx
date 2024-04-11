@@ -2,7 +2,7 @@ import { h } from '@stencil/core';
 import { BYFOFirebaseAdapter, validUsername } from 'byfo-utils';
 
 //#region Fields
-const nameField = {
+export const nameField = {
   key: 'name',
   display: 'Name',
   isValid: (name: string) => {
@@ -14,7 +14,7 @@ const nameField = {
   },
 };
 
-const gameIdField = {
+export const gameIdField = {
   key: 'gameid',
   display: 'Game Id',
   isValid: (id: string) => /[0-9]{0,7}/.test(id),

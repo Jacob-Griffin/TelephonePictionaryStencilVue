@@ -11,6 +11,9 @@ const firebase = inject('Firebase');
 const players = ref([]);
 const gameid = useRoute().params.gameid;
 
+const showCopied = ref(false);
+let copiedTimeout = null;
+
 const roundLength = ref(180000);
 const timeError = ref('');
 
@@ -82,11 +85,22 @@ onMounted(() => {
     timeError.value = detail.timeError;
   });
 });
+
+const copyLink = () => {
+  const link = `${location.origin}/join/${gameid}`;
+  navigator.clipboard.writeText(link);
+  showCopied.value = true;
+  clearTimeout(copiedTimeout);
+  copiedTimeout = setTimeout(()=>{showCopied.value = false;},3000);
+}
 </script>
 
 <template>
   <main>
-    <h2 class="needs-backdrop">Game {{ gameid }}</h2>
+    <section>
+      <h2 class="needs-backdrop">Game {{ gameid }}</h2>
+      <button @click="copyLink" class="small">{{showCopied ? `✓ Copied` : `&#xFE0E;📋 Copy Game Link`}}</button>
+    </section>
     <tp-player-list :players="players"/>
     <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
@@ -100,7 +114,11 @@ onMounted(() => {
 <style>
 main {
   justify-content: center;
-  gap: 2rem;
+  gap: 1rem;
+  & > section {
+    width: 20ch;
+    text-align: center;
+  }
 }
 
 #host-controls {

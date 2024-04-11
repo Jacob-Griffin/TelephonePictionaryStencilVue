@@ -38,6 +38,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@npm': fileURLToPath(new URL('./node_modules',import.meta.url))
     },
   },
   server: {

@@ -5,10 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { BYFOFirebaseAdapter, Metadata, Player, RoundData } from "byfo-utils";
-import { RejoinData } from "byfo-utils/dist/types";
-export { BYFOFirebaseAdapter, Metadata, Player, RoundData } from "byfo-utils";
-export { RejoinData } from "byfo-utils/dist/types";
+import { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData } from "byfo-utils";
+import { RejoinData as RejoinData1 } from "byfo-utils/dist/types";
+export { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData } from "byfo-utils";
+export { RejoinData as RejoinData1 } from "byfo-utils/dist/types";
 export namespace Components {
     interface TpCanvas {
         "exportDrawing": () => Promise<Blob>;
@@ -34,6 +34,11 @@ export namespace Components {
         "round": number;
         "sendingTo": string;
     }
+    interface TpJoinContent {
+        "firebase": BYFOFirebaseAdapter;
+        "gameid": string;
+        "rejoinData": RejoinData;
+    }
     interface TpLogo {
     }
     interface TpMetadataModal {
@@ -55,7 +60,7 @@ export namespace Components {
     interface TpRoutingModal {
         "enabled": boolean;
         "firebase": BYFOFirebaseAdapter;
-        "rejoin"?: RejoinData | null;
+        "rejoin"?: RejoinData1 | null;
         "type": 'host' | 'join' | 'result' | undefined;
     }
     interface TpSettingsModal {
@@ -108,6 +113,12 @@ declare global {
     var HTMLTpInputZoneElement: {
         prototype: HTMLTpInputZoneElement;
         new (): HTMLTpInputZoneElement;
+    };
+    interface HTMLTpJoinContentElement extends Components.TpJoinContent, HTMLStencilElement {
+    }
+    var HTMLTpJoinContentElement: {
+        prototype: HTMLTpJoinContentElement;
+        new (): HTMLTpJoinContentElement;
     };
     interface HTMLTpLogoElement extends Components.TpLogo, HTMLStencilElement {
     }
@@ -169,6 +180,7 @@ declare global {
         "tp-content": HTMLTpContentElement;
         "tp-icon": HTMLTpIconElement;
         "tp-input-zone": HTMLTpInputZoneElement;
+        "tp-join-content": HTMLTpJoinContentElement;
         "tp-logo": HTMLTpLogoElement;
         "tp-metadata-modal": HTMLTpMetadataModalElement;
         "tp-player-list": HTMLTpPlayerListElement;
@@ -203,6 +215,11 @@ declare namespace LocalJSX {
         "round"?: number;
         "sendingTo"?: string;
     }
+    interface TpJoinContent {
+        "firebase"?: BYFOFirebaseAdapter;
+        "gameid"?: string;
+        "rejoinData"?: RejoinData;
+    }
     interface TpLogo {
     }
     interface TpMetadataModal {
@@ -224,7 +241,7 @@ declare namespace LocalJSX {
     interface TpRoutingModal {
         "enabled"?: boolean;
         "firebase"?: BYFOFirebaseAdapter;
-        "rejoin"?: RejoinData | null;
+        "rejoin"?: RejoinData1 | null;
         "type"?: 'host' | 'join' | 'result' | undefined;
     }
     interface TpSettingsModal {
@@ -252,6 +269,7 @@ declare namespace LocalJSX {
         "tp-content": TpContent;
         "tp-icon": TpIcon;
         "tp-input-zone": TpInputZone;
+        "tp-join-content": TpJoinContent;
         "tp-logo": TpLogo;
         "tp-metadata-modal": TpMetadataModal;
         "tp-player-list": TpPlayerList;
@@ -272,6 +290,7 @@ declare module "@stencil/core" {
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
+            "tp-join-content": LocalJSX.TpJoinContent & JSXBase.HTMLAttributes<HTMLTpJoinContentElement>;
             "tp-logo": LocalJSX.TpLogo & JSXBase.HTMLAttributes<HTMLTpLogoElement>;
             "tp-metadata-modal": LocalJSX.TpMetadataModal & JSXBase.HTMLAttributes<HTMLTpMetadataModalElement>;
             "tp-player-list": LocalJSX.TpPlayerList & JSXBase.HTMLAttributes<HTMLTpPlayerListElement>;

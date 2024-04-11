@@ -9,7 +9,7 @@ The selectors for this declaration do not matter, the build process will parse t
 
 There are a few metadata properties you can add as comments too:
 
-`/* @default-name: "My Theme" */` is primarily used for the UI of the theme selector
+`/* @display-name: "My Theme" */` is primarily used for the UI of the theme selector
 `/* @extends: "other-theme" */` is used to build themes on top of other themes. When extends is not set, it defaults to whatever the default theme is (Currently "light")
 
 ## Example
