@@ -43,7 +43,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEW_TELEPHONE_PICTIONARY }}'
-          channelId: dev
-          projectId: new-telephone-pictionary
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEW_TELEPHONE_PICTIONARY_DEV }}'
+          channelId: live
+          projectId: new-telephone-pictionary-dev
           entryPoint: './apps/tp-app'
