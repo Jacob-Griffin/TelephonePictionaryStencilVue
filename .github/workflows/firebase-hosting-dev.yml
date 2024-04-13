@@ -39,7 +39,7 @@ jobs:
           echo "};" >> ./apps/tp-app/firebase.secrets.js
       - run: cat ./apps/tp-app/firebase.secrets.js
       - uses: pnpm/action-setup@v2.2.4
-      - run: pnpm install && pnpm build
+      - run: pnpm install && NODE_ENV=development pnpm build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

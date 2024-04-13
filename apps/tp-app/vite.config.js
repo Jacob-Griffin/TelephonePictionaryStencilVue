@@ -50,5 +50,6 @@ export default defineConfig({
   },
   define: {
     __BUILD_DATE__: createDateStrings(),
+    __IS_DEV__: process.env.NODE_ENV === 'development',
   },
 });

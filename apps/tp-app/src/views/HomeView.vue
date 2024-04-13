@@ -9,6 +9,7 @@ const firebase = inject('Firebase');
 const modalEl = ref(null);
 const tutorialModal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
+const devMode = ref(__IS_DEV__);
 
 const switchModal = event => {
   modalEl.value.rejoin = store.getRejoinData();
@@ -73,7 +74,7 @@ onBeforeUnmount(()=>{
     <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
   </main>
   <footer>
-    <p>Copyright ©{{buildDate.year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
+    <p>Copyright ©{{buildDate.year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved. {{ devMode ? 'Beta Build': '' }}</p>
   </footer>
 </template>
 
