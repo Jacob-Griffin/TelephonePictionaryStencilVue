@@ -64,7 +64,7 @@ export namespace Components {
         "type": 'host' | 'join' | 'result' | undefined;
     }
     interface TpSettingsModal {
-        "buildDate": { year: string; full: string; date: Date };
+        "buildDate": { year: string; full?: string; date?: Date };
         "enabled": boolean;
         "store": any;
     }
@@ -245,7 +245,7 @@ declare namespace LocalJSX {
         "type"?: 'host' | 'join' | 'result' | undefined;
     }
     interface TpSettingsModal {
-        "buildDate"?: { year: string; full: string; date: Date };
+        "buildDate"?: { year: string; full?: string; date?: Date };
         "enabled"?: boolean;
         "store"?: any;
     }

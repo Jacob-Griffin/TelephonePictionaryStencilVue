@@ -19,8 +19,9 @@ const createDateStrings = () => {
 
   const year = dateObj.getFullYear();
   const full = dateObj.toString();
-
-  return {year,full,date: dateObj};
+  return process.env.NODE_ENV === 'development' ?
+  { year,full,date: dateObj } :
+  { year };
 }
 
 // https://vitejs.dev/config/
