@@ -5,7 +5,11 @@ name: Deploy to Firebase Hosting on merge
 'on':
   push:
     branches:
-      - release*
+      - release
+  schedule:
+    #Happens at Midnight UTC going into January 1st. Ensures that the copyright date gets corrected on/around 1/1
+    - cron: '0 0 1 1 *'
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -43,3 +47,4 @@ jobs:
           channelId: live
           projectId: new-telephone-pictionary
           entryPoint: './apps/tp-app'
+          ref: 'refs/heads/release'

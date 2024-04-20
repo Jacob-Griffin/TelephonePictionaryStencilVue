@@ -47,3 +47,4 @@ jobs:
           channelId: live
           projectId: new-telephone-pictionary-dev
           entryPoint: './apps/tp-app'
+          ref: 'refs/heads/dev'
