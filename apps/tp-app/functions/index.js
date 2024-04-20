@@ -21,12 +21,4 @@ const transformGame = (payload) => {
     return newPayload;
 }
 
-exports.transformGamePreSearch = functions.region('us-west2').https.onCall(
-    (request) => {
-        const payload = request.data;
-        logger.warn(JSON.stringify(payload));
-        const newData = transformGame(payload);
-        logger.warn(JSON.stringify(newData));
-        return newData;
-    }
-);
+exports.transformGameForSearch = functions.region('us-west2').https.onCall(transformGame);
