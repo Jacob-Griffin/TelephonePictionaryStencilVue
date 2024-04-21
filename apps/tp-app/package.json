@@ -13,6 +13,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "algoliasearch": "^4.23.3",
     "byfo-themes": "workspace:*",
     "byfo-utils": "workspace:*",
     "firebase": "^9.23.0",

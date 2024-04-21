@@ -35,7 +35,7 @@ coverage
 
 #secrets
 .env
-firebase.secrets.js
+*.secrets.js
 
 #notes
 **/*.note.txt

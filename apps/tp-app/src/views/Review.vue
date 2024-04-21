@@ -9,7 +9,9 @@ import { useRoute } from 'vue-router';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
-const gameid = useRoute().params.gameid;
+const route = useRoute();
+const gameid = route.params.gameid;
+const searchedPlayer = route.query?.stack;
 
 const stacks = await firebase.getGameData(gameid);
 const players = sortNames(Object.keys(stacks));
@@ -81,7 +83,7 @@ if (showAllFlag.value) {
 }
 
 // Check if we're coming out of a game
-const self = store.username;
+const self = searchedPlayer ?? store.username;
 if (self && self in stacks) {
   clickPlayer(self);
 }
