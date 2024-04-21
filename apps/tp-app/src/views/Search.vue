@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { inject, onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
     import createSearchClient from 'algoliasearch';
@@ -7,6 +7,9 @@
 
     const searchClient = createSearchClient(searchAppId, searchAPIKey);
     const searchIndex = searchClient.initIndex('blow_your_face_off_index');
+
+    const store = inject('TpStore');
+    const searchAs = store.searchAs;
 
     const searchBar = ref(null);
     const results = ref([]);
@@ -21,12 +24,16 @@
             return;
         }
 
-        const { hits } = await searchIndex.search(text);
+        if(!searchAs){
+            return;
+        }
+
+        const { hits } = await searchIndex.search(text,{filters:`stackNames:"${searchAs}"`});
         if(!(hits.length > 0)){
             return;
         }
 
-        const boilerplate = /lastmodified|objectID|path|_highlightResult/;
+        const boilerplate = /lastmodified|objectID|path|_highlightResult|stackNames/;
         results.value = hits.map(hit => {
             const gameId = hit.objectID;
             const highlights = [];
@@ -67,19 +74,21 @@
 </script>
 <template>
     <main>
-    <input type='text' ref='searchBar' placeholder="Search"/>
-    <button @click="search">Search</button>
-    <section>
-        <article v-for="result in results" @click="e=>handleResultClick(e,result)">
-            <h2>Game {{ result.gameId }}</h2>
-            <div v-for="stack in result.highlights">
-                <h3>{{ stack.stack }}'s Stack:</h3>
-                <ul>
-                    <li v-for="string in stack.results" v-html="string"></li>
-                </ul>
-            </div>
-        </article>
-    </section>
+        <input type='text' ref='searchBar' placeholder="Search"/>
+        <button @click="search" :disabled="!searchAs">Search</button>
+        <h3 v-if="!searchAs">Search requires a username to try and limit it to games you were a part of. Set your "Search as" username in settings</h3>
+        <p v-else>Searching as {{ searchAs }}</p>
+        <section>
+            <article v-for="result in results" @click="e=>handleResultClick(e,result)">
+                <h2>Game {{ result.gameId }}</h2>
+                <div v-for="stack in result.highlights">
+                    <h3>{{ stack.stack }}'s Stack:</h3>
+                    <ul>
+                        <li v-for="string in stack.results" v-html="string"></li>
+                    </ul>
+                </div>
+            </article>
+        </section>
     </main>
 </template>
 

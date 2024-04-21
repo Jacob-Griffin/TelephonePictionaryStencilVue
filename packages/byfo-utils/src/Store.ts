@@ -82,6 +82,17 @@ export class TPStore {
     this.rejoinNumber = v;
   };
 
+  searchAs = localStorage.getItem('searchAs');
+  setSearchAs = (v:string) => {
+    if(!v) {
+      localStorage.removeItem('searchAs');
+      this.searchAs = undefined;
+      return;
+    }
+    localStorage.setItem('searchAs',v);
+    this.searchAs = v;
+  }
+
   getRejoinData() {
     if (!this.gameid || !this.username) return null;
     return {

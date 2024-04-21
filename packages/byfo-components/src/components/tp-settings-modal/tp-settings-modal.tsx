@@ -22,6 +22,10 @@ export class TpSettingsModal {
     const name = e.target.value;
     this.store?.setTheme(name);
   };
+  changeSearchAs = e => {
+    const name = e.target.value;
+    this.store?.setSearchAs(name);
+  }
   passClick = e => {
     const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
     if (target) {
@@ -57,6 +61,10 @@ export class TpSettingsModal {
               );
             })}
           </select>
+        </div>
+        <div>
+          <h2 class="label">Search As <tp-icon title='Required for search. Filters results to include games with this username' icon='info'></tp-icon></h2>
+          <input type='text' value={this.store.searchAs} onInput={this.changeSearchAs}/>
         </div>
         <div>
           <h2 class="label">

@@ -6,7 +6,9 @@ const logger = require('firebase-functions/logger');
 
 const transformGame = (payload) => {
     const newPayload = {}
+    const stackNames = [];
     for(const stack in payload){
+        stackNames.push(stack);
         if(typeof payload[stack] !== 'object' || Object.keys(stack).some(key => key !== `${parseInt(key)}`)){
             newPayload[stack] = payload[stack];
             continue;
@@ -18,6 +20,7 @@ const transformGame = (payload) => {
             }
         }
     }
+    newPayload.stackNames = stackNames;
     return newPayload;
 }
 
