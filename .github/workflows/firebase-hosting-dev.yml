@@ -25,6 +25,8 @@ jobs:
           VITE_MESSAGINGSENDERID: '${{ secrets.MESSAGINGSENDERID }}'
           VITE_MEASUREMENTID: '${{ secrets.MEASUREMENTID }}'
           VITE_DATABASEURL: '${{ secrets.DATABASEURL }}'
+          VITE_SEARCHAPP: '${{secrets.SEARCHAPP}}'
+          VITE_SEARCHKEY: '${{secrets.SEARCHKEY}}'
         run: |
           touch ./apps/tp-app/firebase.secrets.js
           echo "export const firebaseConfig = {" >> ./apps/tp-app/firebase.secrets.js
@@ -37,6 +39,10 @@ jobs:
           echo measurementId: \"$VITE_MEASUREMENTID\"\,  >> ./apps/tp-app/firebase.secrets.js
           echo databaseURL: \"$VITE_DATABASEURL\"\  >> ./apps/tp-app/firebase.secrets.js
           echo "};" >> ./apps/tp-app/firebase.secrets.js
+        run: |
+          touch ./apps/tp-app/algolia.secrets.js
+          echo "export const searchAPIKey = \"$VITE_SEARCHKEY\";" >> ./apps/tp-app/algolia.secrets.js
+          echo "export const searchAppId = \"$VITE_SEARCHAPP\";" >> ./apps/tp-app/algolia.secrets.js
       - run: cat ./apps/tp-app/firebase.secrets.js
       - uses: pnpm/action-setup@v2.2.4
       - run: pnpm install && NODE_ENV=development pnpm build
