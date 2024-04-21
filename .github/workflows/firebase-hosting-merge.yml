@@ -39,7 +39,6 @@ jobs:
           echo measurementId: \"$VITE_MEASUREMENTID\"\,  >> ./apps/tp-app/firebase.secrets.js
           echo databaseURL: \"$VITE_DATABASEURL\"\  >> ./apps/tp-app/firebase.secrets.js
           echo "};" >> ./apps/tp-app/firebase.secrets.js
-        run: |
           touch ./apps/tp-app/algolia.secrets.js
           echo "export const searchAPIKey = \"$VITE_SEARCHKEY\";" >> ./apps/tp-app/algolia.secrets.js
           echo "export const searchAppId = \"$VITE_SEARCHAPP\";" >> ./apps/tp-app/algolia.secrets.js
