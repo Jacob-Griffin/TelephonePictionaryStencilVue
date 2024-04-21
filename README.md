@@ -11,13 +11,15 @@ This project started as a Vue+Vite app backed by some stencil.js webcomponents t
 - Node JS
 - pnpm (`npm i -g pnpm`, if you need it)
 - A firebase config object
+- An Algolia index named 'blow_your_face_off_index'
 
 <hr>
 
 1. After cloning the repo, run `pnpm install` at the project root
 2. In /apps/tp-app, create a firebase.secrets.js and export your firebase config object
    - This is just to keep my own keys private, and to support github action publishing.
-3. Run `pnpm build`, then `pnpm dev` at the root.
+3. In /apps/tp-app, create a copy of algolia.secrets.template.js call algolia.secrets.js, and sub in your api key and app name 
+4. Run `pnpm build`, then `pnpm dev` at the root.
 
 The game will then be hosted at localhost:5150, and available to your local network at the same port (vite will tell you the address)
 
