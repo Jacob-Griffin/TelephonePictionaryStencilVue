@@ -164,7 +164,8 @@ store.clearGameData();
 }
 
 .stack {
-  height: 100vh;
+  flex-grow: 1;
+  overflow: hidden;
   align-items: center;
   width: 100%;
   max-width: 900px;
