@@ -8,11 +8,11 @@ const transformGame = (payload) => {
     const newPayload = {}
     const stackNames = [];
     for(const stack in payload){
-        stackNames.push(stack);
         if(typeof payload[stack] !== 'object' || Object.keys(stack).some(key => key !== `${parseInt(key)}`)){
             newPayload[stack] = payload[stack];
             continue;
         }
+        stackNames.push(stack);
         newPayload[stack] = {};
         for(const round in payload[stack]){
             if(payload[stack][round].contentType === 'text'){

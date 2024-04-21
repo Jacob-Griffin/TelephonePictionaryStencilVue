@@ -25,6 +25,8 @@ export class TpSettingsModal {
   changeSearchAs = e => {
     const name = e.target.value;
     this.store?.setSearchAs(name);
+    const event = new CustomEvent<string>('tp-setting-changed-searchAs',{detail:name});
+    document.dispatchEvent(event);
   }
   passClick = e => {
     const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];

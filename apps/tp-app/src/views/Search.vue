@@ -1,5 +1,5 @@
 <script setup>
-    import { inject, onMounted, ref } from 'vue';
+    import { inject, onMounted, ref, computed } from 'vue';
     import { useRoute } from 'vue-router';
 
     import createSearchClient from 'algoliasearch';
@@ -9,7 +9,7 @@
     const searchIndex = searchClient.initIndex('blow_your_face_off_index');
 
     const store = inject('TpStore');
-    const searchAs = store.searchAs;
+    const searchAs = ref(store.searchAs);
 
     const searchBar = ref(null);
     const results = ref([]);
@@ -24,11 +24,17 @@
             return;
         }
 
-        if(!searchAs){
+        if(!searchAs.value){
             return;
         }
 
-        const { hits } = await searchIndex.search(text,{filters:`stackNames:"${searchAs}"`});
+        const filterObj = / /.test(searchAs.value) ? {
+            filters:`stackNames:"${searchAs.value.replace(/'/,"\\'")}"`
+        } : {
+            filters:`stackNames:${searchAs.value.replace(/'/,"\\'")}`
+        };
+
+        const { hits } = await searchIndex.search(text, filterObj);
         if(!(hits.length > 0)){
             return;
         }
@@ -66,6 +72,7 @@
         location.href = dest;
     }
     onMounted(()=>{
+        document.addEventListener('tp-setting-changed-searchAs',e=>searchAs.value = e.detail);
         if(initialQuery){
             searchBar.value.value = initialQuery;
             search();
@@ -76,8 +83,8 @@
     <main>
         <input type='text' ref='searchBar' placeholder="Search"/>
         <button @click="search" :disabled="!searchAs">Search</button>
-        <h3 v-if="!searchAs">Search requires a username to try and limit it to games you were a part of. Set your "Search as" username in settings</h3>
-        <p v-else>Searching as {{ searchAs }}</p>
+        <h3 v-if="!searchAs" class="really needs-backdrop">Search requires a username to try and limit it to games you were a part of. Set your "Search as" username in settings</h3>
+        <p v-else class="really needs-backdrop">Searching as {{ searchAs }}</p>
         <section>
             <article v-for="result in results" @click="e=>handleResultClick(e,result)">
                 <h2>Game {{ result.gameId }}</h2>
@@ -96,7 +103,7 @@
     main {
         gap:1rem;
         max-width: 1200px;
-        align-items: stretch;
+        align-items: center;
     }
     input[type='text'] {
         text-align: start;

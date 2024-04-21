@@ -54,10 +54,16 @@ document.addEventListener('tp-modal-action-result',({detail:{gameid}})=>{
   location.href = `/review/${gameid}`;
   return;
 });
+
+document.addEventListener('tp-modal-action-search',({detail:{query}}) =>{
+  location.href = `/search?q=${query}`;
+  return;
+})
 onBeforeUnmount(()=>{
   document.removeEventListener('tp-modal-action-host');
   document.removeEventListener('tp-modal-action-join');
   document.removeEventListener('tp-modal-action-result');
+  document.removeEventListener('tp-modal-action-search');
 })
 </script>
 
@@ -68,6 +74,7 @@ onBeforeUnmount(()=>{
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
+      <button @click="switchModal" modal="search">Search Completed Games</button>
       <button @click="viewTutorial">How to play</button>
     </div>
     <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>

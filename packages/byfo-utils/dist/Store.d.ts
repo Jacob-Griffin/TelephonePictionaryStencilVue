@@ -18,6 +18,8 @@ export declare class TPStore {
     setHosting: (v: string) => void;
     rejoinNumber: string;
     setRejoinNumber: (v: string) => void;
+    searchAs: string;
+    setSearchAs: (v: string) => void;
     getRejoinData(): {
         gameid: string;
         name: string;
