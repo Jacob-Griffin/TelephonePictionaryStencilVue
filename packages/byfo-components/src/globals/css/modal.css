@@ -51,3 +51,7 @@
     margin-top: 0;
   }
 }
+
+:host:not([modal-enabled]) {
+  height: 0;
+}
