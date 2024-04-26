@@ -1,4 +1,10 @@
 import { themes } from 'byfo-themes';
+
+const customStyleDefaults: Record<string,string> = {
+  backgroundBlur: '0',
+  backgroundBrightness: '1',
+  backgroundSaturation: '1',
+}
 export class TPStore {
   changeEvent = (setting: string, value: string) => new CustomEvent('tp-settings-changed', { detail: { setting, value } });
 
@@ -19,6 +25,40 @@ export class TPStore {
       currentTheme = themes[currentTheme].extends;
     }
   };
+
+  customStyle: Record<string,string> = {
+    backgroundBlur: localStorage.getItem('backgroundBlur') ?? customStyleDefaults['backgroundBlur'],
+    backgroundBrightness: localStorage.getItem('backgroundBrightness') ?? customStyleDefaults['backgroundBrightness'],
+    backgroundSaturation: localStorage.getItem('backgroundSaturation') ?? customStyleDefaults['backgroundSaturation'],
+  }
+  setCustomStyle = (prop:string,v:string|number)=>{
+    this.customStyle[prop] = `${v}`;
+    localStorage.setItem(prop, `${v}`);
+    this.useCustomStyles();
+  }
+  resetCustomStyles = () => {
+    this.customStyle = {...customStyleDefaults};
+    Object.entries(customStyleDefaults).forEach(([prop,value])=>{
+      localStorage.setItem(prop, value);
+    })
+    this.useCustomStyles();
+  }
+
+  useCustomStyles = () => {
+    let styleTag = document.getElementById('customized-theme');
+    if(!styleTag){
+      styleTag = document.createElement('style');
+      styleTag.id = 'customized-theme';
+      document.head.appendChild(styleTag);
+    }
+
+    styleTag.innerHTML = '';
+    const newStyles = Object.entries(this.customStyle).map(([prop,value])=>{
+      const kabobPropName = prop.replace(/[A-Z]/,(char)=>`-${char.toLowerCase()}`);
+      return `--customized-${kabobPropName}: ${value};`;
+    });
+    styleTag.innerText = `:root{${newStyles.join('')}}`;
+  }
   //#endregion theme
 
   alwaysShowAll = !!localStorage.getItem('alwaysShowAll');
@@ -91,6 +131,9 @@ export class TPStore {
     }
     localStorage.setItem('searchAs',v);
     this.searchAs = v;
+
+    const e = this.changeEvent('searchAs',v);
+    document.dispatchEvent(e);
   }
 
   getRejoinData() {

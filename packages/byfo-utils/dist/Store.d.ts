@@ -6,6 +6,10 @@ export declare class TPStore {
     theme: string;
     setTheme: (v: string) => void;
     useTheme: (theme?: string) => void;
+    customStyle: Record<string, string>;
+    setCustomStyle: (prop: string, v: string | number) => void;
+    resetCustomStyles: () => void;
+    useCustomStyles: () => void;
     alwaysShowAll: boolean;
     setShowAll: (v: boolean) => void;
     landscapeDismissed: boolean;

@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData } from "byfo-utils";
+import { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData, TPStore } from "byfo-utils";
 import { RejoinData as RejoinData1 } from "byfo-utils/dist/types";
-export { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData } from "byfo-utils";
+export { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData, TPStore } from "byfo-utils";
 export { RejoinData as RejoinData1 } from "byfo-utils/dist/types";
 export namespace Components {
     interface TpCanvas {
@@ -66,7 +66,7 @@ export namespace Components {
     interface TpSettingsModal {
         "buildDate": { year: string; full?: string; date?: Date };
         "enabled": boolean;
-        "store": any;
+        "store": TPStore;
     }
     interface TpTimeInput {
         "initialValue": any;
@@ -247,7 +247,7 @@ declare namespace LocalJSX {
     interface TpSettingsModal {
         "buildDate"?: { year: string; full?: string; date?: Date };
         "enabled"?: boolean;
-        "store"?: any;
+        "store"?: TPStore;
     }
     interface TpTimeInput {
         "initialValue"?: any;

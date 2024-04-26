@@ -11,7 +11,7 @@
 | ----------- | --------------- | ----------- | ----------------------------------------------- | ----------- |
 | `buildDate` | --              |             | `{ year: string; full?: string; date?: Date; }` | `undefined` |
 | `enabled`   | `modal-enabled` |             | `boolean`                                       | `undefined` |
-| `store`     | `store`         |             | `any`                                           | `undefined` |
+| `store`     | --              |             | `TPStore`                                       | `undefined` |
 
 
 ## Dependencies

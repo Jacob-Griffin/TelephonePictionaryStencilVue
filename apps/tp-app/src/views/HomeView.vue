@@ -71,8 +71,8 @@ onBeforeUnmount(()=>{
   <main>
     <tp-logo/>
     <div class="buttonMenu">
-      <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
+      <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
       <button @click="switchModal" modal="search">Search Completed Games</button>
       <button @click="viewTutorial">How to play</button>
@@ -98,6 +98,9 @@ main tp-logo {
   padding: 2rem;
   max-width: 768px;
   gap: 1rem;
+  & > button:first-child {
+    background-color: var(--color-important);
+  }
 }
 
 footer {

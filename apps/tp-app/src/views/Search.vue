@@ -72,7 +72,11 @@
         location.href = dest;
     }
     onMounted(()=>{
-        document.addEventListener('tp-setting-changed-searchAs',e=>searchAs.value = e.detail);
+        document.addEventListener('tp-settings-changed',e=>{
+            if(e.detail.setting === 'searchAs'){
+                searchAs.value = e.detail.value;
+            }
+        });
         if(initialQuery){
             searchBar.value.value = initialQuery;
             search();
