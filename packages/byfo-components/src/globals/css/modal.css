@@ -52,6 +52,10 @@
   }
 }
 
-:host:not([modal-enabled]) {
-  height: 0;
+:host {
+  display: none;
+}
+
+modal-enabled {
+  display: flex;
 }
