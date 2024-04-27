@@ -171,9 +171,12 @@ store.clearGameData();
   max-width: 900px;
   margin-bottom: 1.5rem;
 
-  &.unselected > h3 {
-    line-height: 3.5rem;
-    text-align: center;
+  &.unselected {
+    padding: 1rem;
+    & h3 {
+      line-height: 3.5rem;
+      text-align: center;
+    }
   }
 }
 
