@@ -1,5 +1,6 @@
 body {
   min-height: 100vh;
+  overflow-x: none;
   width: 100%;
   color: var(--color-text);
   background: var(--image-background, var(--color-background));
