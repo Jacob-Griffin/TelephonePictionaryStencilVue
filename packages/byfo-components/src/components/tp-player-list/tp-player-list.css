@@ -28,6 +28,7 @@ section {
     & > p {
       width: var(--name-width, 50%);
       text-align: left;
+      flex: 3 3 0%;
     }
 
     & > div {
