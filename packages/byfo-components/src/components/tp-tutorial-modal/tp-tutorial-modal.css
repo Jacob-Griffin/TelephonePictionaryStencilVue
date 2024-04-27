@@ -2,7 +2,6 @@
 @import '../../globals/css/global-styles.css';
 
 :host {
-  display: block;
   text-align: center;
 }
 
