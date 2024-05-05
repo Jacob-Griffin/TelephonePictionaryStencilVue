@@ -18,6 +18,9 @@ const roundLength = ref(180000);
 const timeError = ref('');
 
 const startGame = async () => {
+  if(players.value.length < config.minPlayers){
+    return;
+  }
   await firebase.beginGame(gameid, roundLength.value);
   location.href = `/game/${gameid}`;
 };
@@ -101,12 +104,12 @@ const copyLink = () => {
       <h2 class="needs-backdrop">Game {{ gameid }}</h2>
       <button @click="copyLink" class="small">{{showCopied ? `✓ Copied` : `&#xFE0E;📋 Copy Game Link`}}</button>
     </section>
-    <tp-player-list :players="players"/>
+    <tp-player-list :players="players" message="Waiting for players. Invite players with the game number or by sharing the join link above"/>
     <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
       <tp-time-input :max-minutes="config.maxRoundLength" init-value="3.0" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
-      <button :disabled="!roundLength" @click="startGame">Start Game</button>
+      <button :disabled="!roundLength || players.length < 3" @click="startGame">Start Game</button>
     </div>
   </main>
 </template>

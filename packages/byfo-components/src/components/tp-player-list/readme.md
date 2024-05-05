@@ -11,9 +11,9 @@
 | ----------- | ------------ | ----------- | ------------------------------------------- | ----------- |
 | `addTime`   | --           |             | `() => void`                                | `undefined` |
 | `isHosting` | `is-hosting` |             | `boolean`                                   | `false`     |
+| `message`   | `message`    |             | `string`                                    | `undefined` |
 | `players`   | --           |             | `Player[]`                                  | `[]`        |
 | `roundData` | --           |             | `{ roundnumber: number; endTime: number; }` | `undefined` |
-| `stuck`     | `stuck`      |             | `boolean`                                   | `false`     |
 
 
 ## Dependencies

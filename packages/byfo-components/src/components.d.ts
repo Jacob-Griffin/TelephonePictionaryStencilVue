@@ -49,9 +49,9 @@ export namespace Components {
     interface TpPlayerList {
         "addTime"?: ()=>void;
         "isHosting"?: boolean;
+        "message"?: string;
         "players": Player[];
         "roundData"?: RoundData;
-        "stuck"?: boolean;
     }
     interface TpReviewChat {
         "showAll": any;
@@ -230,9 +230,9 @@ declare namespace LocalJSX {
     interface TpPlayerList {
         "addTime"?: ()=>void;
         "isHosting"?: boolean;
+        "message"?: string;
         "players"?: Player[];
         "roundData"?: RoundData;
-        "stuck"?: boolean;
     }
     interface TpReviewChat {
         "showAll"?: any;

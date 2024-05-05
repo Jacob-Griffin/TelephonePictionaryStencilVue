@@ -8,6 +8,11 @@ import { validUsername } from './general';
 
 export class BYFOFirebaseAdapter {
   /**
+   * Backs up the last submission time to prevent double ups on timeout submissions
+   */
+  lastForcedSubmission: number = null;
+
+  /**
    * Holds the connection objects for the firebase services
    */
   connection: BYFO.FirebaseConnections = {
@@ -378,8 +383,27 @@ export class BYFOFirebaseAdapter {
    * @param staticRoundInfo - Round metadata, like which round is last and how long rounds are
    * @returns void
    */
-  async submitRound(gameid: number, name: string, round: number, rawContent: Blob | string | undefined, staticRoundInfo: BYFO.StaticRoundInfo) {
+  async submitRound(gameid: number, name: string, round: number, rawContent: Blob | string | undefined, staticRoundInfo: BYFO.StaticRoundInfo, forced: boolean = false) {
+    if (forced) {
+      if (Date.now() - this.lastForcedSubmission < config.minRoundLength * 1000) {
+        // If we got 2 forced submissions less than the minimum round length apart, they're surely in error
+        return;
+      }
+      this.lastForcedSubmission = Date.now();
+    }
     const contentType = round % 2 === 0 ? 'text' : 'image';
+    if ((contentType === 'text' && rawContent instanceof Blob) || (contentType === 'image' && typeof rawContent === 'string')) {
+      if (!forced) {
+        throw new Error();
+      }
+      rawContent = this.getDefaultContent(contentType);
+    }
+    if (contentType === 'text' && (rawContent as string).length > config.textboxMaxCharacters) {
+      if (!forced) {
+        throw new Error();
+      }
+      rawContent = rawContent.slice(0, config.textboxMaxCharacters);
+    }
     const content: string = rawContent instanceof Blob ? await this.uploadImage(gameid, name, round, rawContent) : rawContent || this.getDefaultContent(contentType);
     const savedContent: BYFO.RoundContent = { contentType, content };
 
@@ -414,6 +438,16 @@ export class BYFOFirebaseAdapter {
     await set(roundRef, newRoundData);
 
     return;
+  }
+
+  /**
+   * Manually fetch round data the way the subscription would, so we can handle cases where data changed while the page wasn't being viewed
+   * @param gameid
+   * @param callback
+   * @returns void
+   */
+  async resyncRoundData(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
+    get(this.ref(`/games/${gameid}/finished`)).then(result => callback(result));
   }
 
   /**

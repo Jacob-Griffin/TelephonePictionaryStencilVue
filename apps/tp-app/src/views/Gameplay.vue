@@ -83,7 +83,7 @@ if(!redirect){
   const playerNumber = await firebase.getPlayerNumber(gameid, name);
   const missingListener = firebase.attachMissingListener(gameid,playerNumber);
 
-  subscriptions.push(firebase.attachRoundListener(gameid, async snapshot => {
+  const handleRoundData = async snapshot => {
     const newRound = snapshot.val();
     if (newRound === null) {
       //If the data no longer exists, go to the review page
@@ -100,8 +100,15 @@ if(!redirect){
 
     //Grab the data of your "from" player using pre-updated round#
     content.value = await firebase.fetchCard(gameid, people?.from, roundnumber.value - 1);
-  }));
+  }
 
+  subscriptions.push(firebase.attachRoundListener(gameid, handleRoundData));
+
+  window.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState === 'visible' && waiting.value){
+      firebase.resyncRoundData(gameid,handleRoundData);
+    }
+  })
 
   //Subscribe to see when the game gets finished
   subscriptions.push(firebase.attachFinishedListener(gameid,snapshot => {
@@ -118,10 +125,17 @@ if(!redirect){
 
   //Add event listeners
   onMounted(() => {
-    document.addEventListener('tp-submitted', ({ detail }) => {
-      firebase.submitRound(gameid, name, roundnumber.value, detail, staticRoundInfo);
-      finishedRound.value = roundnumber.value;
-      window.scroll({top:0});
+    document.addEventListener('tp-submitted', async ({ detail:{content,forced} }) => {
+      if(finishedRound.value === roundnumber.value){
+        // No double submissions
+        return;
+      }
+      try{
+        await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo,forced);
+        finishedRound.value = roundnumber.value;
+        window.scroll({top:0});
+      } catch (e) {
+      }
     });
 
     //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
@@ -161,7 +175,7 @@ const scrollToCanvas = e => {
 <template>
   <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
-    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :stuck="stuck" :addTime="addTime"></tp-player-list>
+    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :message="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''" :addTime="addTime"></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>

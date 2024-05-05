@@ -10,8 +10,8 @@ import { calculatePlayerNameWidth } from 'byfo-utils';
 })
 export class TpPlayerList {
   @Prop() players: Player[] = [];
+  @Prop({reflect:true}) message?:string;
   @Prop() roundData?: RoundData;
-  @Prop() stuck?: boolean = false;
   @Prop() isHosting?: boolean = false;
   @Prop() addTime?:()=>void;
 
@@ -37,20 +37,21 @@ export class TpPlayerList {
   render() {
     const nameWidth = calculatePlayerNameWidth(this.players);
     let roundInfo = null;
-    console.log(this);
     if(this.hasRoundData){
       roundInfo = [`Round ${this.roundData.roundnumber}`];
       if(this.roundData.endTime !== -1) {
         roundInfo.push(<tp-timer endtime={this.roundData.endTime}></tp-timer>)
       }
-      if(this.stuck) {
-        <p v-if="stuck">Stuck? <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">Knowlege base</a></p>
-      }
     }
+
+    const innerHTML = this.message.replace(/<[^>]+>/,'').replace(/\[([^\]]+)\]\((.+)\)/,'<a href="$2">$1</a>');
+    const message = <p></p>
+    message.innerHTML = innerHTML;
     return (
       <Host>
         <section style={{'--nameWidth:':`${nameWidth}px`}}>
           {roundInfo}
+          {message}
           {this.renderPlayers()}
           {this.isHosting && this.roundData?.endTime > 0 ?
         <button onClick={this.addTime} class="small">Add {config.addTimeIncrement}s</button>
