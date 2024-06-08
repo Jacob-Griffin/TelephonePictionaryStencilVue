@@ -181,9 +181,11 @@ store.clearGameData();
 }
 
 tp-icon[icon='statistics']{
-  position: absolute;
+  display: inline-flex;
+  margin-left: 0.5rem;
   height: 1em;
   width: 1em;
+  padding: 0.1em;
   cursor: pointer;
   border: 1px solid var(--color-text);
   border-radius: 0.5em;
