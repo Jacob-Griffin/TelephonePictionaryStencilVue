@@ -16,6 +16,7 @@
 
 ### Used by
 
+ - [tp-info-bubble](../tp-info-bubble)
  - [tp-metadata-modal](../tp-metadata-modal)
  - [tp-routing-modal](../tp-routing-modal)
  - [tp-settings-modal](../tp-settings-modal)
@@ -24,6 +25,7 @@
 ### Graph
 ```mermaid
 graph TD;
+  tp-info-bubble --> tp-icon
   tp-metadata-modal --> tp-icon
   tp-routing-modal --> tp-icon
   tp-settings-modal --> tp-icon

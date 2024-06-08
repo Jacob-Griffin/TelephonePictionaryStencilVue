@@ -68,7 +68,7 @@ export class TpSettingsModal {
           </select>
         </div>
         <div>
-          <h2 class="label">Search As <tp-icon title='Required for search. Filters results to include games with this username' icon='info'></tp-icon></h2>
+          <h2 class="label">Search As <tp-info-bubble content='Required for search. Filters results to include games with this username'></tp-info-bubble></h2>
           <input type='text' value={this.store.searchAs} onInput={e => this.store.setSearchAs((e.target as HTMLInputElement).value)}/>
         </div>
         <div>
@@ -89,7 +89,7 @@ export class TpSettingsModal {
         </div>
         <div>
           <h2 class="label">
-            Always "Show all" <tp-icon title="Applies to review page" icon="info"></tp-icon>
+            Always "Show all" <tp-info-bubble content="Applies to review page"></tp-info-bubble>
           </h2>
           <div id="showAll-toggle" class={`toggle-wrapper${this.store.alwaysShowAll ? ' checked' : ''}`} onClick={this.passClick}>
             <input type="checkbox" id="showAllInput" onInput={e => this.handleToggle('showAll', this.store.setShowAll, e)} checked={this.store.alwaysShowAll ? true : null} />

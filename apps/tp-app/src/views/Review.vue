@@ -109,7 +109,7 @@ store.clearGameData();
 </script>
 
 <template>
-  <h2>Game {{ gameid }}<tp-icon icon='info' title='Game details' @click="openMetadata"/></h2> 
+  <h2>Game {{ gameid }}<tp-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
     <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
@@ -188,6 +188,8 @@ tp-icon[icon='info']{
   height: 1.32rem;
   width: 1.32rem;
   cursor: pointer;
+  border: 1px solid var(--color-text);
+  border-radius: 0.5em;
 
   & > svg {
     top: -0.35rem;

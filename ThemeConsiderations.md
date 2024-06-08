@@ -216,13 +216,11 @@
 - Standard button styling (--color-button, --color-button-text, --color-button-hover, --color-button-disabled)
 - text and link (--color-link, --color-link-hover, --color-text)
 
-## Native components
-
-### byfo-content
-
-- image border color (--color-light-border)
-- text color and backdrop (--color-backdrop-text, --color-backdrop)
-
-### icon
+### tp-icon
 
 - icon color (--color-text)
+
+### tp-info-bubble
+
+- text (--color-text)
+- background (--color-backdrop)

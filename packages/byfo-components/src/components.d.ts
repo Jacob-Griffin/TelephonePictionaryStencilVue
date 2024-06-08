@@ -29,6 +29,9 @@ export namespace Components {
     interface TpIcon {
         "icon": any;
     }
+    interface TpInfoBubble {
+        "content": string;
+    }
     interface TpInputZone {
         "characterLimit": number;
         "round": number;
@@ -108,6 +111,12 @@ declare global {
         prototype: HTMLTpIconElement;
         new (): HTMLTpIconElement;
     };
+    interface HTMLTpInfoBubbleElement extends Components.TpInfoBubble, HTMLStencilElement {
+    }
+    var HTMLTpInfoBubbleElement: {
+        prototype: HTMLTpInfoBubbleElement;
+        new (): HTMLTpInfoBubbleElement;
+    };
     interface HTMLTpInputZoneElement extends Components.TpInputZone, HTMLStencilElement {
     }
     var HTMLTpInputZoneElement: {
@@ -179,6 +188,7 @@ declare global {
         "tp-canvas-controls": HTMLTpCanvasControlsElement;
         "tp-content": HTMLTpContentElement;
         "tp-icon": HTMLTpIconElement;
+        "tp-info-bubble": HTMLTpInfoBubbleElement;
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-join-content": HTMLTpJoinContentElement;
         "tp-logo": HTMLTpLogoElement;
@@ -209,6 +219,9 @@ declare namespace LocalJSX {
     }
     interface TpIcon {
         "icon"?: any;
+    }
+    interface TpInfoBubble {
+        "content"?: string;
     }
     interface TpInputZone {
         "characterLimit"?: number;
@@ -268,6 +281,7 @@ declare namespace LocalJSX {
         "tp-canvas-controls": TpCanvasControls;
         "tp-content": TpContent;
         "tp-icon": TpIcon;
+        "tp-info-bubble": TpInfoBubble;
         "tp-input-zone": TpInputZone;
         "tp-join-content": TpJoinContent;
         "tp-logo": TpLogo;
@@ -289,6 +303,7 @@ declare module "@stencil/core" {
             "tp-canvas-controls": LocalJSX.TpCanvasControls & JSXBase.HTMLAttributes<HTMLTpCanvasControlsElement>;
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
             "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
+            "tp-info-bubble": LocalJSX.TpInfoBubble & JSXBase.HTMLAttributes<HTMLTpInfoBubbleElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-join-content": LocalJSX.TpJoinContent & JSXBase.HTMLAttributes<HTMLTpJoinContentElement>;
             "tp-logo": LocalJSX.TpLogo & JSXBase.HTMLAttributes<HTMLTpLogoElement>;
