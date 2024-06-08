@@ -180,19 +180,12 @@ store.clearGameData();
   }
 }
 
-tp-icon[icon='info']{
+tp-icon[icon='statistics']{
   position: absolute;
-  top: 0.48rem;
-  right: -1.5rem;
-
-  height: 1.32rem;
-  width: 1.32rem;
+  height: 1em;
+  width: 1em;
   cursor: pointer;
   border: 1px solid var(--color-text);
   border-radius: 0.5em;
-
-  & > svg {
-    top: -0.35rem;
-  }
 }
 </style>
