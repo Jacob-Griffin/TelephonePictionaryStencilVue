@@ -76,17 +76,18 @@ export class TpInputZone {
     const span = e.target as HTMLSpanElement;
     const content = span.textContent;
     this.text = content
-
-    if(this.text.length > this.characterLimit){
-      this.text = content.slice(0,this.characterLimit);
-    }
   };
 
   sendRound = async (_,forced = false) => {
     let content: string | Blob = this.text;
+    
     if (!this.isTextRound) {
       const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
       content = await canvas?.exportDrawing();
+    } else {
+      if(this.text.length > this.characterLimit){
+        content = this.text.slice(0,this.characterLimit);
+      }
     }
 
     const submitEvent = new CustomEvent<{content: string | Blob, forced:boolean}>('tp-submitted', {
