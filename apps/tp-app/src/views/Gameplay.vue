@@ -126,13 +126,14 @@ if(!redirect){
   //Add event listeners
   onMounted(() => {
     document.addEventListener('tp-submitted', async ({ detail:{content,forced} }) => {
+      const submittedRound = roundnumber.value;
       if(finishedRound.value === roundnumber.value){
         // No double submissions
         return;
       }
       try{
         await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo,forced);
-        finishedRound.value = roundnumber.value;
+        finishedRound.value = submittedRound;
         window.scroll({top:0});
       } catch (e) {
       }

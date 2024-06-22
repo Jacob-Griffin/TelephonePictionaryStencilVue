@@ -383,7 +383,14 @@ export class BYFOFirebaseAdapter {
    * @param staticRoundInfo - Round metadata, like which round is last and how long rounds are
    * @returns void
    */
-  async submitRound(gameid: number, name: string, round: number, rawContent: Blob | string | undefined, staticRoundInfo: BYFO.StaticRoundInfo, forced: boolean = false) {
+  async submitRound(
+    gameid: number,
+    name: string,
+    round: number,
+    rawContent: Blob | string | undefined,
+    staticRoundInfo: BYFO.StaticRoundInfo,
+    forced: boolean = false,
+  ): Promise<true | void> {
     if (forced) {
       if (Date.now() - this.lastForcedSubmission < config.minRoundLength * 1000) {
         // If we got 2 forced submissions less than the minimum round length apart, they're surely in error
@@ -437,7 +444,7 @@ export class BYFOFirebaseAdapter {
     if (staticRoundInfo.roundLength === -1) newRoundData.endTime = -1;
     await set(roundRef, newRoundData);
 
-    return;
+    return true;
   }
 
   /**
