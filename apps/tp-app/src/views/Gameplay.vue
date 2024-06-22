@@ -114,10 +114,11 @@ if(!redirect){
   subscriptions.push(firebase.attachFinishedListener(gameid,snapshot => {
     const result = [];
     const pulledData = snapshot.val();
-    for (let username in pulledData) {
+    for (let name in pulledData) {
+      const username = firebase.decodePath(name);
       result.push({
         username,
-        lastRound: pulledData[username],
+        lastRound: pulledData[name],
       });
     }
     playerlist.value = sortNamesBy(result, 'username');

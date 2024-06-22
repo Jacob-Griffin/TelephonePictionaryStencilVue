@@ -77,6 +77,14 @@ export class BYFOFirebaseAdapter {
 
   //#region Realtime Database
 
+  encodePath(path: string) {
+    return path.replaceAll('.', '%2E').replaceAll('#', '%23').replaceAll('$', '%24').replaceAll('[', '%5B').replaceAll(']', '%5D');
+  }
+
+  decodePath(path: string) {
+    return path.replaceAll('%2E', '.').replaceAll('%23', '#').replaceAll('%24', '$').replaceAll('%5B', '[').replaceAll('%5D', ']');
+  }
+
   /**
    * Shorthand function for getting a Real Time Database Reference
    *
@@ -89,7 +97,8 @@ export class BYFOFirebaseAdapter {
     if (this.connection.rtdb === null) {
       throw new Error('Firebase App Connection not configured');
     }
-    return rtdbRef(this.connection.rtdb, path);
+    const fixedPath = this.encodePath(path);
+    return rtdbRef(this.connection.rtdb, fixedPath);
   }
 
   /**
@@ -608,8 +617,8 @@ export class BYFOFirebaseAdapter {
       let source = player;
       finalStackData[player] = {};
       for (let i = 0; i < stackData[source].length; i++) {
-        finalStackData[player][i] = { ...stackData[source][i], from: source };
-        source = playerOrder[source].to;
+        finalStackData[player][i] = { ...stackData[source][i], from: this.decodePath(source) };
+        source = this.encodePath(playerOrder[source].to);
       }
     }
 

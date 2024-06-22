@@ -14,7 +14,7 @@ const gameid = route.params.gameid;
 const searchedPlayer = route.query?.stack;
 
 const stacks = await firebase.getGameData(gameid);
-const players = sortNames(Object.keys(stacks));
+const players = sortNames(Object.keys(stacks).map(firebase.decodePath));
 const imagesCached = new Set();
 
 const metadata = await firebase.getGameMetadata(gameid);
