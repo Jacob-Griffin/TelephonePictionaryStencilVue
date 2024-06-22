@@ -9,18 +9,15 @@ const firebase = inject('Firebase');
 const gameid = useRoute().params.gameid;
 const rejoinData = store.getRejoinData();
 
-document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,name}})=>{
-  if(dest === 'lobby'){
-    store.setRejoinNumber(undefined);
+document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,name}})=>{
+    store.setRejoinNumber(playerid);
     store.setUsername(name);
     store.setGameid(gameid);
+  if(dest === 'lobby'){
     location.href = `/lobby/${gameid}`;
     return;
   }
   if(dest === 'game') {
-    store.setRejoinNumber(gameid);
-    store.setUsername(name);
-    store.setGameid(gameid);
     location.href = `/game/${gameid}`;
     return;
   }
