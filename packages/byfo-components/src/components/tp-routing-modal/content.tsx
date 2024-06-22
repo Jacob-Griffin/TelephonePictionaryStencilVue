@@ -36,6 +36,7 @@ export type Field = {
 export type ModalAction = {
   gameid: string;
   name?: string;
+  playerid?: string;
   dest?: 'lobby' | 'game';
 };
 
@@ -182,6 +183,7 @@ export class JoinModal extends ModalContent {
       detail: {
         gameid,
         name,
+        playerid: result.detail,
         dest: result.dest,
       },
     });

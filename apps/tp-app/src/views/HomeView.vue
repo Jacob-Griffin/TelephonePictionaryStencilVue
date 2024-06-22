@@ -33,18 +33,15 @@ document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
   }
 });
 
-document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,name}})=>{
+document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,name}})=>{
+  store.setRejoinNumber(playerid);
+  store.setUsername(name);
+  store.setGameid(gameid);
   if(dest === 'lobby'){
-    store.setRejoinNumber(undefined);
-    store.setUsername(name);
-    store.setGameid(gameid);
     location.href = `/lobby/${gameid}`;
     return;
   }
   if(dest === 'game') {
-    store.setRejoinNumber(gameid);
-    store.setUsername(name);
-    store.setGameid(gameid);
     location.href = `/game/${gameid}`;
     return;
   }
