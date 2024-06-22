@@ -1,5 +1,13 @@
 import { Component, Element, h, Method, Prop } from '@stencil/core';
 
+const numsToPathString = (path:number[][]) => {
+  if(!path || !path.length){
+    return '';
+  }
+  const strings = path.map(([x,y]) => `${x} ${y}`);
+  return 'M '+strings.join(' L ');
+}
+
 @Component({
   tag: 'tp-canvas',
   styleUrl: 'tp-canvas.css',
@@ -35,10 +43,11 @@ export class TpCanvas {
   lineWidths = this.lineWidthSets.draw;
 
   //Canvas State
-  currentPath: string; //SVG string equivalent of current path                 :(String)
+  currentPath: number[][] = [];
   paths = []; //List of paths drawn (support for undo/redo)                    :(Path2D[])
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                   :(String)
+  canvasRect:DOMRect;
 
   //#region setup
   componentDidLoad() {
@@ -106,9 +115,10 @@ export class TpCanvas {
   //#region drawing
   startDraw = event => {
     //We only want to start a line if there already isn't a line
-    if (!this.currentPath) {
+    if (this.currentPath.length === 0) {
+      this.canvasRect = this.canvasElement.getBoundingClientRect();
       const point = this.transformCoordinates(event);
-      this.currentPath = `M ${point[0]} ${point[1]}`;
+      this.currentPath.push(point);
       this.ctx.beginPath();
       this.ctx.moveTo(...point);
       //Canvas API no longer accepts "Line to" on an exact point
@@ -118,15 +128,12 @@ export class TpCanvas {
 
   draw = event => {
     //We only want to continue drawing if we've already started a line
-    if (this.currentPath) {
+    if (this.currentPath.length > 0) {
       let point = this.transformCoordinates(event);
-      // If this is a dot (No lineTos yet, and the point is the same)
-      if (point[0] == this.dotPos[0] && point[1] == this.dotPos[1]) {
-        // Adjust the point just barely so it renders
-        point[0] += 0.1;
-        point[1] += 0.1;
-      }
-      this.currentPath = this.currentPath + ` L ${point[0]} ${point[1]}`;
+      // Adjust the point just barely so it renders dots. This is fine unconditionally
+      point[0] += 0.1;
+      point[1] += 0.1;
+      this.currentPath.push(point);
       this.ctx.lineTo(...point);
       this.ctx.stroke();
     }
@@ -135,9 +142,9 @@ export class TpCanvas {
 
   finishLine = event => {
     //Only add the path if there is one
-    if (this.currentPath) {
+    if (this.currentPath.length > 0) {
       if (event.fromRedo) {
-        const path = new Path2D(this.currentPath);
+        const path = new Path2D(numsToPathString(this.currentPath));
         this.ctx.stroke(path);
       } else {
         this.draw(event);
@@ -145,7 +152,7 @@ export class TpCanvas {
       //Push the current Path to the path list and final drawing
       this.paths.push({ path: this.currentPath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle });
 
-      this.currentPath = undefined;
+      this.currentPath = [];
 
       const backupEvent = new CustomEvent<string>('tp-canvas-line', { detail: JSON.stringify(this.paths) });
       this.hostEl.dispatchEvent(backupEvent);
@@ -159,7 +166,7 @@ export class TpCanvas {
 
   //#region undo-redo
   redo = () => {
-    if (this.redoStack.length > 0) {
+    if (this.redoStack.length > 0 && this.currentPath.length === 0) {
       let currentItem = this.redoStack.pop();
       if (currentItem.clear) {
         let backupFill = this.ctx.fillStyle;
@@ -181,7 +188,7 @@ export class TpCanvas {
   };
 
   undo = () => {
-    if (this.paths.length == 0) {
+    if (this.paths.length == 0 || this.currentPath.length > 0) {
       return;
     }
     this.redoStack.push(this.paths.pop());
@@ -206,7 +213,7 @@ export class TpCanvas {
       } else {
         this.ctx.lineWidth = this.paths[i].size;
         this.ctx.strokeStyle = this.paths[i].color;
-        this.ctx.stroke(new Path2D(this.paths[i].path));
+        this.ctx.stroke(new Path2D(numsToPathString(this.paths[i].path)));
       }
     }
 
@@ -221,6 +228,8 @@ export class TpCanvas {
     this.ctx.fillStyle = event.detail.color;
     this.ctx.fillRect(0, 0, this.width, this.height);
     this.paths.push({ clear: event.detail.color });
+    const backupEvent = new CustomEvent<string>('tp-canvas-line', { detail: JSON.stringify(this.paths) });
+    this.hostEl.dispatchEvent(backupEvent);
     if (!event.fromRedo) {
       this.redoStack = [];
     }
@@ -251,9 +260,8 @@ export class TpCanvas {
 
   transformCoordinates(event): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
-    let box = this.canvasElement.getBoundingClientRect();
-    const x = Math.round(((event.clientX - box.left) * this.width) / box.width);
-    const y = Math.round(((event.clientY - box.top) * this.height) / box.height);
+    const x = Math.round(((event.clientX - this.canvasRect.left) * this.width) / this.canvasRect.width);
+    const y = Math.round(((event.clientY - this.canvasRect.top) * this.height) / this.canvasRect.height);
     return [x, y];
   }
 
