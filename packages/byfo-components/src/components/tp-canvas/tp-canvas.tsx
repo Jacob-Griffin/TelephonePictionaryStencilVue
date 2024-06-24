@@ -48,6 +48,8 @@ export class TpCanvas {
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                   :(String)
   canvasRect:DOMRect;
+  //drawCount:number = 0;
+  //debugInterval: NodeJS.Timer|undefined;
 
   //#region setup
   componentDidLoad() {
@@ -100,8 +102,6 @@ export class TpCanvas {
     this.currentWidth = 'small';
     this.ctx.lineCap = 'round';
     this.ctx.lineJoin = 'round';
-    this.ctx.imageSmoothingEnabled = true;
-    this.ctx.imageSmoothingQuality = 'high';
 
     this.ctx.fillRect(0, 0, this.width, this.height); //Background
 
@@ -123,6 +123,7 @@ export class TpCanvas {
       this.ctx.moveTo(...point);
       //Canvas API no longer accepts "Line to" on an exact point
       this.dotPos = point;
+      //this.debugInterval = setInterval(()=> { console.log(`${this.drawCount} Draw events`); this.drawCount = 0},1000);
     }
   };
 
@@ -133,9 +134,14 @@ export class TpCanvas {
       // Adjust the point just barely so it renders dots. This is fine unconditionally
       point[0] += 0.1;
       point[1] += 0.1;
+      // This seems redundant to continually begin paths when paths don't really have to go away, but
+      // This fixes a weird firefox bug with negligible performance impact, so might as well
+      this.ctx.beginPath()
+      this.ctx.moveTo(...this.currentPath.at(-1) as [number,number]);
       this.currentPath.push(point);
       this.ctx.lineTo(...point);
       this.ctx.stroke();
+      //this.drawCount += 1;
     }
     return true;
   };
@@ -143,6 +149,7 @@ export class TpCanvas {
   finishLine = event => {
     //Only add the path if there is one
     if (this.currentPath.length > 0) {
+      //clearInterval(this.debugInterval);
       if (event.fromRedo) {
         const path = new Path2D(numsToPathString(this.currentPath));
         this.ctx.stroke(path);
@@ -159,6 +166,7 @@ export class TpCanvas {
 
       if (!event.fromRedo) {
         this.redoStack = [];
+        this.redraw();
       }
     }
   };
