@@ -47,6 +47,7 @@ export class TpCanvas {
   paths = []; //List of paths drawn (support for undo/redo)                    :(Path2D[])
   redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
   currentWidth = 'small'; //Current Pen Size                                   :(String)
+  resizeObserver:ResizeObserver = new ResizeObserver(()=>this.rescaleCanvas());
   canvasRect:DOMRect;
   //drawCount:number = 0;
   //debugInterval: NodeJS.Timer|undefined;
@@ -80,6 +81,9 @@ export class TpCanvas {
 
     //Stop right click menu
     this.el.addEventListener('contextmenu', e => e.preventDefault());
+
+    this.resizeObserver.observe(this.el);
+    this.rescaleCanvas();
   }
 
   disconnectedCallback() {
@@ -317,6 +321,12 @@ export class TpCanvas {
       this.redraw();
     }
     return new Promise(() => {});
+  }
+
+  rescaleCanvas(){
+    const { width } = this.el.getBoundingClientRect();
+    const ratio = width / this.width;
+    this.el.style.setProperty('--scale-factor', ratio.toString())
   }
 
   render() {
