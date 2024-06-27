@@ -8,7 +8,7 @@ import 'byfo-components/tp-content';
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { config, sortNamesBy } from 'byfo-utils/rollup';
+import { config, sortNamesBy, decodePath } from 'byfo-utils/rollup';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
@@ -115,7 +115,7 @@ if(!redirect){
     const result = [];
     const pulledData = snapshot.val();
     for (let name in pulledData) {
-      const username = firebase.decodePath(name);
+      const username = decodePath(name);
       result.push({
         username,
         lastRound: pulledData[name],

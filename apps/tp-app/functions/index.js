@@ -3,7 +3,10 @@ const logger = require('firebase-functions/logger');
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 // The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
-
+const decodePath = (path) => {
+    // This function is in lieu of an import from byfo-utils/general
+    return path.replaceAll('%2E', '.').replaceAll('%23', '#').replaceAll('%24', '$').replaceAll('%5B', '[').replaceAll('%5D', ']');
+}
 const transformGame = (payload) => {
     const newPayload = {}
     const stackNames = [];
@@ -12,7 +15,7 @@ const transformGame = (payload) => {
             newPayload[stack] = payload[stack];
             continue;
         }
-        stackNames.push(stack);
+        stackNames.push(decodePath(stack));
         newPayload[stack] = {};
         for(const round in payload[stack]){
             if(payload[stack][round].contentType === 'text'){

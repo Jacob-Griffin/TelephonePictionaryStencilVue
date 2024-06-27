@@ -45,6 +45,25 @@ export function calculatePlayerNameWidth(players: { username: string; [other: st
   const value = 50 + (40 * max) / 32;
   return `${value}%`;
 }
+
+/**
+ * Encodes the characters that are invalid in firebase paths as HTML escapes
+ * @param path A firebase path string
+ * @returns The string with no invalid characters
+ */
+export function encodePath(path: string) {
+  return path.replaceAll('.', '%2E').replaceAll('#', '%23').replaceAll('$', '%24').replaceAll('[', '%5B').replaceAll(']', '%5D');
+}
+
+/**
+ * Generates the proper string from an encoded path
+ * @see encodePath
+ * @param path The encoded path to decode
+ * @returns A string with certain html encoding undone
+ */
+export function decodePath(path: string) {
+  return path.replaceAll('%2E', '.').replaceAll('%23', '#').replaceAll('%24', '$').replaceAll('%5B', '[').replaceAll('%5D', ']');
+}
 //#endregion Strings
 
 //#region Regexp
@@ -108,7 +127,7 @@ export function invalidCharactersList(input: string) {
  * @param location - The window.Location in question
  * @returns True if the location is in game
  */
-export function inGame(path:string) {
+export function inGame(path: string) {
   return /\/game\/[0-9]{1,7}\/?$/.test(path);
 }
 
@@ -117,7 +136,7 @@ export function inGame(path:string) {
  * @param location - The window.Location in question
  * @returns True if the location is in home
  */
-export function inHome(path:string) {
+export function inHome(path: string) {
   return path === '/';
 }
 //#endregion Regexp

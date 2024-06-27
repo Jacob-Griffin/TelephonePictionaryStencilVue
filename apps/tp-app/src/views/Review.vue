@@ -3,7 +3,7 @@ import 'byfo-components/tp-content';
 import 'byfo-components/tp-review-chat';
 import 'byfo-components/tp-icon';
 import 'byfo-components/tp-metadata-modal';
-import { sortNames } from 'byfo-utils/rollup';
+import { sortNames, decodePath } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -14,7 +14,7 @@ const gameid = route.params.gameid;
 const searchedPlayer = route.query?.stack;
 
 const stacks = await firebase.getGameData(gameid);
-const players = sortNames(Object.keys(stacks).map(firebase.decodePath));
+const players = sortNames(Object.keys(stacks).map(decodePath));
 const imagesCached = new Set();
 
 const metadata = await firebase.getGameMetadata(gameid);
