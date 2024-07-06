@@ -1,6 +1,7 @@
 import { Component, Prop, Element, h } from '@stencil/core';
 import { themes } from 'byfo-themes';
 import { renderModal } from '../../globals/modal';
+import type { TPStore } from 'byfo-utils';
 
 @Component({
   tag: 'tp-settings-modal',
@@ -9,7 +10,7 @@ import { renderModal } from '../../globals/modal';
 })
 export class TpSettingsModal {
   @Prop({ reflect: true, attribute: 'modal-enabled' }) enabled: boolean;
-  @Prop() store;
+  @Prop() store: TPStore;
   @Prop() buildDate: { year: string; full?: string; date?: Date };
 
   @Element() el;
@@ -18,16 +19,13 @@ export class TpSettingsModal {
     return this.el.shadowRoot;
   }
 
-  changeTheme = e => {
-    const name = e.target.value;
-    this.store?.setTheme(name);
-  };
   passClick = e => {
     const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
     if (target) {
       this.root.getElementById(`${target}Input`).click();
     }
   };
+
   handleToggle = (prop, setter, e) => {
     const enabled = e.target.checked;
     setter(enabled);
@@ -40,13 +38,24 @@ export class TpSettingsModal {
       div.classList.remove('checked');
     }
   };
+
+  resetBackground = () => {
+    this.store.resetCustomStyles();
+    Object.entries(this.store.customStyle).forEach(([prop,value])=>{
+      const dashProp = prop.replace(/[A-Z]/,c=>`-${c.toLowerCase()}`);
+      const input = this.root.getElementById(dashProp) as HTMLInputElement;
+      if(!input) return;
+      input.value = /px$/.test(value) ? `${parseInt(value)}` : value;
+    })
+  }
+
   renderBody(): Element[] {
     const header = <h2>Settings</h2>;
     const body = (
       <section class="settings">
         <div>
           <h2 class="label">Theme</h2>
-          <select onInput={this.changeTheme}>
+          <select onInput={e => this.store.setTheme((e.target as HTMLSelectElement).value)}>
             {Object.values(themes).map(theme => {
               return theme.key === this.store.theme ? (
                 <option value={theme.key} selected>
@@ -59,8 +68,28 @@ export class TpSettingsModal {
           </select>
         </div>
         <div>
+          <h2 class="label">Search As <tp-info-bubble content='Required for search. Filters results to include games with this username'></tp-info-bubble></h2>
+          <input type='text' value={this.store.searchAs} onInput={e => this.store.setSearchAs((e.target as HTMLInputElement).value)}/>
+        </div>
+        <div>
+          <h2 class='label'>Background Customization:</h2>
+          <button class='small' onClick={this.resetBackground}>Reset Background</button>
+        </div>
+        <div  class='indent-1'>
+          <h2 class='label'>Background Brightness:</h2>
+          <input type='range' min='0.4' max='1.3' step='0.05' id='background-brightness' value={this.store.customStyle.backgroundBrightness} onInput={e => this.store.setCustomStyle('backgroundBrightness',`${(e.target as HTMLInputElement).value}`)}/>
+        </div>
+        <div class='indent-1'>
+          <h2 class='label'>Background Saturation:</h2>
+          <input type='range' min='0.7' max='1.4' step='0.05' id='background-saturation' value={this.store.customStyle.backgroundSaturation} onInput={e => this.store.setCustomStyle('backgroundSaturation',`${(e.target as HTMLInputElement).value}`)}/>
+        </div>
+        <div class='indent-1'>
+          <h2 class='label'>Background Blur:</h2>
+          <input type='range' min='0' max='10' id='background-blur' value={this.store.customStyle.backgroundBlur.replace('px','')} onInput={e => this.store.setCustomStyle('backgroundBlur',`${(e.target as HTMLInputElement).value}px`)}/>
+        </div>
+        <div>
           <h2 class="label">
-            Always "Show all" <tp-icon title="Applies to review page" icon="info"></tp-icon>
+            Always "Show all" <tp-info-bubble content="Applies to review page"></tp-info-bubble>
           </h2>
           <div id="showAll-toggle" class={`toggle-wrapper${this.store.alwaysShowAll ? ' checked' : ''}`} onClick={this.passClick}>
             <input type="checkbox" id="showAllInput" onInput={e => this.handleToggle('showAll', this.store.setShowAll, e)} checked={this.store.alwaysShowAll ? true : null} />

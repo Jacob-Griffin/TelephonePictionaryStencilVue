@@ -48,6 +48,14 @@ export const routerConfig = {
       component: () => import('../views/Review.vue'),
     },
     {
+      path: '/search/',
+      name: 'search',
+      meta: {
+        title: 'Search - Blow Your Face Off'
+      },
+      component: ()=> import('../views/Search.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'redirect404',
       meta: {

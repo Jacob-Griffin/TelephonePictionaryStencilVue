@@ -2,7 +2,6 @@
 @import '../../globals/css/global-styles.css';
 
 :host {
-  display: block;
   text-align: center;
 }
 
@@ -53,6 +52,7 @@ h3 {
     height: 1em;
     font-size: 1.2rem;
     cursor: pointer;
+    user-select: none;
   }
   & > section {
     flex-grow: 1;

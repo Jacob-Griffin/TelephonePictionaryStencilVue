@@ -8,12 +8,13 @@ import { Component, Host, h, Prop, State } from '@stencil/core';
 export class TpTimer {
   @Prop() endtime: number;
   @State() currentTime: number = Date.now();
+  @State() timeoutReady:boolean = true;
   timerLoop;
 
   connectedCallback() {
     this.timerLoop = setInterval(() => {
       this.currentTime = Date.now();
-    }, 500);
+    }, 250);
   }
 
   disconnectedCallback() {
@@ -21,7 +22,10 @@ export class TpTimer {
   }
 
   timeoutRound() {
-    document.dispatchEvent(new CustomEvent('tp-timer-finished', {}));
+    if(this.timeoutReady){
+      document.dispatchEvent(new CustomEvent('tp-timer-finished', {}));
+      this.timeoutReady = false;
+    }
   }
 
   get secondsLeft(): number {
@@ -32,6 +36,8 @@ export class TpTimer {
     if (this.secondsLeft < 0) {
       this.timeoutRound();
       return 'Out of time - Submitting';
+    } else {
+      this.timeoutReady = true;
     }
     let seconds: string | number = this.secondsLeft % 60;
     seconds = seconds < 10 ? '0' + seconds : seconds;

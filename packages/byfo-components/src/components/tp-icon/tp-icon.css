@@ -1,4 +1,5 @@
 :host {
+  display: inline-flex;
   stroke: var(--color-text);
   fill: var(--color-text);
   width: 100%;

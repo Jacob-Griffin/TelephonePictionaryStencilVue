@@ -11,19 +11,22 @@
 | ----------- | --------------- | ----------- | ----------------------------------------------- | ----------- |
 | `buildDate` | --              |             | `{ year: string; full?: string; date?: Date; }` | `undefined` |
 | `enabled`   | `modal-enabled` |             | `boolean`                                       | `undefined` |
-| `store`     | `store`         |             | `any`                                           | `undefined` |
+| `store`     | --              |             | `TPStore`                                       | `undefined` |
 
 
 ## Dependencies
 
 ### Depends on
 
+- [tp-info-bubble](../tp-info-bubble)
 - [tp-icon](../tp-icon)
 
 ### Graph
 ```mermaid
 graph TD;
+  tp-settings-modal --> tp-info-bubble
   tp-settings-modal --> tp-icon
+  tp-info-bubble --> tp-icon
   style tp-settings-modal fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -33,18 +33,15 @@ document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
   }
 });
 
-document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,name}})=>{
+document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,name}})=>{
+  store.setRejoinNumber(playerid);
+  store.setUsername(name);
+  store.setGameid(gameid);
   if(dest === 'lobby'){
-    store.setRejoinNumber(undefined);
-    store.setUsername(name);
-    store.setGameid(gameid);
     location.href = `/lobby/${gameid}`;
     return;
   }
   if(dest === 'game') {
-    store.setRejoinNumber(gameid);
-    store.setUsername(name);
-    store.setGameid(gameid);
     location.href = `/game/${gameid}`;
     return;
   }
@@ -54,10 +51,16 @@ document.addEventListener('tp-modal-action-result',({detail:{gameid}})=>{
   location.href = `/review/${gameid}`;
   return;
 });
+
+document.addEventListener('tp-modal-action-search',({detail:{query}}) =>{
+  location.href = `/search?q=${query}`;
+  return;
+})
 onBeforeUnmount(()=>{
   document.removeEventListener('tp-modal-action-host');
   document.removeEventListener('tp-modal-action-join');
   document.removeEventListener('tp-modal-action-result');
+  document.removeEventListener('tp-modal-action-search');
 })
 </script>
 
@@ -65,9 +68,10 @@ onBeforeUnmount(()=>{
   <main>
     <tp-logo/>
     <div class="buttonMenu">
-      <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="join">Join Game</button>
+      <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
+      <button @click="switchModal" modal="search">Search Completed Games</button>
       <button @click="viewTutorial">How to play</button>
     </div>
     <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
@@ -91,6 +95,9 @@ main tp-logo {
   padding: 2rem;
   max-width: 768px;
   gap: 1rem;
+  & > button:first-child {
+    background-color: var(--color-important);
+  }
 }
 
 footer {

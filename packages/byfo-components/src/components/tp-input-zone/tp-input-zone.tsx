@@ -34,8 +34,8 @@ export class TpInputZone {
   getElement = id => this.el.shadowRoot.getElementById(id);
 
   @Listen('tp-timer-finished', { target: 'document' })
-  timerFinished() {
-    this.sendRound();
+  timerFinished(e) {
+    this.sendRound(e, true);
   }
 
   @Listen('tp-canvas-line')
@@ -73,19 +73,28 @@ export class TpInputZone {
   }
 
   handleInput = (e: InputEvent) => {
-    const content = (e.target as HTMLSpanElement)?.textContent;
-    this.text = content;
+    const span = e.target as HTMLSpanElement;
+    const content = span.textContent;
+    this.text = content
   };
 
-  sendRound = async () => {
+  sendRound = async (_,forced = false) => {
     let content: string | Blob = this.text;
+    
     if (!this.isTextRound) {
       const canvas = this.getElement('canvas') as HTMLTpCanvasElement;
       content = await canvas?.exportDrawing();
+    } else {
+      if(this.text.length > this.characterLimit){
+        content = this.text.slice(0,this.characterLimit);
+      }
     }
 
-    const submitEvent = new CustomEvent<string | Blob>('tp-submitted', {
-      detail: content,
+    const submitEvent = new CustomEvent<{content: string | Blob, forced:boolean}>('tp-submitted', {
+      detail: {
+        content,
+        forced
+      }
     });
     localStorage.removeItem('currentRoundData');
 

@@ -1,10 +1,6 @@
 @import '../../globals/css/modal.css';
 @import '../../globals/css/global-styles.css';
 
-:host {
-  display: block;
-}
-
 strong {
   font-weight: 600;
 }

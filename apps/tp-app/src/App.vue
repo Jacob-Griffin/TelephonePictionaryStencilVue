@@ -31,7 +31,10 @@ watch(useRoute(), (r) => {
   isInHome.value = inHome(r.path);
 });
 
-onBeforeMount(() => tp.useTheme());
+onBeforeMount(() => {
+  tp.useTheme();
+  tp.useCustomStyles();
+});
 onMounted(()=>{
   settingsmodal.value.store = tp;
 })

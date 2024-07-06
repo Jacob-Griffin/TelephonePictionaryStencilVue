@@ -25,6 +25,14 @@
   max-width: 500px;
   padding-block: 0.75rem;
   align-items: center;
+
+  &.indent-1 {
+    width: 95%;
+    max-width: 475px;
+    margin-inline-start: max(2.5%, 25px);
+    font-size: 0.9em;
+    padding-block: 0.4rem;
+  }
 }
 
 .settings select {

@@ -3,16 +3,18 @@ import 'byfo-components/tp-content';
 import 'byfo-components/tp-review-chat';
 import 'byfo-components/tp-icon';
 import 'byfo-components/tp-metadata-modal';
-import { sortNames } from 'byfo-utils/rollup';
+import { sortNames, decodePath } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
-const gameid = useRoute().params.gameid;
+const route = useRoute();
+const gameid = route.params.gameid;
+const searchedPlayer = route.query?.stack;
 
 const stacks = await firebase.getGameData(gameid);
-const players = sortNames(Object.keys(stacks));
+const players = sortNames(Object.keys(stacks).map(decodePath));
 const imagesCached = new Set();
 
 const metadata = await firebase.getGameMetadata(gameid);
@@ -81,7 +83,7 @@ if (showAllFlag.value) {
 }
 
 // Check if we're coming out of a game
-const self = store.username;
+const self = searchedPlayer ?? store.username;
 if (self && self in stacks) {
   clickPlayer(self);
 }
@@ -107,7 +109,7 @@ store.clearGameData();
 </script>
 
 <template>
-  <h2>Game {{ gameid }}<tp-icon icon='info' title='Game details' @click="openMetadata"/></h2> 
+  <h2>Game {{ gameid }}<tp-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
     <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
@@ -162,29 +164,30 @@ store.clearGameData();
 }
 
 .stack {
-  height: 100vh;
+  flex-grow: 1;
+  overflow: hidden;
   align-items: center;
   width: 100%;
   max-width: 900px;
   margin-bottom: 1.5rem;
 
-  &.unselected > h3 {
-    line-height: 3.5rem;
-    text-align: center;
+  &.unselected {
+    padding: 1rem;
+    & h3 {
+      line-height: 3.5rem;
+      text-align: center;
+    }
   }
 }
 
-tp-icon[icon='info']{
-  position: absolute;
-  top: 0.48rem;
-  right: -1.5rem;
-
-  height: 1.32rem;
-  width: 1.32rem;
+tp-icon[icon='statistics']{
+  display: inline-flex;
+  margin-left: 0.5rem;
+  height: 1em;
+  width: 1em;
+  padding: 0.1em;
   cursor: pointer;
-
-  & > svg {
-    top: -0.35rem;
-  }
+  border: 1px solid var(--color-text);
+  border-radius: 0.5em;
 }
 </style>

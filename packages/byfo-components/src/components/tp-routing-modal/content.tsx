@@ -20,6 +20,12 @@ export const gameIdField = {
   isValid: (id: string) => /[0-9]{0,7}/.test(id),
 };
 
+export const queryField = {
+  key: 'query',
+  display: 'Search',
+  isValid: (query:string) => query?.length > 0
+}
+
 export type Field = {
   key: string;
   display: string;
@@ -30,6 +36,7 @@ export type Field = {
 export type ModalAction = {
   gameid: string;
   name?: string;
+  playerid?: string;
   dest?: 'lobby' | 'game';
 };
 
@@ -124,6 +131,7 @@ export const createModal = (type: string, rerender: () => void, firebase: BYFOFi
   if (type === 'host') return new HostModal({ rerender, firebase });
   if (type === 'join') return new JoinModal({ rerender, firebase });
   if (type === 'result') return new ResultModal({ rerender, firebase });
+  if (type === 'search') return new SearchModal({ rerender, firebase });
   return null;
 };
 
@@ -175,8 +183,28 @@ export class JoinModal extends ModalContent {
       detail: {
         gameid,
         name,
+        playerid: result.detail,
         dest: result.dest,
       },
+    });
+    document.dispatchEvent(event);
+  };
+}
+
+export class SearchModal extends ModalContent {
+  headerText = 'Search Completed Games';
+  actionText = 'Search';
+  fields = [queryField];
+  useAction = () => {
+    this.verifyFields();
+    if(this.hasError){
+      return;
+    }
+    const query = this.fieldValues[queryField.key];
+    const event = new CustomEvent<{query:string}>('tp-modal-action-search', {
+      detail:{
+        query
+      }
     });
     document.dispatchEvent(event);
   };

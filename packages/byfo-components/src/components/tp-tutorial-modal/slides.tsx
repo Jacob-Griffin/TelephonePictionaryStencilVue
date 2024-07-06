@@ -6,7 +6,7 @@ export type Slide = {
 
 export const slides: Slide[] = [
   {
-    image: '',
+    image: '/byfo-logo.png',
     maintext: 'Welcome to Blow Your Face Off',
     detail: 'an online game of **Telephone Pictionary**',
   },
