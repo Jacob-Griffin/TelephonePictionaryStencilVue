@@ -25,8 +25,8 @@ const openMetadata = () => {
   metadataModal.value.gameid = gameid;
   metadataModal.value.enabled ||= true;
 }
-
-const selected = ref('');
+const {location:{hash}} = window;
+const selected = ref(hash && hash in stacks ? hash : '');
 const showAllFlag = ref(!!store.alwaysShowAll);
 
 const playerSelector = ref(null);
@@ -59,6 +59,18 @@ const cacheImage = (player, idx) => {
 
 const clickPlayer = username => {
   selected.value = username;
+  let newURL = window.location.href;
+  const queryParam = `?stack=${username}`
+  if(window.location.search){
+    newURL = newURL.replace(/\?stack=[^?&]+/,queryParam);
+  } else {
+    if(window.location.hash){
+      newURL = newURL.replace('#',`?stack=${queryParam}#`);
+    } else {
+      newURL += queryParam;
+    }
+  }
+  history.replaceState({},null,newURL);
   if (!showAllFlag.value) {
     for (let i = 1; i < players.length; i += 2) {
       //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
