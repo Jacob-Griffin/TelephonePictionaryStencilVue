@@ -54,7 +54,8 @@ export namespace Components {
     interface TpPlayerList {
         "addTime"?: ()=>void;
         "isHosting"?: boolean;
-        "message"?: string;
+        "messageEnd"?: string;
+        "messageStart"?: string;
         "players": Player[];
         "roundData"?: RoundData;
     }
@@ -247,7 +248,8 @@ declare namespace LocalJSX {
     interface TpPlayerList {
         "addTime"?: ()=>void;
         "isHosting"?: boolean;
-        "message"?: string;
+        "messageEnd"?: string;
+        "messageStart"?: string;
         "players"?: Player[];
         "roundData"?: RoundData;
     }

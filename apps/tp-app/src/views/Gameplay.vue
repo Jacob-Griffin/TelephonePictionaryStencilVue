@@ -181,7 +181,7 @@ const scrollToCanvas = e => {
 <template>
   <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
-    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :message="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''" :addTime="addTime"></tp-player-list>
+    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''" :addTime="addTime"></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
     <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
