@@ -19,6 +19,7 @@ const isHosting = store.hosting === gameid;
 
 const inputzone = ref(null);
 const landscapeDismissed = ref(store.landscapeDismissed ?? false);
+const isSending = ref(false);
 
 const playerlist = ref([]);
 
@@ -128,15 +129,18 @@ if(!redirect){
   onMounted(() => {
     document.addEventListener('tp-submitted', async ({ detail:{content,forced} }) => {
       const submittedRound = roundnumber.value;
-      if(finishedRound.value === roundnumber.value){
+      if(finishedRound.value === roundnumber.value || isSending.value){
         // No double submissions
         return;
       }
       try{
+        isSending.value = true;
         await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo,forced);
         finishedRound.value = submittedRound;
         window.scroll({top:0});
       } catch (e) {
+      } finally {
+        isSending.value = false;
       }
     });
 
@@ -186,7 +190,7 @@ const scrollToCanvas = e => {
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></tp-content>
       <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></tp-timer>
-      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to">
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to" :isSending="isSending">
         <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></tp-timer>
       </tp-input-zone>
     </section>

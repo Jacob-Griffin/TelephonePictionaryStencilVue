@@ -11,6 +11,7 @@ export class TpCanvasControls {
 
   @Prop() hostEl: HTMLElement;
   @Prop() submithandler: (e: Event) => void;
+  @Prop() isSending: boolean;
   @Element() el: HTMLElement;
   @State() drawing: boolean = true;
   @State() activeWidth: string = this.lineWidths[0];
@@ -104,8 +105,8 @@ export class TpCanvasControls {
           <button id="black-clear">{icons.droplet}</button>
         </section>
 
-        <button id="submit-button" onClick={this.submithandler}>
-          Submit
+        <button id="submit-button" onClick={this.submithandler} disabled={this.isSending}>
+          {!this.isSending ? <span>Submit</span> : <span>Sending...</span>}
         </button>
       </section>
     );

@@ -19,6 +19,7 @@ export namespace Components {
     }
     interface TpCanvasControls {
         "hostEl": HTMLElement;
+        "isSending": boolean;
         "submithandler": (e: Event) => void;
     }
     interface TpContent {
@@ -34,6 +35,7 @@ export namespace Components {
     }
     interface TpInputZone {
         "characterLimit": number;
+        "isSending": boolean;
         "round": number;
         "sendingTo": string;
     }
@@ -210,6 +212,7 @@ declare namespace LocalJSX {
     }
     interface TpCanvasControls {
         "hostEl"?: HTMLElement;
+        "isSending"?: boolean;
         "submithandler"?: (e: Event) => void;
     }
     interface TpContent {
@@ -225,6 +228,7 @@ declare namespace LocalJSX {
     }
     interface TpInputZone {
         "characterLimit"?: number;
+        "isSending"?: boolean;
         "round"?: number;
         "sendingTo"?: string;
     }

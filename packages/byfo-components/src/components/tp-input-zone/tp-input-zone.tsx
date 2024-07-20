@@ -9,6 +9,7 @@ export class TpInputZone {
   @Prop() round: number;
   @Prop() characterLimit: number;
   @Prop() sendingTo: string;
+  @Prop() isSending: boolean;
   @Element() el: HTMLElement;
   @State() text: string = '';
 
@@ -28,7 +29,7 @@ export class TpInputZone {
   }
 
   get canSend() {
-    return !(this.isTextRound && (!this.text || this.text.length > this.characterLimit));
+    return !(this.isTextRound && (!this.text || this.text.length > this.characterLimit) && !this.isSending);
   }
 
   getElement = id => this.el.shadowRoot.getElementById(id);
@@ -116,13 +117,15 @@ export class TpInputZone {
             <tp-canvas id="canvas" hostEl={this.el}></tp-canvas>
             <div id="control-wrapper">
               <slot name="timer" />
-              <tp-canvas-controls submithandler={this.sendRound} hostEl={this.el}></tp-canvas-controls>
+              <tp-canvas-controls submithandler={this.sendRound} hostEl={this.el} isSending={this.isSending}></tp-canvas-controls>
             </div>
           </div>
         )}
         {this.isTextRound ? (
           <button onClick={this.sendRound} disabled={!this.canSend}>
-            Send to <strong>{this.sendingTo}</strong>
+            { !this.isSending ? 
+              <span class="button-text">Send to <strong>{this.sendingTo}</strong></span> :
+              <span class="button-text">Sending...</span> }
           </button>
         ) : null}
       </section>
