@@ -84,10 +84,6 @@ onBeforeUnmount(()=>{
 </template>
 
 <style>
-main tp-logo {
-  margin-top: -1.5rem;
-}
-
 .buttonMenu {
   display: flex;
   flex-direction: column;
