@@ -67,7 +67,7 @@ onBeforeUnmount(()=>{
 
 <template>
   <main>
-    <byfo-logo inset/>
+    <byfo-logo/>
     <div class="buttonMenu">
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="host">Host Game</button>

@@ -27,11 +27,6 @@ export class ByfoLogo extends LitElement {
       height: 3rem;
       background-image: var(--small-icon);
     }
-
-    :host([inset]) {
-      position: relative;
-      top: -1.5rem;
-    }
   `;
 }
 
