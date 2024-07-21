@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "algoliasearch": "^4.23.3",
+    "byfo-components-lit": "workspace:^",
     "byfo-themes": "workspace:*",
     "byfo-utils": "workspace:*",
     "firebase": "^9.23.0",
