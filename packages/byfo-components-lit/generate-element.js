@@ -1,4 +1,4 @@
-import {exec,execSync} from 'child_process';
+import {execSync} from 'child_process';
 
 const [_1,_2,cname,...args] = process.argv;
 if(cname === undefined){
@@ -6,10 +6,17 @@ if(cname === undefined){
   process.exit(1);
 }
 const componentName = {};
-componentName.normalized = cname.replace(/^byfo-?/,'').replace(/[A-Z]/,match => `-${match.toLowerCase()}`);
-componentName.class = 'Byfo'+componentName.normalized.replace(/(?:^|-)([a-z])/,(_,letter)=>letter.toUpperCase());
+componentName.normalized = cname.replace(/^byfo-?/,'').replaceAll(/[A-Z]/g,match => `-${match.toLowerCase()}`);
+componentName.class = 'Byfo'+componentName.normalized.replaceAll(/(?:^|-)([a-z])/g,(_,letter)=>letter.toUpperCase());
 componentName.tagname = 'byfo-'+componentName.normalized;
 componentName.file = `./src/${componentName.tagname}.ts`
+
+const extendsIdx = args.indexOf('-e');
+if(extendsIdx > -1 && extendsIdx + 1 < args.length){
+  const pnormal = args[extendsIdx + 1].replace(/^byfo-?/,'').replace(/[A-Z]/,match => `-${match.toLowerCase()}`);
+  componentName.parent = 'Byfo'+pnormal.replace(/(?:^|-)([a-z])/,(_,letter)=>letter.toUpperCase());
+  componentName.parentFile = `./${'byfo-'+pnormal}`;
+}
 
 try {
   //Weird backwards try. If the file successfully reads, then we have a problem because the component already exists
@@ -22,11 +29,12 @@ try {
 }
 
 //Step 1: create the boilerplate string
-const fileContents = `import { LitElement, css, html } from 'lit';
+const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-
+${componentName.parent ? `import { ${componentName.parent} } from '${componentName.parentFile}'
+` : ''}
 /**
- * Description of your element here. Use @property doc tags to describe props
+ * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('${componentName.tagname}')
 export class ${componentName.class} extends ${componentName.parent ?? 'LitElement'} {
@@ -48,6 +56,11 @@ declare global {
 
 //Step 2: Write the file contents
 execSync(`cat > ${componentName.file} <<< "${fileContents}"`);
+
+if(args.indexOf('-i') > -1){
+  //"Internal" flag, don't export
+  process.exit(0);
+}
 
 //Step 3: Modify the package.json
 const contents = execSync('cat ./package.json');
