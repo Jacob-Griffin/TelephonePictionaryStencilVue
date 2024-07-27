@@ -585,7 +585,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - The game
    * @returns The static round info
    */
-  async getStaticRoundInfo(gameid: number) {
+  async getStaticRoundInfo(gameid: number): Promise<BYFO.StaticRoundInfo> {
     return this.getRef(`game/${gameid}/staticRoundInfo`);
   }
 

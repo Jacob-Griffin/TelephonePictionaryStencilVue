@@ -1,6 +1,5 @@
 import { Component, Host, h, Prop, VNode } from '@stencil/core';
 import type {Player,RoundData} from 'byfo-utils'
-import { config } from 'byfo-utils';
 import { calculatePlayerNameWidth } from 'byfo-utils';
 
 @Component({
@@ -13,8 +12,8 @@ export class TpPlayerList {
   @Prop() messageStart?:string;
   @Prop() messageEnd?:string;
   @Prop() roundData?: RoundData;
-  @Prop() isHosting?: boolean = false;
   @Prop() addTime?:()=>void;
+  @Prop() lastRound?: string = '';
 
   get hasRoundData() {
     return typeof this.roundData?.endTime === 'number';
@@ -59,9 +58,9 @@ export class TpPlayerList {
     const nameWidth = calculatePlayerNameWidth(this.players);
     let roundInfo = null;
     if(this.hasRoundData){
-      roundInfo = [`Round ${this.roundData.roundnumber}`];
+      roundInfo = [`Round ${this.roundData.roundnumber}/${this.lastRound}`];
       if(this.roundData.endTime !== -1) {
-        roundInfo.push(<tp-timer endtime={this.roundData.endTime}></tp-timer>)
+        roundInfo.push(<tp-timer endtime={this.roundData.endTime} addTime={this.addTime}></tp-timer>)
       }
     }
 
@@ -73,9 +72,6 @@ export class TpPlayerList {
           {this.parseMessage(this.messageStart)}
           {this.renderPlayers()}
           {this.parseMessage(this.messageEnd)}
-          {this.isHosting && this.roundData?.endTime > 0 ?
-        <button onClick={this.addTime} class="small">Add {config.addTimeIncrement}s</button>
-        : null}
         </section>
 
       </Host>

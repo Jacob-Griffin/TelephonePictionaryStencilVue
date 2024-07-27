@@ -181,17 +181,17 @@ const scrollToCanvas = e => {
 <template>
   <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
-    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''" :addTime="addTime"></tp-player-list>
+    <tp-player-list :players="playerlist" :roundData="roundData" :lastRound="staticRoundInfo.lastRound" :addTime="isHosting ? addTime : undefined" :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''"></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
-    <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
+    <h2 class="needs-backdrop">Round {{ roundnumber }}/{{ staticRoundInfo.lastRound }}</h2>
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></tp-content>
-      <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></tp-timer>
+      <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime"></tp-timer>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to" :isSending="isSending">
-        <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></tp-timer>
+        <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime" :addTime="isHosting ? addTime : undefined"></tp-timer>
       </tp-input-zone>
     </section>
     <section id="landscape-enforcer" v-if="!isText && !waiting && !landscapeDismissed">
@@ -204,6 +204,12 @@ const scrollToCanvas = e => {
 <style scoped>
 .mb-4 {
   margin-bottom: 1rem;
+}
+
+.float-bottom-right {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 section {

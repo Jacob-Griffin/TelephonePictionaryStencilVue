@@ -53,7 +53,7 @@ export namespace Components {
     }
     interface TpPlayerList {
         "addTime"?: ()=>void;
-        "isHosting"?: boolean;
+        "lastRound"?: string;
         "messageEnd"?: string;
         "messageStart"?: string;
         "players": Player[];
@@ -83,6 +83,7 @@ export namespace Components {
         "value": number;
     }
     interface TpTimer {
+        "addTime": ()=>void;
         "endtime": number;
     }
     interface TpTutorialModal {
@@ -247,7 +248,7 @@ declare namespace LocalJSX {
     }
     interface TpPlayerList {
         "addTime"?: ()=>void;
-        "isHosting"?: boolean;
+        "lastRound"?: string;
         "messageEnd"?: string;
         "messageStart"?: string;
         "players"?: Player[];
@@ -277,6 +278,7 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     interface TpTimer {
+        "addTime"?: ()=>void;
         "endtime"?: number;
     }
     interface TpTutorialModal {

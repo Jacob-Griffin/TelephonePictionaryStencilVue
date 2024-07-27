@@ -1,4 +1,5 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
+import { config } from 'byfo-utils';
 
 @Component({
   tag: 'tp-timer',
@@ -7,6 +8,7 @@ import { Component, Host, h, Prop, State } from '@stencil/core';
 })
 export class TpTimer {
   @Prop() endtime: number;
+  @Prop() addTime: ()=>void;
   @State() currentTime: number = Date.now();
   @State() timeoutReady:boolean = true;
   timerLoop;
@@ -46,6 +48,6 @@ export class TpTimer {
   }
 
   render() {
-    return <Host>{this.relativeTime}</Host>;
+    return <Host>{this.relativeTime}{this.addTime ? <button onClick={this.addTime} class='add-time-button'>+{config.addTimeIncrement}s</button>: null}</Host>;
   }
 }
