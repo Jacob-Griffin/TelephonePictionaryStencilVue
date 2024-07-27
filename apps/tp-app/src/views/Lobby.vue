@@ -104,7 +104,7 @@ const copyLink = () => {
       <h2 class="needs-backdrop">Game {{ gameid }}</h2>
       <button @click="copyLink" class="small">{{showCopied ? `✓ Copied` : `&#xFE0E;📋 Copy Game Link`}}</button>
     </section>
-    <tp-player-list :players="players" :messageStart="'Waiting for players. Invite players with the game number or by sharing the join link above'" :messageEnd="`${players.length}/${config.maxPlayers} in lobby`"/>
+    <tp-player-list :players="players" :messageStart="'Waiting for players. Invite players with the game number or by sharing the join link above'" :messageEnd="`${players.length} players in lobby (${players.length < config.minPlayers ? `req. ${config.minPlayers}` : `max ${config.maxPlayers}`})`"/>
     <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
       <tp-time-input :max-minutes="config.maxRoundLength" init-value="3.0" placeholder="∞" />
