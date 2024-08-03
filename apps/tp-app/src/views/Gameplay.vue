@@ -184,7 +184,7 @@ const scrollToCanvas = e => {
     <tp-player-list :players="playerlist" :roundData="roundData" :lastRound="staticRoundInfo.lastRound" :addTime="isHosting ? addTime : undefined" :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''"></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
-    <h2 class="needs-backdrop">Round {{ roundnumber }}/{{ staticRoundInfo.lastRound }}</h2>
+    <h2 class="needs-backdrop">Round {{ roundnumber+1 }}/{{ (~~staticRoundInfo.lastRound)+1 }}</h2>
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>

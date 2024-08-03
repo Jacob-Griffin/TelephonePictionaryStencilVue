@@ -58,7 +58,7 @@ export class TpPlayerList {
     const nameWidth = calculatePlayerNameWidth(this.players);
     let roundInfo = null;
     if(this.hasRoundData){
-      roundInfo = [`Round ${this.roundData.roundnumber}/${this.lastRound}`];
+      roundInfo = [`Round ${this.roundData.roundnumber + 1}/${~~this.lastRound + 1}`];
       if(this.roundData.endTime !== -1) {
         roundInfo.push(<tp-timer endtime={this.roundData.endTime} addTime={this.addTime}></tp-timer>)
       }
