@@ -1,5 +1,6 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
+import 'byfo-components-lit/logo';
 import 'byfo-components/tp-logo';
 import 'byfo-components/tp-routing-modal';
 import 'byfo-components/tp-tutorial-modal';
@@ -66,7 +67,7 @@ onBeforeUnmount(()=>{
 
 <template>
   <main>
-    <tp-logo/>
+    <byfo-logo/>
     <div class="buttonMenu">
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="host">Host Game</button>
@@ -83,10 +84,6 @@ onBeforeUnmount(()=>{
 </template>
 
 <style>
-main tp-logo {
-  margin-top: -1.5rem;
-}
-
 .buttonMenu {
   display: flex;
   flex-direction: column;

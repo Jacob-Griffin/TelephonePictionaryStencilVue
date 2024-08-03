@@ -19,6 +19,7 @@ export namespace Components {
     }
     interface TpCanvasControls {
         "hostEl": HTMLElement;
+        "isSending": boolean;
         "submithandler": (e: Event) => void;
     }
     interface TpContent {
@@ -34,6 +35,7 @@ export namespace Components {
     }
     interface TpInputZone {
         "characterLimit": number;
+        "isSending": boolean;
         "round": number;
         "sendingTo": string;
     }
@@ -51,8 +53,9 @@ export namespace Components {
     }
     interface TpPlayerList {
         "addTime"?: ()=>void;
-        "isHosting"?: boolean;
-        "message"?: string;
+        "lastRound"?: string;
+        "messageEnd"?: string;
+        "messageStart"?: string;
         "players": Player[];
         "roundData"?: RoundData;
     }
@@ -80,6 +83,7 @@ export namespace Components {
         "value": number;
     }
     interface TpTimer {
+        "addTime": ()=>void;
         "endtime": number;
     }
     interface TpTutorialModal {
@@ -210,6 +214,7 @@ declare namespace LocalJSX {
     }
     interface TpCanvasControls {
         "hostEl"?: HTMLElement;
+        "isSending"?: boolean;
         "submithandler"?: (e: Event) => void;
     }
     interface TpContent {
@@ -225,6 +230,7 @@ declare namespace LocalJSX {
     }
     interface TpInputZone {
         "characterLimit"?: number;
+        "isSending"?: boolean;
         "round"?: number;
         "sendingTo"?: string;
     }
@@ -242,8 +248,9 @@ declare namespace LocalJSX {
     }
     interface TpPlayerList {
         "addTime"?: ()=>void;
-        "isHosting"?: boolean;
-        "message"?: string;
+        "lastRound"?: string;
+        "messageEnd"?: string;
+        "messageStart"?: string;
         "players"?: Player[];
         "roundData"?: RoundData;
     }
@@ -271,6 +278,7 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     interface TpTimer {
+        "addTime"?: ()=>void;
         "endtime"?: number;
     }
     interface TpTutorialModal {

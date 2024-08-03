@@ -19,6 +19,7 @@ const isHosting = store.hosting === gameid;
 
 const inputzone = ref(null);
 const landscapeDismissed = ref(store.landscapeDismissed ?? false);
+const isSending = ref(false);
 
 const playerlist = ref([]);
 
@@ -128,15 +129,18 @@ if(!redirect){
   onMounted(() => {
     document.addEventListener('tp-submitted', async ({ detail:{content,forced} }) => {
       const submittedRound = roundnumber.value;
-      if(finishedRound.value === roundnumber.value){
+      if(finishedRound.value === roundnumber.value || isSending.value){
         // No double submissions
         return;
       }
       try{
+        isSending.value = true;
         await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo,forced);
         finishedRound.value = submittedRound;
         window.scroll({top:0});
       } catch (e) {
+      } finally {
+        isSending.value = false;
       }
     });
 
@@ -177,17 +181,17 @@ const scrollToCanvas = e => {
 <template>
   <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
-    <tp-player-list :players="playerlist" :roundData="roundData" :isHosting="isHosting" :message="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''" :addTime="addTime"></tp-player-list>
+    <tp-player-list :players="playerlist" :roundData="roundData" :lastRound="staticRoundInfo.lastRound" :addTime="isHosting ? addTime : undefined" :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''"></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
-    <h2 class="needs-backdrop">Round {{ roundnumber }}</h2>
+    <h2 class="needs-backdrop">Round {{ roundnumber+1 }}/{{ (~~staticRoundInfo.lastRound)+1 }}</h2>
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></tp-content>
-      <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :endtime="roundData.endTime"></tp-timer>
-      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to">
-        <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime"></tp-timer>
+      <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime"></tp-timer>
+      <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to" :isSending="isSending">
+        <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime" :addTime="isHosting ? addTime : undefined"></tp-timer>
       </tp-input-zone>
     </section>
     <section id="landscape-enforcer" v-if="!isText && !waiting && !landscapeDismissed">
@@ -200,6 +204,12 @@ const scrollToCanvas = e => {
 <style scoped>
 .mb-4 {
   margin-bottom: 1rem;
+}
+
+.float-bottom-right {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 section {

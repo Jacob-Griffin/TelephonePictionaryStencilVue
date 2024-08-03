@@ -8,6 +8,13 @@ const numsToPathString = (path:number[][]) => {
   return 'M '+strings.join(' L ');
 }
 
+type PathEntry = {
+  path?:[number,number][],
+  color?:string,
+  size?:number,
+  clear?:string;
+}
+
 @Component({
   tag: 'tp-canvas',
   styleUrl: 'tp-canvas.css',
@@ -23,7 +30,6 @@ export class TpCanvas {
   @Element() el: HTMLElement;
   canvasElement: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  dotPos: number[];
 
   lineWidthSets = {
     draw: {
@@ -43,14 +49,16 @@ export class TpCanvas {
   lineWidths = this.lineWidthSets.draw;
 
   //Canvas State
-  currentPath: number[][] = [];
-  paths = []; //List of paths drawn (support for undo/redo)                    :(Path2D[])
-  redoStack = []; //Stack of paths that were undone (clears on new path drawn) :(Path2D[])
-  currentWidth = 'small'; //Current Pen Size                                   :(String)
+  currentPath: [number,number][] = [];
+  paths:PathEntry[] = []; //List of paths drawn (support for undo/redo)
+  redoStack:PathEntry[] = []; //Stack of paths that were undone (clears on new path drawn)
+  currentWidth = 'small'; //Current Pen Size
   resizeObserver:ResizeObserver = new ResizeObserver(()=>this.rescaleCanvas());
   canvasRect:DOMRect;
-  //drawCount:number = 0;
-  //debugInterval: NodeJS.Timer|undefined;
+  scaleRatio:number // Cached value of bounding box width to internal width ratio
+  lastDrawEnd:number;
+  drawCount:number;
+  debugInterval:NodeJS.Timer;
 
   //#region setup
   componentDidLoad() {
@@ -123,17 +131,18 @@ export class TpCanvas {
       this.canvasRect = this.canvasElement.getBoundingClientRect();
       const point = this.transformCoordinates(event);
       this.currentPath.push(point);
-      this.ctx.beginPath();
-      this.ctx.moveTo(...point);
-      //Canvas API no longer accepts "Line to" on an exact point
-      this.dotPos = point;
-      //this.debugInterval = setInterval(()=> { console.log(`${this.drawCount} Draw events`); this.drawCount = 0},1000);
+      if(window.location.hash === '#debug-count'){
+        this.debugInterval = setInterval(()=> { console.log(`${this.drawCount} Draw events`); this.drawCount = 0},1000);
+      }
     }
   };
 
   draw = event => {
     //We only want to continue drawing if we've already started a line
     if (this.currentPath.length > 0) {
+      if(window.location.hash === '#debug-distance'){
+        console.log(`${performance.now() - this.lastDrawEnd ?? 0}ms of empty space`); ///!!!!
+      }
       let point = this.transformCoordinates(event);
       // Adjust the point just barely so it renders dots. This is fine unconditionally
       point[0] += 0.1;
@@ -141,11 +150,16 @@ export class TpCanvas {
       // This seems redundant to continually begin paths when paths don't really have to go away, but
       // This fixes a weird firefox bug with negligible performance impact, so might as well
       this.ctx.beginPath()
-      this.ctx.moveTo(...this.currentPath.at(-1) as [number,number]);
+      this.ctx.moveTo(...this.currentPath.at(-1));
       this.currentPath.push(point);
       this.ctx.lineTo(...point);
       this.ctx.stroke();
-      //this.drawCount += 1;
+      if(window.location.hash === '#debug-count'){
+        this.drawCount += 1;
+      }
+      if(window.location.hash === '#debug-distance'){
+        this.lastDrawEnd = performance.now();
+      }
     }
     return true;
   };
@@ -153,7 +167,7 @@ export class TpCanvas {
   finishLine = event => {
     //Only add the path if there is one
     if (this.currentPath.length > 0) {
-      //clearInterval(this.debugInterval);
+      clearInterval(this.debugInterval);
       if (event.fromRedo) {
         const path = new Path2D(numsToPathString(this.currentPath));
         this.ctx.stroke(path);
@@ -161,7 +175,7 @@ export class TpCanvas {
         this.draw(event);
       }
       //Push the current Path to the path list and final drawing
-      this.paths.push({ path: this.currentPath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle });
+      this.paths.push({ path: this.currentPath, size: this.ctx.lineWidth, color: this.ctx.strokeStyle as string });
 
       this.currentPath = [];
 
@@ -272,8 +286,8 @@ export class TpCanvas {
 
   transformCoordinates(event): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
-    const x = Math.round(((event.clientX - this.canvasRect.left) * this.width) / this.canvasRect.width);
-    const y = Math.round(((event.clientY - this.canvasRect.top) * this.height) / this.canvasRect.height);
+    const x = Math.round((event.clientX - this.canvasRect.left) / this.scaleRatio);
+    const y = Math.round((event.clientY - this.canvasRect.top) / this.scaleRatio);
     return [x, y];
   }
 
@@ -325,8 +339,8 @@ export class TpCanvas {
 
   rescaleCanvas(){
     const { width } = this.el.getBoundingClientRect();
-    const ratio = width / this.width;
-    this.el.style.setProperty('--scale-factor', ratio.toString())
+    this.scaleRatio = width / this.width;
+    this.el.style.setProperty('--scale-factor', this.scaleRatio.toString())
   }
 
   render() {
