@@ -24,7 +24,13 @@ if(branch !== 'dev'){
 packages.forEach(p => execSync(`git add ${p}`));
 execSync(`git commit -m "Automated: Release ${version}"`);
 execSync('git push');
-if(branch !== 'dev'){
+
+execSync(`git switch release`);
+execSync(`git merge --no-message --squash dev`);
+execSync(`git commit -m "Automated: Release ${version}"`);
+execSync(`git push`);
+
+if(branch !== 'release'){
   console.log(`switching back to branch ${branch}`);
   execSync(`git switch ${branch}`);
 }
