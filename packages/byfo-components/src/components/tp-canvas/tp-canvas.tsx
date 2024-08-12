@@ -72,6 +72,7 @@ export class TpCanvas {
     this.hostEl.addEventListener('clear-input', this.clearCanvas);
     this.hostEl.addEventListener('pen-input', () => this.setDrawMode('#000'));
     this.hostEl.addEventListener('eraser-input', () => this.setDrawMode('#FFF'));
+    this.hostEl.addEventListener('invert-input', this.invert);
 
     //Listen for drawing-related events (Listen to full document for finishes):
 
@@ -120,6 +121,9 @@ export class TpCanvas {
     if (this.paths?.length > 0) {
       // If there was a restore backup call but the ctx wasn't loaded yet, catch up
       this.redraw();
+    } else {
+      // If this is a brand new canvas, make sure there's a clear event so that invert will work
+      this.paths.push({clear: '#FFF'})
     }
   }
   //#endregion setup
@@ -236,7 +240,7 @@ export class TpCanvas {
       if (this.paths[i].clear) {
         this.ctx.fillStyle = this.paths[i].clear;
         this.ctx.fillRect(0, 0, this.width, this.height);
-      } else {
+      } else if (this.paths[i].color) {
         this.ctx.lineWidth = this.paths[i].size;
         this.ctx.strokeStyle = this.paths[i].color;
         this.ctx.stroke(new Path2D(numsToPathString(this.paths[i].path)));
@@ -282,6 +286,18 @@ export class TpCanvas {
     }
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
   };
+
+  invert = () => {
+    this.paths.forEach(path => {
+      console.log(path);
+      if(path.clear){
+        path.clear = /f/i.test(path.clear) ? '#000' : '#FFF';
+      } else {
+        path.color = /f/i.test(path.color) ? '#000' : '#FFF';
+      }
+    });
+    this.redraw();
+  }
   //#endregion handle inputs
 
   transformCoordinates({clientX:mx,clientY:my}:PointerEvent): [number, number] {
