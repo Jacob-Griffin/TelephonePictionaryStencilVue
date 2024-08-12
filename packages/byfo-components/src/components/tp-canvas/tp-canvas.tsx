@@ -284,10 +284,10 @@ export class TpCanvas {
   };
   //#endregion handle inputs
 
-  transformCoordinates(event): [number, number] {
+  transformCoordinates({clientX:mx,clientY:my}:PointerEvent): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
-    const x = Math.round((event.clientX - this.canvasRect.left) / this.scaleRatio);
-    const y = Math.round((event.clientY - this.canvasRect.top) / this.scaleRatio);
+    const x = Math.round((mx - this.canvasRect.left) / this.scaleRatio);
+    const y = Math.round((my - this.canvasRect.top) / this.scaleRatio);
     return [x, y];
   }
 
@@ -340,7 +340,6 @@ export class TpCanvas {
   rescaleCanvas(){
     const { width } = this.el.getBoundingClientRect();
     this.scaleRatio = width / this.width;
-    this.el.style.setProperty('--scale-factor', this.scaleRatio.toString())
   }
 
   render() {
