@@ -11,11 +11,10 @@ packages.forEach(p => {
   const oldContent = execSync(`cat ${p}`).toString();
   const newContent = oldContent.replace(/"version": ".*"/,`"version": "${version}"`);
   execSync(`echo -n "${newContent.replaceAll('\\"','\\\\"').replaceAll('"','\\"')}" | cat > ${p}`);
-})
+});
 
 const _branch = execSync('git branch').toString();
 const branch = _branch.match(/\* (.+)/)[1];
-console.log(branch);
 if(branch !== 'dev'){
   console.log('switching to branch dev')
   execSync(`git switch dev`);
