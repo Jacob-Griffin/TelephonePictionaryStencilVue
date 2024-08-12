@@ -161,6 +161,8 @@ if(!redirect){
         return;
       }
     });
+
+    finishedRound.value = firebase.fetchFinishedRound(gameid,name);
   });
 
   //Wrap up firebase subscriptions on unmount

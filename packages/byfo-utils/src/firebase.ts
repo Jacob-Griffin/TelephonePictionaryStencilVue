@@ -63,6 +63,17 @@ export class BYFOFirebaseAdapter {
   }
 
   /**
+   * Fetches the finished round for a given player in a given game
+   * @param gameid
+   * @param name
+   * @returns The last round number that the player has submitted a response for
+   */
+  async fetchFinishedRound(gameid: number, name: string): Promise<number> {
+    const round = await this.getRef(`game/${gameid}/finished/${name}`);
+    return ~~round;
+  }
+
+  /**
    * Fetches the metadata from a completed game
    * @param gameid
    * @returns
