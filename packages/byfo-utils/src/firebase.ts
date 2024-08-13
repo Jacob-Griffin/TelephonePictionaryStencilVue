@@ -1,5 +1,5 @@
 import { setDoc, doc, getDocFromServer, getFirestore } from 'firebase/firestore';
-import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot } from 'firebase/database';
+import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot, Unsubscribe } from 'firebase/database';
 import { getDownloadURL, ref as storageRef, updateMetadata, uploadBytes, getStorage } from 'firebase/storage';
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import * as BYFO from './types';
@@ -22,6 +22,11 @@ export class BYFOFirebaseAdapter {
   };
 
   /**
+   * Stores approximately how far off of the server clock the client is for better syncing
+   */
+  serverOffset: number;
+
+  /**
    * Passes the firebase settings to the config object
    * Required for all other functions in byfo-utils/firebase
    *
@@ -32,6 +37,11 @@ export class BYFOFirebaseAdapter {
     this.connection.db = getFirestore(app);
     this.connection.rtdb = getDatabase(app);
     this.connection.storage = getStorage(app);
+    const offsetRef = rtdbRef(this.connection.rtdb, '.info/serverTimeOffset');
+    onValue(offsetRef, snap => {
+      const offset = snap.val();
+      this.serverOffset = offset;
+    });
   }
 
   //#region firestore
@@ -60,17 +70,6 @@ export class BYFOFirebaseAdapter {
     const snapshot = await getDocFromServer(docRef);
     const gameData = snapshot.data() as BYFO.Game;
     return gameData;
-  }
-
-  /**
-   * Fetches the finished round for a given player in a given game
-   * @param gameid
-   * @param name
-   * @returns The last round number that the player has submitted a response for
-   */
-  async fetchFinishedRound(gameid: number, name: string): Promise<number> {
-    const round = await this.getRef(`game/${gameid}/finished/${name}`);
-    return ~~round;
   }
 
   /**
@@ -346,8 +345,11 @@ export class BYFOFirebaseAdapter {
     const roundRef = this.ref(`game/${gameid}/round`);
     const round0 = {
       roundnumber: 0,
-      endTime: Date.now() + roundLength,
+      endTime: Date.now() + roundLength + this.serverOffset,
     };
+    console.log(this.serverOffset);
+    console.log(roundLength);
+    console.log(Date.now());
     if (roundLength === -1) round0.endTime = -1;
     set(roundRef, round0);
 
@@ -451,12 +453,23 @@ export class BYFOFirebaseAdapter {
     const roundRef = this.ref(`game/${gameid}/round/`);
     const newRoundData: BYFO.RoundData = {
       roundnumber: round + 1,
-      endTime: Date.now() + staticRoundInfo.roundLength,
+      endTime: Date.now() + staticRoundInfo.roundLength + this.serverOffset,
     };
     if (staticRoundInfo.roundLength === -1) newRoundData.endTime = -1;
     await set(roundRef, newRoundData);
 
     return true;
+  }
+
+  /**
+   * Fetches the finished round for a given player in a given game
+   * @param gameid
+   * @param name
+   * @returns The last round number that the player has submitted a response for
+   */
+  async fetchFinishedRound(gameid: number, name: string): Promise<number> {
+    const round = await this.getRef(`game/${gameid}/finished/${name}`);
+    return ~~round;
   }
 
   /**

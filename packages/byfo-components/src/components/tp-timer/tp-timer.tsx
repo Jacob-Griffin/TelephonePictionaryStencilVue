@@ -8,6 +8,7 @@ import { config } from 'byfo-utils';
 })
 export class TpTimer {
   @Prop() endtime: number;
+  @Prop() offset: number;
   @Prop() addTime: ()=>void;
   @State() currentTime: number = Date.now();
   @State() timeoutReady:boolean = true;
@@ -15,7 +16,7 @@ export class TpTimer {
 
   connectedCallback() {
     this.timerLoop = setInterval(() => {
-      this.currentTime = Date.now();
+      this.currentTime = Date.now() + this.offset ?? 0;
     }, 250);
   }
 

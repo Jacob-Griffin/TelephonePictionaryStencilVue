@@ -69,6 +69,10 @@ export declare type FirebaseConnections = {
   storage: FirebaseStorage | null;
 };
 
+export declare type RefOptions = {
+  noEncode?: boolean;
+};
+
 export declare type Metadata = {
   date: string;
   roundLength: number;
