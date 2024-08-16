@@ -11,13 +11,14 @@
     "g": "node ./generate-element.js"
   },
   "dependencies": {
-    "lit": "^3.1.4"
+    "lit-element": "^4.1.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   },
   "exports": {
-    "./logo": "./dist/byfo-logo.js"
+    "./logo": "./dist/byfo-logo.js",
+    "./content": "./dist/byfo-content.js"
   }
 }

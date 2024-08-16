@@ -3,7 +3,7 @@
 import 'byfo-components/tp-timer';
 import 'byfo-components/tp-input-zone';
 import 'byfo-components/tp-player-list';
-import 'byfo-components/tp-content';
+import 'byfo-components-lit/content';
 
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';
@@ -190,7 +190,7 @@ const scrollToCanvas = e => {
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
-      <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></tp-content>
+      <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></byfo-content>
       <div class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText">
         <tp-timer class='really needs-backdrop timer' :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime" :offset="firebase.serverOffset"></tp-timer>
       </div>
@@ -227,7 +227,7 @@ section {
   gap: 1rem;
 }
 
-#gameplay-elements tp-content{
+#gameplay-elements byfo-content{
   max-width: 1100px;
 }
 
