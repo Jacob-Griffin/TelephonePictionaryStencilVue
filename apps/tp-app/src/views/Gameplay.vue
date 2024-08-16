@@ -191,9 +191,13 @@ const scrollToCanvas = e => {
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <tp-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></tp-content>
-      <tp-timer class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText" :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime" :offset="firebase.serverOffset"></tp-timer>
+      <div class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText">
+        <tp-timer class='really needs-backdrop timer' :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime" :offset="firebase.serverOffset"></tp-timer>
+      </div>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to" :isSending="isSending">
-        <tp-timer slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText" :endtime="roundData.endTime" :offset="firebase.serverOffset" :addTime="isHosting ? addTime : undefined"></tp-timer>
+        <div slot="timer" class='really needs-backdrop timer' v-if="roundData.endTime !== -1 && !isText">
+          <tp-timer :endtime="roundData.endTime" :offset="firebase.serverOffset" :addTime="isHosting ? addTime : undefined"></tp-timer>
+        </div>
       </tp-input-zone>
     </section>
     <section id="landscape-enforcer" v-if="!isText && !waiting && !landscapeDismissed">
@@ -249,6 +253,11 @@ section {
 
 #landscape-enforcer {
   display: none;
+}
+
+.timer {
+  width: fit-content;
+  align-self: center;
 }
 
 tp-input-zone {
