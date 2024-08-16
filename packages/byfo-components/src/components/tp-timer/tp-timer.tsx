@@ -16,7 +16,7 @@ export class TpTimer {
 
   connectedCallback() {
     this.timerLoop = setInterval(() => {
-      this.currentTime = Date.now() + this.offset ?? 0;
+      this.currentTime = Date.now() + (this.offset ?? 0);
     }, 250);
   }
 
