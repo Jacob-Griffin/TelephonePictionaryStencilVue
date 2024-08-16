@@ -1,4 +1,5 @@
 import {execSync} from 'child_process';
+import { formatJson } from '../../script-utils.mjs';
 
 const [_1,_2,cname,...args] = process.argv;
 if(cname === undefined){
@@ -70,36 +71,7 @@ if(typeof contents.toString?.() !== 'string'){
 }
 
 let packageJson = JSON.parse(contents.toString());
-packageJson.exports[`./${componentName.normalized}`] = componentName.file;
-
-const formatJson = (json,depth = 1) => {
-  let output = `{\n`;
-  Object.keys(json).forEach(key => {
-    output += '  '.repeat(depth);
-    output += `\\"${key}\\": `;
-    switch(typeof json[key]){
-      case 'string':
-        output += `\\"${json[key]}\\"`;
-        break;
-      case 'number':
-        output += `${json[key]}`;
-        break;
-      case 'boolean':
-        output += json[key] ? 'true' : 'false';
-        break;
-      case 'object':
-        output += formatJson(json[key],depth+1);
-        break;
-    }
-    output += ',\n';
-  });
-  if(depth > 1){
-    output += '  '.repeat(depth - 1);
-  }
-  output += '}';
-  output = output.replaceAll(/,(?=\s+})/g,'');
-  return output;
-}
+packageJson.exports[`./${componentName.normalized}`] = `./dist/${componentName.tagname}.js`;
 
 const newContents = formatJson(packageJson);
 
