@@ -3,7 +3,7 @@
 import 'byfo-components/tp-timer';
 import 'byfo-components/tp-input-zone';
 import 'byfo-components/tp-player-list';
-import 'byfo-components-lit/content';
+import '@component/byfo-content';
 
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';

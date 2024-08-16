@@ -30,8 +30,8 @@ try {
 }
 
 //Step 1: create the boilerplate string
-const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit-element';
+import { customElement } from 'lit-element/decorators.js';
 ${componentName.parent ? `import { ${componentName.parent} } from '${componentName.parentFile}'
 ` : ''}
 /**

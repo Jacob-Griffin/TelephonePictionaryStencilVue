@@ -1,6 +1,6 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
-import 'byfo-components-lit/logo';
+import '@component/byfo-logo';
 import 'byfo-components/tp-logo';
 import 'byfo-components/tp-routing-modal';
 import 'byfo-components/tp-tutorial-modal';
