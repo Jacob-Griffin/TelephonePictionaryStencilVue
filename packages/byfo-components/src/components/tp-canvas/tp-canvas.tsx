@@ -289,7 +289,6 @@ export class TpCanvas {
 
   invert = () => {
     this.paths.forEach(path => {
-      console.log(path);
       if(path.clear){
         path.clear = /f/i.test(path.clear) ? '#000' : '#FFF';
       } else {
