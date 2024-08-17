@@ -53,7 +53,6 @@ export class TpCanvas {
   paths:PathEntry[] = []; //List of paths drawn (support for undo/redo)
   redoStack:PathEntry[] = []; //Stack of paths that were undone (clears on new path drawn)
   currentWidth = 'small'; //Current Pen Size
-  resizeObserver:ResizeObserver = new ResizeObserver(()=>this.rescaleCanvas());
   canvasRect:DOMRect;
   scaleRatio:number // Cached value of bounding box width to internal width ratio
   lastDrawEnd:number;
@@ -90,9 +89,6 @@ export class TpCanvas {
 
     //Stop right click menu
     this.el.addEventListener('contextmenu', e => e.preventDefault());
-
-    this.resizeObserver.observe(this.el);
-    this.rescaleCanvas();
   }
 
   disconnectedCallback() {
@@ -301,8 +297,8 @@ export class TpCanvas {
 
   transformCoordinates({clientX:mx,clientY:my}:PointerEvent): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
-    const x = Math.round((mx - this.canvasRect.left) / this.scaleRatio);
-    const y = Math.round((my - this.canvasRect.top) / this.scaleRatio);
+    const x = Math.round((mx - this.canvasRect.left) * this.width / this.canvasRect.width);
+    const y = Math.round((my - this.canvasRect.top) * this.height / this.canvasRect.height);
     return [x, y];
   }
 
@@ -350,11 +346,6 @@ export class TpCanvas {
       this.redraw();
     }
     return new Promise(() => {});
-  }
-
-  rescaleCanvas(){
-    const { width } = this.el.getBoundingClientRect();
-    this.scaleRatio = width / this.width;
   }
 
   render() {
