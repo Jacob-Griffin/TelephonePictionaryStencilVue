@@ -5,7 +5,8 @@ import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import 'byfo-components/tp-logo';
 import 'byfo-components/tp-time-input';
-import 'byfo-components/tp-settings-modal';
+//import 'byfo-components/tp-settings-modal';
+import '@component/byfo-settings-modal';
 import { firebaseConfig } from '../firebase.secrets';
 
 const path = useRoute().path;
@@ -53,7 +54,7 @@ onMounted(()=>{
   <Suspense>
     <RouterView />
   </Suspense>
-  <tp-settings-modal ref="settingsmodal" :buildDate="buildDate"></tp-settings-modal>
+  <byfo-settings-modal ref="settingsmodal" :buildDate="buildDate"></byfo-settings-modal>
 </template>
 
 <style scoped>

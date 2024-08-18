@@ -11,6 +11,8 @@
     "g": "node ./generate-element.js"
   },
   "dependencies": {
+    "byfo-themes": "workspace:^",
+    "byfo-utils": "workspace:^",
     "lit-element": "^4.1.0"
   },
   "devDependencies": {
@@ -20,6 +22,7 @@
   "exports": {
     "./logo": "./dist/byfo-logo.js",
     "./content": "./dist/byfo-content.js",
-    "./info-bubble": "./dist/byfo-info-bubble.js"
+    "./info-bubble": "./dist/byfo-info-bubble.js",
+    "./settings-modal": "./dist/byfo-settings-modal.js"
   }
 }
