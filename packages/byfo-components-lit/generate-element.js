@@ -43,9 +43,9 @@ export class ${componentName.class} extends ${componentName.parent ?? 'LitElemen
     return html\\\`\\\`;
   }
   static styles = css\\\`
-    :host {
+    ${componentName.parent ? `\\\${${componentName.parent}.styles}` : `:host {
       display: block;
-    }
+    }`}
   \\\`;
 }
 
