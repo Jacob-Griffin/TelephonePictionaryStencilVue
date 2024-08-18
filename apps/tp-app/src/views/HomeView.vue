@@ -22,7 +22,7 @@ const viewTutorial = () => {
   tutorialModal.value.enabled = true;
 }
 
-document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
+const handleHost = ({detail:{gameid,name}})=>{
   store.setHosting(gameid);
   store.setUsername(name);
   store.setGameid(gameid);
@@ -32,9 +32,9 @@ document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
   } else {
     location.href = `/lobby/${gameid}`;
   }
-});
+}
 
-document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,name}})=>{
+const handleJoin = ({detail:{dest,gameid,playerid,name}})=>{
   store.setRejoinNumber(playerid);
   store.setUsername(name);
   store.setGameid(gameid);
@@ -46,22 +46,28 @@ document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,
     location.href = `/game/${gameid}`;
     return;
   }
-})
+}
 
-document.addEventListener('tp-modal-action-result',({detail:{gameid}})=>{
+const handleResults = ({detail:{gameid}})=>{
   location.href = `/review/${gameid}`;
   return;
-});
+}
 
-document.addEventListener('tp-modal-action-search',({detail:{query}}) =>{
+const handleSearch = ({detail:{query}}) =>{
   location.href = `/search?q=${query}`;
   return;
-})
+}
+
+document.addEventListener('tp-modal-action-host',handleHost);
+document.addEventListener('tp-modal-action-join',handleJoin);
+document.addEventListener('tp-modal-action-result',handleResults);
+document.addEventListener('tp-modal-action-search',handleSearch);
+
 onBeforeUnmount(()=>{
-  document.removeEventListener('tp-modal-action-host');
-  document.removeEventListener('tp-modal-action-join');
-  document.removeEventListener('tp-modal-action-result');
-  document.removeEventListener('tp-modal-action-search');
+  document.removeEventListener('tp-modal-action-host',handleHost);
+  document.removeEventListener('tp-modal-action-join',handleJoin);
+  document.removeEventListener('tp-modal-action-result',handleResults);
+  document.removeEventListener('tp-modal-action-search',handleSearch);
 })
 </script>
 

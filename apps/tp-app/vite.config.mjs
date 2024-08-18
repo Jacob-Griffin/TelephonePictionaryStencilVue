@@ -3,16 +3,14 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-const watcherPlugin = {
-  name: 'watch-node-modules',
-  configureServer: server => {
-    server.watcher.on('change', file => {
-      if (/byfo-components\/dist\/components\/.*/.test(file) || /byfo-themes.+\.ts$/.test(file) || /byfo-utils/.test(file)) {
-        server.restart();
-      }
-    });
-  },
-};
+const hmrPlugin = {
+  name:'handle-hmr-custom',
+  async handleHotUpdate({file,server}){
+    if(file.includes('/packages/') && !file.includes('themes')){
+        server.ws.send({ type: 'full-reload' });
+    }
+  }
+}
 
 const createDateStrings = () => {
   const dateObj = new Date();
@@ -27,7 +25,7 @@ const createDateStrings = () => {
 // https://vitejs.dev/config/
 export default defineConfig(({command})=>({
     plugins: [
-      watcherPlugin,
+      hmrPlugin,
       vue({
         template: {
           compilerOptions: {
