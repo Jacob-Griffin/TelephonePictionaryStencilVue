@@ -1,4 +1,4 @@
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
 import { formatJson } from '../../script-utils.mjs';
 
 const [_1,_2,cname,...args] = process.argv;
