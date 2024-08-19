@@ -2,6 +2,7 @@
 import { inject, onBeforeUnmount, ref } from 'vue';
 import 'byfo-components/tp-routing-modal';
 import 'byfo-components/tp-tutorial-modal';
+import { computed } from 'vue';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
@@ -9,6 +10,12 @@ const modalEl = ref(null);
 const tutorialModal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
 const devMode = ref(__IS_DEV__);
+if(window.location.hash === '#enable-tutorial'){
+  localStorage.setItem('tutorial','true');
+} else if(window.location.hash === '#disable-tutorial') {
+  localStorage.removeItem('tutorial');
+}
+const tutorialVisible = !!localStorage.getItem('tutorial');
 
 const switchModal = event => {
   modalEl.value.rejoin = store.getRejoinData();
@@ -77,7 +84,7 @@ onBeforeUnmount(()=>{
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
       <button @click="switchModal" modal="search">Search Completed Games</button>
-      <button @click="viewTutorial">How to play</button>
+      <button @click="viewTutorial" v-if="tutorialVisible">How to play</button>
     </div>
     <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
     <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
