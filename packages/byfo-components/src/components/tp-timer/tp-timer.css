@@ -2,6 +2,7 @@ tp-timer {
   display: inline;
   position: relative;
   line-height: 1em;
+  color: var(--color-text);
 }
 
 .add-time-button {

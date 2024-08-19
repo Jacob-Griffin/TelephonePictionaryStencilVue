@@ -93,6 +93,7 @@ export const appStyles = css`
 
   .really {
     --optional-text-backdrop: var(--color-backdrop);
+    --color-text: var(--color-backdrop-text);
   }
   .needs-backdrop {
     background-color: var(--optional-text-backdrop);
