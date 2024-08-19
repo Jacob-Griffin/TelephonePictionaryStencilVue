@@ -3,7 +3,7 @@ import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, D
 import { getDownloadURL, ref as storageRef, updateMetadata, uploadBytes, getStorage } from 'firebase/storage';
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import * as BYFO from './types';
-import config from './config';
+import { config } from './config';
 import { decodePath, encodePath, validUsername } from './general';
 
 export class BYFOFirebaseAdapter {

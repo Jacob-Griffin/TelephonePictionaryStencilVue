@@ -1,4 +1,4 @@
-export default {
+export const config = {
   minPlayers: 3,
   maxPlayers: 20,
   minRoundLength: 3, //Value in seconds

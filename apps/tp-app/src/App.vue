@@ -3,9 +3,7 @@ import { RouterView, useRoute} from 'vue-router';
 import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
-import 'byfo-components/tp-logo';
-import 'byfo-components/tp-time-input';
-//import 'byfo-components/tp-settings-modal';
+import '@component/byfo-logo';
 import '@component/byfo-settings-modal';
 import { firebaseConfig } from '../firebase.secrets';
 
@@ -46,7 +44,7 @@ onMounted(()=>{
     <tp-icon icon="home"></tp-icon>
   </div>
   <header :class="isInHome ? 'invisible' : ''">
-    <tp-logo small v-if="!isInHome"/>
+    <byfo-logo small v-if="!isInHome"/>
   </header>
   <div float right @click="settingsmodal.enabled = true">
     <tp-icon icon="gear"></tp-icon>

@@ -1,5 +1,6 @@
 <script setup>
 import 'byfo-components/tp-player-list';
+import '@component/byfo-time-input';
 import { onMounted } from 'vue';
 import { config, sortNamesBy } from 'byfo-utils/rollup';
 import { useRoute } from 'vue-router';
@@ -107,7 +108,7 @@ const copyLink = () => {
     <tp-player-list :players="players" :messageStart="'Waiting for players. Invite players with the game number or by sharing the join link above'" :messageEnd="`${players.length} player${players.length !== 1 ? 's' : ''} in game (${players.length < config.minPlayers ? `req. ${config.minPlayers}` : `max ${config.maxPlayers}`})`"/>
     <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
-      <tp-time-input :max-minutes="config.maxRoundLength" init-value="3.0" placeholder="∞" />
+      <byfo-time-input init-value="3.0" placeholder="∞" />
       <p v-if="timeError" class="error-text">{{ timeError }}</p>
       <button :disabled="!roundLength || players.length < 3" @click="startGame">Start Game</button>
     </div>
