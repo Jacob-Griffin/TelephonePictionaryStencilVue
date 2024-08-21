@@ -24,6 +24,17 @@
     "./content": "./dist/byfo-content.js",
     "./info-bubble": "./dist/byfo-info-bubble.js",
     "./settings-modal": "./dist/byfo-settings-modal.js",
-    "./time-input": "./dist/byfo-time-input.js"
+    "./time-input": "./dist/byfo-time-input.js",
+    "./canvas": "./dist/byfo-canvas.js",
+    "./canvas-controls": "./dist/byfo-canvas-controls.js",
+    "./icon": "./dist/byfo-icon.js",
+    "./join-content": "./dist/byfo-join-content.js",
+    "./metadata-modal": "./dist/byfo-metadata-modal.js",
+    "./player-list": "./dist/byfo-player-list.js",
+    "./review-chat": "./dist/byfo-review-chat.js",
+    "./routing-modal": "./dist/byfo-routing-modal.js",
+    "./timer": "./dist/byfo-timer.js",
+    "./tutorial-modal": "./dist/byfo-tutorial-modal.js",
+    "./provider": "./dist/byfo-provider.js"
   }
 }

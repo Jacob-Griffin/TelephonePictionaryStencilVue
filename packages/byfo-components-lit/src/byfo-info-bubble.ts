@@ -1,11 +1,12 @@
-import { LitElement, css, html } from 'lit-element';
+import { css, html } from 'lit-element';
 import { customElement } from 'lit-element/decorators.js';
+import { ByfoElement } from './byfo-element';
 
 /**
  * A tooltip-like element that has custom styling and appears immediately on hover
  */
 @customElement('byfo-info-bubble')
-export class ByfoInfoBubble extends LitElement {
+export class ByfoInfoBubble extends ByfoElement {
   render() {
     return html`<tp-icon icon="info"></tp-icon>
       <div id="bubble">{this.content}</div>`;

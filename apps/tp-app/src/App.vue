@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView, useRoute} from 'vue-router';
-import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
+import { inGame, inHome, TPStore, BYFOFirebaseAdapter, BYFODependencyProvider } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import '@component/byfo-logo';
@@ -24,6 +24,8 @@ provide('TpStore', tp);
 
 const firebase = new BYFOFirebaseAdapter(firebaseConfig);
 provide('Firebase',firebase);
+
+const provider = new BYFODependencyProvider({firebase,store:tp});
 
 watch(useRoute(), (r) => {
   isInGame.value = inGame(r.path);

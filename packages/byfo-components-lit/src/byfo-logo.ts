@@ -1,11 +1,12 @@
-import { LitElement, css, html } from 'lit-element';
+import { css, html } from 'lit-element';
 import { customElement } from 'lit-element/decorators.js';
+import { ByfoElement } from './byfo-element';
 
 /**
  * A logo element. Used to attributify the "shape" of the logo
  */
 @customElement('byfo-logo')
-export class ByfoLogo extends LitElement {
+export class ByfoLogo extends ByfoElement {
   render() {
     return html``;
   }

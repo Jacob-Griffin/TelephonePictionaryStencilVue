@@ -1,12 +1,12 @@
-import { LitElement, css, html } from 'lit-element';
-import { customElement, property } from 'lit-element/decorators.js';
+import { css, html } from 'lit-element';
+import { property } from 'lit-element/decorators.js';
 import { appStyles } from './common';
+import { ByfoElement } from './byfo-element';
 
 /**
  * Base class that defines a floating window that can be closed
  */
-@customElement('byfo-modal')
-export class ByfoModal extends LitElement {
+export class ByfoModal extends ByfoElement {
   @property({ reflect: true, attribute: 'modal-enabled', type: Boolean }) enabled: boolean = false;
 
   checkClose(e: PointerEvent) {

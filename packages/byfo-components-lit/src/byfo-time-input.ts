@@ -1,7 +1,8 @@
-import { LitElement, css, html } from 'lit-element';
+import { css, html } from 'lit-element';
 import { customElement, property, state } from 'lit-element/decorators.js';
 import { appStyles, TargetedInputEvent } from './common';
 import { config } from 'byfo-utils';
+import { ByfoElement } from './byfo-element';
 
 /**
  * Element for inputing a time value, with standardized validation
@@ -10,7 +11,7 @@ import { config } from 'byfo-utils';
  * @property value: Takes an initial time value, or reads back the the input time in ms
  */
 @customElement('byfo-time-input')
-export class ByfoTimeInput extends LitElement {
+export class ByfoTimeInput extends ByfoElement {
   @state() timeError: string = '';
   @property({ reflect: true, attribute: 'init-value' }) value?: number;
 
