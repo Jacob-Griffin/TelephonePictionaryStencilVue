@@ -1,4 +1,5 @@
-import { css, html } from 'lit-element';
+import { css, html } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 /**
  * Lit CSS fragment that applies top level app styles. Used for structural components, but not necessarily inline
@@ -180,7 +181,7 @@ const parse = (input: string, allowLinks: boolean) => {
  * @returns - a safe html string
  */
 const sanitize = (input: string) => {
-  return input;
+  return input.replace(/<\\?script>/, '');
 };
 
 /**
@@ -191,5 +192,5 @@ const sanitize = (input: string) => {
  */
 export const format = (input: string, allowLinks: boolean) => {
   const output = sanitize(parse(input, allowLinks));
-  return html`<span class="markdown" innerHTML=${output}></span>`;
+  return html`<span class="markdown">${unsafeHTML(output)}</span>`;
 };

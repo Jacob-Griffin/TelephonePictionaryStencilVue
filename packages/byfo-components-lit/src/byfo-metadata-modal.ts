@@ -1,6 +1,6 @@
-import { css, html } from 'lit-element';
-import { customElement } from 'lit-element/decorators.js';
-import { ByfoModal } from './byfo-modal'
+import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { ByfoModal } from './byfo-modal';
 
 /**
  * Description of your element here. Use @ property doc tags to describe props

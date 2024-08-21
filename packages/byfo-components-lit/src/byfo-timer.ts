@@ -1,5 +1,5 @@
-import { css, html } from 'lit-element';
-import { customElement, property } from 'lit-element/decorators.js';
+import { css, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { ByfoElement } from './byfo-element';
 
 /**

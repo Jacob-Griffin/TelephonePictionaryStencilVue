@@ -1,8 +1,7 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
 import 'byfo-components/tp-routing-modal';
-import 'byfo-components/tp-tutorial-modal';
-import { computed } from 'vue';
+import '@component/byfo-tutorial-modal';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
@@ -87,7 +86,7 @@ onBeforeUnmount(()=>{
       <button @click="viewTutorial" v-if="tutorialVisible">How to play</button>
     </div>
     <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
-    <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
+    <byfo-tutorial-modal ref="tutorialModal"></byfo-tutorial-modal>
   </main>
   <footer>
     <p>Copyright ©{{buildDate.year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved. {{ devMode ? 'Beta Build': '' }}</p>

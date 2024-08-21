@@ -103,9 +103,9 @@ importers:
       byfo-utils:
         specifier: workspace:^
         version: link:../byfo-utils
-      lit-element:
-        specifier: ^4.1.0
-        version: 4.1.0
+      lit:
+        specifier: ^3.2.0
+        version: 3.2.0
     devDependencies:
       typescript:
         specifier: ^5.2.2
@@ -1218,6 +1218,9 @@ packages:
 
   lit-html@3.2.0:
     resolution: {integrity: sha512-pwT/HwoxqI9FggTrYVarkBKFN9MlTUpLrDHubTmW4SrkL3kkqW5gxwbxMMUnbbRHBC0WTZnYHcjDSCM559VyfA==}
+
+  lit@3.2.0:
+    resolution: {integrity: sha512-s6tI33Lf6VpDu7u4YqsSX78D28bYQulM+VAzsGch4fx2H0eLZnJsUBsPWmGYSGoKDNbjtRv02rio1o+UdPVwvw==}
 
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
@@ -2826,6 +2829,12 @@ snapshots:
   lit-html@3.2.0:
     dependencies:
       '@types/trusted-types': 2.0.7
+
+  lit@3.2.0:
+    dependencies:
+      '@lit/reactive-element': 2.0.4
+      lit-element: 4.1.0
+      lit-html: 3.2.0
 
   locate-path@6.0.0:
     dependencies:
