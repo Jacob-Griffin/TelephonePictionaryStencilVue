@@ -2,7 +2,10 @@ import { LitElement, css, html } from 'lit-element';
 import { customElement, property } from 'lit-element/decorators.js';
 
 /**
- * Description of your element here. Use @ property doc tags to describe props
+ * Displays a piece of round content in proper card aspect ratio
+ * @property type - Whether this is an image or text being displayed
+ * @property content - The content to be displayed
+ * @property sendingTo - The person next in gameplay (optional)
  */
 @customElement('byfo-content')
 export class ByfoContent extends LitElement {

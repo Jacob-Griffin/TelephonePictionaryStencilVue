@@ -3,7 +3,7 @@ import { customElement, property } from 'lit-element/decorators.js';
 import { appStyles } from './common';
 
 /**
- * Description of your element here. Use @ property doc tags to describe props
+ * Base class that defines a floating window that can be closed
  */
 @customElement('byfo-modal')
 export class ByfoModal extends LitElement {

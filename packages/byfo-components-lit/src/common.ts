@@ -1,5 +1,8 @@
 import { css, html } from 'lit-element';
 
+/**
+ * Lit CSS fragment that applies top level app styles. Used for structural components, but not necessarily inline
+ */
 export const appStyles = css`
   ::-webkit-scrollbar {
     background: none;
@@ -103,6 +106,9 @@ export const appStyles = css`
   }
 `;
 
+/**
+ * Lit CSS fragment for any element using toggles
+ */
 export const toggleStyles = css`
   .toggle-wrapper {
     height: 1.32rem;
@@ -140,13 +146,26 @@ export const toggleStyles = css`
   }
 `;
 
+/**
+ * Alternate Event typing that explicitly defines target as an element
+ */
 export interface TargetedEvent extends Event {
   target: HTMLElement;
 }
+
+/**
+ * Alternate InputEvent typing that explicitly says that target exists and has a value
+ */
 export interface TargetedInputEvent extends InputEvent {
   target: HTMLInputElement;
 }
 
+/**
+ * Markdown parsing function
+ * @param input - The string to be parsed
+ * @param allowLinks - Define whether links should be parsed as links
+ * @returns The parsed markdown as standard html in a string
+ */
 const parse = (input: string, allowLinks: boolean) => {
   const withoutTags = input.replace('<', '&lt;').replace('>', '&gt');
   const withLinks = allowLinks ? withoutTags.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>') : withoutTags;
@@ -155,10 +174,21 @@ const parse = (input: string, allowLinks: boolean) => {
   return withItalics;
 };
 
+/**
+ * Makes sure parsed markdown is safe to render
+ * @param input - html string
+ * @returns - a safe html string
+ */
 const sanitize = (input: string) => {
   return input;
 };
 
+/**
+ * Runs the markdown pipeline to generate a complete parsed markdown element
+ * @param input - The markdown string to be parsed
+ * @param allowLinks - Define whether links should be parsed as links
+ * @returns The parsed markdown as a lit HTML fragment
+ */
 export const format = (input: string, allowLinks: boolean) => {
   const output = sanitize(parse(input, allowLinks));
   return html`<span class="markdown" innerHTML=${output}></span>`;

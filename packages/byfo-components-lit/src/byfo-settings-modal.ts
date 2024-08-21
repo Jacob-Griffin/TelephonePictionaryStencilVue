@@ -7,7 +7,9 @@ import type { TPStore } from '../../byfo-utils/dist';
 import { themes } from 'byfo-themes';
 
 /**
- * Description of your element here. Use @ property doc tags to describe props
+ * A modal that contains various client-side settings
+ * @property store - A localstorage management object
+ * @property buildDate - An object describing how to format dates
  */
 @customElement('byfo-settings-modal')
 export class ByfoSettingsModal extends ByfoModal {

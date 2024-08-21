@@ -3,7 +3,6 @@ import { customElement } from 'lit-element/decorators.js';
 
 /**
  * A logo element. Used to attributify the "shape" of the logo
- *
  */
 @customElement('byfo-logo')
 export class ByfoLogo extends LitElement {

@@ -4,7 +4,10 @@ import { appStyles, TargetedInputEvent } from './common';
 import { config } from 'byfo-utils';
 
 /**
- * Description of your element here. Use @ property doc tags to describe props
+ * Element for inputing a time value, with standardized validation
+ *
+ * @attribute init-value => value
+ * @property value: Takes an initial time value, or reads back the the input time in ms
  */
 @customElement('byfo-time-input')
 export class ByfoTimeInput extends LitElement {

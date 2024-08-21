@@ -2,7 +2,7 @@ import { LitElement, css, html } from 'lit-element';
 import { customElement } from 'lit-element/decorators.js';
 
 /**
- * Description of your element here. Use @ property doc tags to describe props
+ * A tooltip-like element that has custom styling and appears immediately on hover
  */
 @customElement('byfo-info-bubble')
 export class ByfoInfoBubble extends LitElement {
