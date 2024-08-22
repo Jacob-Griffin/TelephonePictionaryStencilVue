@@ -7,6 +7,7 @@
     "build": "vite build",
     "tsc": "tsc",
     "preview": "vite preview",
+    "clean:modules": "rm -rf ./node_modules",
     "generate": "node ./generate-element.js",
     "g": "node ./generate-element.js"
   },

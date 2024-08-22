@@ -82,7 +82,9 @@ export class ByfoTutorialModal extends ByfoModal {
   }
 
   handleKey = ({ key }: KeyboardEvent) => {
-    console.log(key);
+    if (!this.enabled) {
+      return;
+    }
     if (key === 'ArrowRight') this.next();
     if (key === 'ArrowLeft') this.prev();
   };

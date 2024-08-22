@@ -21,6 +21,7 @@
   },
   "scripts": {
     "build": "stencil build",
+    "clean:modules": "rm -rf ./node_modules",
     "dev": "stencil build --watch",
     "start": "stencil build --dev --watch --serve",
     "generate": "stencil generate"

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES6",
+    "lib":["es2021","dom"],
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "typeRoots": ["./types"],
     "rootDir": "./src",
     "outDir": "./dist",
@@ -12,5 +13,5 @@
     "preserveConstEnums": true,
     "inlineSourceMap": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts","src/*.ts"],
 }

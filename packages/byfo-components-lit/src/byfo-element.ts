@@ -10,12 +10,13 @@ interface ByfoElementConstructor extends Function {
  */
 export class ByfoElement extends LitElement {
   static uses: (keyof DependencyList)[] = [];
-  set injected(v: DependencyList) {
-    for (const dep in v) {
-      this[dep] = v[dep];
-    }
+  injected: DependencyList = {};
+  get firebase() {
+    return this.injected.firebase;
   }
-  [dep: keyof DependencyList]: DependencyList[typeof dep];
+  get store() {
+    return this.injected.store;
+  }
 
   constructor() {
     super();

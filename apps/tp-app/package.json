@@ -6,6 +6,7 @@
     "dev": "vite --host",
     "dev:local": "vite",
     "build": "vite build",
+    "clean:modules": "rm -rf ./node_modules",
     "start": "vite build; vite --host",
     "start:local": "vite build; vite",
     "deploy": "firebase deploy",

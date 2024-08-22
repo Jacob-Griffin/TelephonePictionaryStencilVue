@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { TargetedEvent, TargetedInputEvent, toggleStyles } from './common';
 import { ByfoModal } from './byfo-modal';
 import './byfo-info-bubble';
-import type { TPStore } from '../../byfo-utils/dist';
+import type { DependencyList } from 'byfo-utils';
 import { themes } from 'byfo-themes';
 
 /**
@@ -13,7 +13,8 @@ import { themes } from 'byfo-themes';
  */
 @customElement('byfo-settings-modal')
 export class ByfoSettingsModal extends ByfoModal {
-  @property() store?: TPStore;
+  static uses: (keyof DependencyList)[] = ['store'];
+
   @property() buildDate?: { year: string; full?: string; date?: Date };
 
   //Explicitly type render root as shadow root

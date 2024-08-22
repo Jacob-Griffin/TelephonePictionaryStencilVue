@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index",
+    ".": "./dist/index.js",
     "./firebase": "./dist/firebase",
     "./config": "./dist/config",
     "./types": "./dist/types",
@@ -13,6 +13,7 @@
     "./rollup/firebase": "./src/firebase"
   },
   "scripts": {
+    "clean:modules": "rm -rf ./node_modules",
     "build": "tsc && cp ./src/types.d.ts ./dist/types.d.ts"
   },
   "dependencies": {

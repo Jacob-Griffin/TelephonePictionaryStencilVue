@@ -36,9 +36,6 @@ onBeforeMount(() => {
   tp.useTheme();
   tp.useCustomStyles();
 });
-onMounted(()=>{
-  settingsmodal.value.store = tp;
-})
 </script>
 
 <template>
