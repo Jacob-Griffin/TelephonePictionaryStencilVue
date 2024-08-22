@@ -12,5 +12,5 @@
     "preserveConstEnums": true,
     "inlineSourceMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
 }

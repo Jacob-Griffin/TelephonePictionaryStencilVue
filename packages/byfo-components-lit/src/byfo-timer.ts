@@ -1,19 +1,19 @@
 import { css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { ByfoElement } from './byfo-element';
+import { config } from 'byfo-utils';
 
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('byfo-timer')
 export class ByfoTimer extends ByfoElement {
-  static usesFirebase = true;
-  @property() endtime: number;
-  @property() offset: number;
-  @property() addTime: () => void;
-  @State() currentTime: number = Date.now();
-  @State() timeoutReady: boolean = true;
-  timerLoop;
+  static uses = ['firebase'];
+  @property() endtime?: number;
+  @property() addTime?: () => void;
+  @state() currentTime: number = Date.now();
+  @state() timeoutReady: boolean = true;
+  timerLoop?: NodeJS.Timer;
 
   connectedCallback() {
     this.timerLoop = setInterval(() => {
@@ -33,7 +33,7 @@ export class ByfoTimer extends ByfoElement {
   }
 
   get secondsLeft(): number {
-    return Math.floor((this.endtime - this.currentTime) / 1000);
+    return this.endtime ? Math.floor((this.endtime - this.currentTime) / 1000) : -1;
   }
 
   get relativeTime() {
@@ -49,7 +49,7 @@ export class ByfoTimer extends ByfoElement {
     return `${minutes}:${seconds}`;
   }
   render() {
-    return html``;
+    return html`${this.relativeTime}${this.addTime ? html`<button onClick="{this.addTime}" class="add-time-button">+${config.addTimeIncrement}s</button>` : null}`;
   }
   static styles = css`
     :host {
