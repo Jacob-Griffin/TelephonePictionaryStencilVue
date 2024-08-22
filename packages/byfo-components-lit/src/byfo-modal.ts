@@ -78,6 +78,7 @@ export class ByfoModal extends ByfoElement {
       height: 2.25rem;
       background-color: rgba(0, 0, 0, 0);
       border: none;
+      z-index: 10;
     }
 
     .main-action {

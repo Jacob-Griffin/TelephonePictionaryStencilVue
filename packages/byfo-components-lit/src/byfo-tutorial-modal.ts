@@ -63,7 +63,7 @@ const slides: Slide[] = [
 ];
 
 /**
- * Description of your element here. Use @ property doc tags to describe props
+ * Displays a carousel of tutorial slides in a modal
  */
 @customElement('byfo-tutorial-modal')
 export class ByfoTutorialModal extends ByfoModal {
@@ -81,11 +81,20 @@ export class ByfoTutorialModal extends ByfoModal {
     }
   }
 
-  componentDidLoad() {
-    document.addEventListener('keydown', ({ key }) => {
-      if (key === 'ArrowRight') this.next();
-      if (key === 'ArrowLeft') this.prev();
-    });
+  handleKey = ({ key }: KeyboardEvent) => {
+    console.log(key);
+    if (key === 'ArrowRight') this.next();
+    if (key === 'ArrowLeft') this.prev();
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('keydown', this.handleKey);
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    document.removeEventListener('keydown', this.handleKey);
   }
 
   renderSlide() {
@@ -101,11 +110,11 @@ export class ByfoTutorialModal extends ByfoModal {
     this.index;
     return html`
       <div class="tutorial-main">
-        <p @click=${this.prev.bind(this)}>&lt;</p>
+        <p @click=${this.prev.bind(this)} class=${this.index === 0 ? 'hidden' : ''}>&lt;</p>
         <section class="slide">${this.renderSlide()}</section>
-        <p @click=${this.next.bind(this)}>&gt;</p>
+        <p @click=${this.next.bind(this)} class=${this.index === slides.length - 1 ? 'hidden' : ''}>&gt;</p>
       </div>
-      <div class="dot-container">${slides.forEach((_, i) => html` <p @click=${() => (this.index = i)} class=${this.index === i ? 'current' : ''}>•</p>`)}</div>
+      <div class="dot-container">${slides.map((_, i) => html`<p @click=${() => (this.index = i)} class=${this.index === i ? 'current' : ''}>•</p>`)}</div>
     `;
   }
   static styles = css`
@@ -145,7 +154,7 @@ export class ByfoTutorialModal extends ByfoModal {
       font-size: 1.7rem;
       cursor: pointer;
       gap: 0.5rem;
-      margin-top: 0.5rem;
+      margin-bottom: -0.75rem;
       color: var(--color-border);
       & > .current {
         color: var(--color-text);
@@ -157,11 +166,15 @@ export class ByfoTutorialModal extends ByfoModal {
       width: 100%;
       align-items: center;
       & > p {
-        flex-basis: 2ch;
+        flex-basis: 2.5ch;
         height: 1em;
         font-size: 1.2rem;
         cursor: pointer;
         user-select: none;
+        &.hidden {
+          height: 0;
+          overflow-y: hidden;
+        }
       }
       & > section {
         flex-grow: 1;
@@ -169,6 +182,10 @@ export class ByfoTutorialModal extends ByfoModal {
         flex-direction: column;
         gap: 0.25rem;
         align-items: center;
+        & > p {
+          max-width: 90%;
+          text-wrap: balance;
+        }
       }
     }
   `;
