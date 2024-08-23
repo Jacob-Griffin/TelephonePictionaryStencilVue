@@ -358,7 +358,7 @@ export class TpCanvas {
   }
 
   adjustScale = () => {
-    const {width} = this.hostEl.getBoundingClientRect();
+    const { width } = this.el.getBoundingClientRect();
     this.scaleRatio = width/this.width
     if(this.canvasElement){
       this.canvasElement.style['scale'] = `${this.scaleRatio}`;
