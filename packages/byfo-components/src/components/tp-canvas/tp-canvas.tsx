@@ -89,6 +89,10 @@ export class TpCanvas {
 
     //Stop right click menu
     this.el.addEventListener('contextmenu', e => e.preventDefault());
+    
+    //Add scale adjusters
+    window.addEventListener('resize',this.adjustScale);
+    this.adjustScale();
   }
 
   disconnectedCallback() {
@@ -101,6 +105,7 @@ export class TpCanvas {
     document.removeEventListener('pointermove', this.draw);
     document.removeEventListener('pointercancel', this.finishLine);
     document.removeEventListener('pointerup', this.finishLine);
+    window.removeEventListener('resize',this.adjustScale);
   }
 
   setupContext() {
@@ -140,6 +145,11 @@ export class TpCanvas {
   draw = event => {
     //We only want to continue drawing if we've already started a line
     if (this.currentPath.length > 0) {
+      if(performance.now() - this.lastDrawEnd < 5){
+        // There's a little bit of jitter with the mouse moves if they happen too quickly
+        // Stop the event if it hasn't been a full rendered window frame
+        return;
+      }
       if(window.location.hash === '#debug-distance'){
         console.log(`${performance.now() - this.lastDrawEnd ?? 0}ms of empty space`); ///!!!!
       }
@@ -157,9 +167,7 @@ export class TpCanvas {
       if(window.location.hash === '#debug-count'){
         this.drawCount += 1;
       }
-      if(window.location.hash === '#debug-distance'){
-        this.lastDrawEnd = performance.now();
-      }
+      this.lastDrawEnd = performance.now();
     }
     return true;
   };
@@ -335,6 +343,7 @@ export class TpCanvas {
     if (this.isBlankCanvas()) {
       return emptyPromise;
     }
+
     return new Promise(callback => {
       this.canvasElement.toBlob(callback);
     });
@@ -348,7 +357,18 @@ export class TpCanvas {
     return new Promise(() => {});
   }
 
+  adjustScale = () => {
+    const { width } = this.el.getBoundingClientRect();
+    this.scaleRatio = width/this.width
+    if(this.canvasElement){
+      this.canvasElement.style['scale'] = `${this.scaleRatio}`;
+    }
+  }
+
   render() {
-    return <canvas height={this.height} width={this.width} ref={el => (this.canvasElement = el)}></canvas>;
+    if(!this.scaleRatio){
+      this.adjustScale();
+    }
+    return <canvas height={this.height} width={this.width} style={{'scale':`${this.scaleRatio}`}} ref={el => (this.canvasElement = el)}></canvas>;
   }
 }
