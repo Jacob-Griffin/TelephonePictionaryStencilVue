@@ -30,15 +30,15 @@ try {
 }
 
 //Step 1: create the boilerplate string
-const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit';
+const fileContents = `import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 ${componentName.parent ? `import { ${componentName.parent} } from '${componentName.parentFile}'
-` : ''}
+` : "import { ByfoElement } from './byfo-element'"}
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('${componentName.tagname}')
-export class ${componentName.class} extends ${componentName.parent ?? 'LitElement'} {
+export class ${componentName.class} extends ${componentName.parent ?? 'ByfoElement'} {
   render() {
     return html\\\`\\\`;
   }

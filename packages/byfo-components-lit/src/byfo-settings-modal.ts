@@ -8,17 +8,15 @@ import { themes } from 'byfo-themes';
 
 /**
  * A modal that contains various client-side settings
- * @property store - A localstorage management object
- * @property buildDate - An object describing how to format dates
  */
 @customElement('byfo-settings-modal')
 export class ByfoSettingsModal extends ByfoModal {
   static uses: (keyof DependencyList)[] = ['store'];
 
+  /**
+   * Used in beta builds to display the full date of the most recent build
+   */
   @property() buildDate?: { year: string; full?: string; date?: Date };
-
-  //Explicitly type render root as shadow root
-  renderRoot = this.renderRoot as DocumentFragment;
 
   passClick(e: TargetedEvent) {
     const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
