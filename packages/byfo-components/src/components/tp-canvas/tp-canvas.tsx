@@ -335,6 +335,7 @@ export class TpCanvas {
     if (this.isBlankCanvas()) {
       return emptyPromise;
     }
+    this.redraw();
     return new Promise(callback => {
       this.canvasElement.toBlob(callback);
     });
