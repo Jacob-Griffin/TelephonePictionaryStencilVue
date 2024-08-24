@@ -1,9 +1,9 @@
 {
   "name": "byfo-utils",
-  "version": "0.9.8",
+  "version": "1.0.0-rc",
   "private": true,
   "main": "./dist/index.js",
-  "typings": "./dist/index",
+  "typings": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index",
     "./firebase": "./dist/firebase",
@@ -11,9 +11,6 @@
     "./types": "./dist/types",
     "./rollup": "./src/index",
     "./rollup/firebase": "./src/firebase"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "scripts": {
     "build": "tsc && cp ./src/types.d.ts ./dist/types.d.ts"

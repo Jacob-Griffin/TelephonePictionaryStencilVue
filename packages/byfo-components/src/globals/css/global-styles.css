@@ -15,7 +15,7 @@
   background-color: var(--scroll-color);
 }
 
-:not(strong){
+:not(strong) {
   font-weight: normal;
 }
 
@@ -90,6 +90,7 @@ input[type='text']:focus,
 
 .really {
   --optional-text-backdrop: var(--color-backdrop);
+  --color-text: var(--color-backdrop-text);
 }
 .needs-backdrop {
   background-color: var(--optional-text-backdrop);

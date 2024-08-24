@@ -1,6 +1,6 @@
 {
   "name": "tp-app",
-  "version": "0.9.8",
+  "version": "1.0.0-rc",
   "private": true,
   "scripts": {
     "dev": "vite --host",
@@ -14,22 +14,22 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "algoliasearch": "^4.23.3",
+    "algoliasearch": "^4.24.0",
     "byfo-components-lit": "workspace:^",
     "byfo-themes": "workspace:*",
     "byfo-utils": "workspace:*",
     "firebase": "^9.23.0",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue": "^3.4.38",
+    "vue-router": "^4.4.3"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.7.2",
+    "@rushstack/eslint-patch": "^1.10.4",
     "@vitejs/plugin-vue": "^4.6.2",
     "@vue/eslint-config-prettier": "^7.1.0",
     "byfo-components": "workspace:^",
-    "eslint": "^8.56.0",
-    "eslint-plugin-vue": "^9.20.1",
+    "eslint": "^9.9.0",
+    "eslint-plugin-vue": "^9.27.0",
     "prettier": "^2.8.8",
-    "vite": "^4.5.2"
+    "vite": "^5.4.1"
   }
 }

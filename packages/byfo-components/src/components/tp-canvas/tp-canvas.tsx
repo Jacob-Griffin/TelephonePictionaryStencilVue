@@ -53,7 +53,6 @@ export class TpCanvas {
   paths:PathEntry[] = []; //List of paths drawn (support for undo/redo)
   redoStack:PathEntry[] = []; //Stack of paths that were undone (clears on new path drawn)
   currentWidth = 'small'; //Current Pen Size
-  resizeObserver:ResizeObserver = new ResizeObserver(()=>this.rescaleCanvas());
   canvasRect:DOMRect;
   scaleRatio:number // Cached value of bounding box width to internal width ratio
   lastDrawEnd:number;
@@ -72,6 +71,7 @@ export class TpCanvas {
     this.hostEl.addEventListener('clear-input', this.clearCanvas);
     this.hostEl.addEventListener('pen-input', () => this.setDrawMode('#000'));
     this.hostEl.addEventListener('eraser-input', () => this.setDrawMode('#FFF'));
+    this.hostEl.addEventListener('invert-input', this.invert);
 
     //Listen for drawing-related events (Listen to full document for finishes):
 
@@ -89,9 +89,10 @@ export class TpCanvas {
 
     //Stop right click menu
     this.el.addEventListener('contextmenu', e => e.preventDefault());
-
-    this.resizeObserver.observe(this.el);
-    this.rescaleCanvas();
+    
+    //Add scale adjusters
+    window.addEventListener('resize',this.adjustScale);
+    this.adjustScale();
   }
 
   disconnectedCallback() {
@@ -104,6 +105,7 @@ export class TpCanvas {
     document.removeEventListener('pointermove', this.draw);
     document.removeEventListener('pointercancel', this.finishLine);
     document.removeEventListener('pointerup', this.finishLine);
+    window.removeEventListener('resize',this.adjustScale);
   }
 
   setupContext() {
@@ -120,6 +122,9 @@ export class TpCanvas {
     if (this.paths?.length > 0) {
       // If there was a restore backup call but the ctx wasn't loaded yet, catch up
       this.redraw();
+    } else {
+      // If this is a brand new canvas, make sure there's a clear event so that invert will work
+      this.paths.push({clear: '#FFF'})
     }
   }
   //#endregion setup
@@ -140,6 +145,11 @@ export class TpCanvas {
   draw = event => {
     //We only want to continue drawing if we've already started a line
     if (this.currentPath.length > 0) {
+      if(performance.now() - this.lastDrawEnd < 5){
+        // There's a little bit of jitter with the mouse moves if they happen too quickly
+        // Stop the event if it hasn't been a full rendered window frame
+        return;
+      }
       if(window.location.hash === '#debug-distance'){
         console.log(`${performance.now() - this.lastDrawEnd ?? 0}ms of empty space`); ///!!!!
       }
@@ -157,9 +167,7 @@ export class TpCanvas {
       if(window.location.hash === '#debug-count'){
         this.drawCount += 1;
       }
-      if(window.location.hash === '#debug-distance'){
-        this.lastDrawEnd = performance.now();
-      }
+      this.lastDrawEnd = performance.now();
     }
     return true;
   };
@@ -236,7 +244,7 @@ export class TpCanvas {
       if (this.paths[i].clear) {
         this.ctx.fillStyle = this.paths[i].clear;
         this.ctx.fillRect(0, 0, this.width, this.height);
-      } else {
+      } else if (this.paths[i].color) {
         this.ctx.lineWidth = this.paths[i].size;
         this.ctx.strokeStyle = this.paths[i].color;
         this.ctx.stroke(new Path2D(numsToPathString(this.paths[i].path)));
@@ -282,12 +290,23 @@ export class TpCanvas {
     }
     this.ctx.lineWidth = this.lineWidths[this.currentWidth];
   };
+
+  invert = () => {
+    this.paths.forEach(path => {
+      if(path.clear){
+        path.clear = /f/i.test(path.clear) ? '#000' : '#FFF';
+      } else {
+        path.color = /f/i.test(path.color) ? '#000' : '#FFF';
+      }
+    });
+    this.redraw();
+  }
   //#endregion handle inputs
 
-  transformCoordinates(event): [number, number] {
+  transformCoordinates({clientX:mx,clientY:my}:PointerEvent): [number, number] {
     //Convert screen coordinates to canvas coordinates (Offset by box position, scale by width difference)
-    const x = Math.round((event.clientX - this.canvasRect.left) / this.scaleRatio);
-    const y = Math.round((event.clientY - this.canvasRect.top) / this.scaleRatio);
+    const x = Math.round((mx - this.canvasRect.left) * this.width / this.canvasRect.width);
+    const y = Math.round((my - this.canvasRect.top) * this.height / this.canvasRect.height);
     return [x, y];
   }
 
@@ -324,6 +343,7 @@ export class TpCanvas {
     if (this.isBlankCanvas()) {
       return emptyPromise;
     }
+
     return new Promise(callback => {
       this.canvasElement.toBlob(callback);
     });
@@ -337,13 +357,18 @@ export class TpCanvas {
     return new Promise(() => {});
   }
 
-  rescaleCanvas(){
+  adjustScale = () => {
     const { width } = this.el.getBoundingClientRect();
-    this.scaleRatio = width / this.width;
-    this.el.style.setProperty('--scale-factor', this.scaleRatio.toString())
+    this.scaleRatio = width/this.width
+    if(this.canvasElement){
+      this.canvasElement.style['scale'] = `${this.scaleRatio}`;
+    }
   }
 
   render() {
-    return <canvas height={this.height} width={this.width} ref={el => (this.canvasElement = el)}></canvas>;
+    if(!this.scaleRatio){
+      this.adjustScale();
+    }
+    return <canvas height={this.height} width={this.width} style={{'scale':`${this.scaleRatio}`}} ref={el => (this.canvasElement = el)}></canvas>;
   }
 }

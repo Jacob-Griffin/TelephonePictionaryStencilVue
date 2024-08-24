@@ -85,6 +85,7 @@ export namespace Components {
     interface TpTimer {
         "addTime": ()=>void;
         "endtime": number;
+        "offset": number;
     }
     interface TpTutorialModal {
         "enabled": boolean;
@@ -280,6 +281,7 @@ declare namespace LocalJSX {
     interface TpTimer {
         "addTime"?: ()=>void;
         "endtime"?: number;
+        "offset"?: number;
     }
     interface TpTutorialModal {
         "enabled"?: boolean;

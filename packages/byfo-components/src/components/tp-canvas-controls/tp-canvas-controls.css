@@ -77,9 +77,13 @@ tp-icon-fill-squiggle {
   height: var(--squiggle-size);
 }
 
-#white-clear,
-#black-clear {
+#clear {
   background-color: var(--color-important);
+}
+
+#invert {
+  color: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 1) 100%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 1) 100%);
 }
 
 #undo svg {

@@ -18,3 +18,32 @@ export function processArgs(argv,unaryArgs,binaryArgs) {
   }
   return argMap;
 }
+
+export function formatJson(json,depth = 1){
+  let output = `{\n`;
+  Object.keys(json).forEach(key => {
+    output += '  '.repeat(depth);
+    output += `\\"${key}\\": `;
+    switch(typeof json[key]){
+      case 'string':
+        output += `\\"${json[key]}\\"`;
+        break;
+      case 'number':
+        output += `${json[key]}`;
+        break;
+      case 'boolean':
+        output += json[key] ? 'true' : 'false';
+        break;
+      case 'object':
+        output += formatJson(json[key],depth+1);
+        break;
+    }
+    output += ',\n';
+  });
+  if(depth > 1){
+    output += '  '.repeat(depth - 1);
+  }
+  output += '}';
+  output = output.replaceAll(/,(?=\s+})/g,'');
+  return output;
+}

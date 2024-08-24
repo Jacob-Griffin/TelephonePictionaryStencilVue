@@ -31,11 +31,11 @@ export class TpCanvasControls {
       });
     });
 
-    this.getElement('white-clear').addEventListener('click', () => {
+    this.getElement('clear').addEventListener('click', () => {
       this.sendClear('#FFF');
     });
-    this.getElement('black-clear').addEventListener('click', () => {
-      this.sendClear('#000');
+    this.getElement('invert').addEventListener('click', () => {
+      this.sendInvert();
     });
   }
 
@@ -66,6 +66,10 @@ export class TpCanvasControls {
     this.hostEl.dispatchEvent(new CustomEvent('size-input', { detail: { newSize } }));
     this.activeWidth = newSize;
   };
+
+  sendInvert = () => {
+    this.hostEl.dispatchEvent(new CustomEvent('invert-input'));
+  }
 
   //#endregion
 
@@ -101,8 +105,8 @@ export class TpCanvasControls {
 
         {/* Clear */}
         <section>
-          <button id="white-clear">{icons.droplet}</button>
-          <button id="black-clear">{icons.droplet}</button>
+          <button id="clear">{icons.trash}</button>
+          <button id="invert">{icons.swap}</button>
         </section>
 
         <button id="submit-button" onClick={this.submithandler} disabled={this.isSending}>
