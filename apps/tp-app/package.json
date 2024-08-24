@@ -1,6 +1,6 @@
 {
   "name": "tp-app",
-  "version": "1.0.0-rc",
+  "version": "1.0.0-rc.2",
   "private": true,
   "scripts": {
     "dev": "vite --host",
