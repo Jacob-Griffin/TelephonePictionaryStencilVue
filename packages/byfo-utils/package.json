@@ -1,6 +1,6 @@
 {
   "name": "byfo-utils",
-  "version": "0.9.9-test",
+  "version": "0.9.9-test.2",
   "private": true,
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",

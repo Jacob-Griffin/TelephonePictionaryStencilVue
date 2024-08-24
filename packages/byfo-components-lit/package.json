@@ -1,7 +1,7 @@
 {
   "name": "byfo-components-lit",
   "private": true,
-  "version": "0.9.9-test",
+  "version": "0.9.9-test.2",
   "type": "module",
   "scripts": {
     "build": "vite build",
