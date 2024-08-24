@@ -1,16 +1,22 @@
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { DependencyList, InjectionRequest } from './common';
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('byfo-provider')
 export class ByfoProvider extends LitElement {
-  @property() sources: DependencyList = {};
+  #sources?: DependencyList;
+  set sources(v: DependencyList) {
+    this.#sources = v;
+  }
 
   handleInjection = ({ detail: { sourceElement, dependencies } }: CustomEvent<InjectionRequest>) => {
+    if (!this.#sources) {
+      return;
+    }
     dependencies.forEach(dependency => {
-      (sourceElement[dependency] as DependencyList[typeof dependency]) = this.sources[dependency];
+      (sourceElement[dependency] as DependencyList[typeof dependency]) = this.#sources![dependency];
     });
   };
 
