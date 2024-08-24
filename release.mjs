@@ -53,20 +53,30 @@ const devpr = execSync(`gh pr create -t "Release ${version}" -b "Automated relea
 const devid = devpr.match(/\/pull\/(\d+)/)[1];
 console.log(`Created PR #${devid} for version-${version} => dev`);
 
-execSync(`gh pr merge ${devid} --squash`);
+execSync(`gh pr merge ${devid} --squash -d`);
+console.log(`Merged PR #${devid}. 'dev' is updated`);
 
 const releasepr = execSync(`gh pr create -t "Release ${version}" -b "Automated release PR for version ${version}" -B "release" -H "dev"`).toString();
-const releaseid = devpr.match(/\/pull\/(\d+)/)[1];
+const releaseid = releasepr.match(/\/pull\/(\d+)/)[1];
 console.log(`Created PR #${releaseid} for version-${version} => release`);
 
 execSync(`gh pr merge ${releaseid} --merge`);
 
+console.log(`Merged PR #${releaseid}. 'release' is caught up with dev`);
+
+console.log(`Deleting local branch version-${version}`);
+execSync(`git branch -D version-${version}`);
+
 console.log(`switching back to branch ${branch}`);
 execSync(`git switch ${branch}`);
 
+
+
+console.log(`returning cli and git user`);
 execSync(`gh auth switch -u ${currentAuth}`);
 execSync(`git config set user.name ${currentUserName}`);
 
+console.log(`Labeling installed:beta issues as installed:release`)
 const issuesText = execSync(`gh issue list --label "C - Beta"`).toString();
 const issues = [...issuesText.matchAll(/^\d+/gm)].map(match => match[0]);
 issues.forEach(id => {
@@ -75,6 +85,7 @@ issues.forEach(id => {
   execSync(`gh issue comment ${id} --body "Installed fixes from beta branch released with version ${version}"`);
 });
 
+console.log(`Creating Release post`);
 const releaseMessage = `Released ${issues.length} fixed issues according to labels. Issues fixed:
 ${issues.map(id => `#${id}`).join('\n')}`;
 execSync(`gh release create v${version} --title "Release ${version}" --notes "${releaseMessage}"`);
