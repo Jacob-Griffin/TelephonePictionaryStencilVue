@@ -59,7 +59,7 @@ const releasepr = execSync(`gh pr create -t "Release ${version}" -b "Automated r
 const releaseid = devpr.match(/\/pull\/(\d+)/)[1];
 console.log(`Created PR #${releaseid} for version-${version} => release`);
 
-execSync(`gh pr merge ${releaseid} --squash`);
+execSync(`gh pr merge ${releaseid} --merge`);
 
 console.log(`switching back to branch ${branch}`);
 execSync(`git switch ${branch}`);
