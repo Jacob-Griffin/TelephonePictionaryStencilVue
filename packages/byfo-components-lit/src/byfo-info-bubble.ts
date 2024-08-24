@@ -1,5 +1,5 @@
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { ByfoElement } from './byfo-element';
 
 /**
@@ -7,9 +7,13 @@ import { ByfoElement } from './byfo-element';
  */
 @customElement('byfo-info-bubble')
 export class ByfoInfoBubble extends ByfoElement {
+  @property() content?: string;
   render() {
-    return html`<tp-icon icon="info"></tp-icon>
-      <div id="bubble">{this.content}</div>`;
+    if (!window.customElements.get('byfo-icon')) {
+      import('./byfo-icon');
+    }
+    return html`<byfo-icon icon="info"></byfo-icon>
+      <div id="bubble">${this.content}</div>`;
   }
   static styles = css`
     :host {
@@ -45,7 +49,7 @@ export class ByfoInfoBubble extends ByfoElement {
       transition: opacity 200ms ease, z-index 200ms ease;
     }
 
-    tp-icon {
+    byfo-icon {
       position: relative;
       top: 0.15em;
       display: inline-block;
@@ -53,7 +57,7 @@ export class ByfoInfoBubble extends ByfoElement {
       width: 1em;
     }
 
-    tp-icon:hover ~ #bubble {
+    byfo-icon:hover ~ #bubble {
       opacity: 1;
       z-index: 3000;
     }

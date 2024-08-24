@@ -51,7 +51,7 @@ onBeforeMount(() => {
     <RouterView />
   </Suspense>
   <byfo-provider :sources="{firebase,store}"></byfo-provider>
-  <byfo-settings-modal :buildDate="buildDate"></byfo-settings-modal>
+  <byfo-settings-modal ref='settingsmodal' :buildDate="buildDate"></byfo-settings-modal>
 </template>
 
 <style scoped>
