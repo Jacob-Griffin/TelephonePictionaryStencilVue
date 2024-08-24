@@ -1,6 +1,6 @@
 {
   "name": "byfo-themes",
-  "version": "0.9.8",
+  "version": "0.9.9-test",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
