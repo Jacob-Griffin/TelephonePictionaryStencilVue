@@ -1,38 +1,40 @@
 import { LitElement, css, html } from 'lit';
-import { DependencyList, InjectionRequest } from 'byfo-utils';
+import { BYFOFirebaseAdapter, TPStore } from 'byfo-utils';
+import { Dependency, InjectionRequest } from './common';
 
 interface ByfoElementConstructor extends Function {
-  uses: (keyof DependencyList)[];
+  uses: Dependency[];
 }
 
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 export class ByfoElement extends LitElement {
-  static uses: (keyof DependencyList)[] = [];
-  injected: DependencyList = {};
+  static uses: Dependency[] = [];
+
+  _firebase?: BYFOFirebaseAdapter;
+  _store?: TPStore;
+
+  set firebase(v: BYFOFirebaseAdapter | undefined) {
+    this._firebase = v;
+  }
+  set store(v: TPStore | undefined) {
+    this._store = v;
+  }
   get firebase() {
-    this.lintDependency('firebase');
-    return this.injected.firebase;
+    if (!this._firebase) {
+    }
+    return this._firebase;
   }
   get store() {
-    this.lintDependency('store');
-    return this.injected.store;
+    if (!this._store) {
+      console.warn('Attempting to use the store without injection. Please add a byfo-provider to the page and supply it with the constructed TPStore adapter');
+    }
+    return this._store;
   }
 
   get static() {
     return this.constructor as ByfoElementConstructor;
-  }
-
-  lintDependency(key: keyof DependencyList) {
-    if (!this.static.uses.includes(key)) {
-      console.error(`Component error - Attempted to use property ${key} in ${this.static.name} without injecting. Add '${key}' to the static "uses" array`);
-      console.log(this.static);
-      return;
-    }
-    if (!this.injected[key]) {
-      console.warn(`Component is requesting injection ${key}, but no object was provided. Ensure you have a BYFODependencyProvider created, and that its sources are defined`);
-    }
   }
 
   //Explicitly type render root as shadow root
@@ -43,7 +45,7 @@ export class ByfoElement extends LitElement {
     const dependencies = this.static.uses;
     if (dependencies.length > 0 && !!dependencies.forEach) {
       const request = new CustomEvent<InjectionRequest>('byfo-injection-request', { detail: { sourceElement: this, dependencies } });
-      document.dispatchEvent(request);
+      document.getElementsByTagName('byfo-provider')[0].dispatchEvent(request);
     }
   }
 

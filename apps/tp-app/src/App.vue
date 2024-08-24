@@ -1,10 +1,11 @@
 <script setup>
 import { RouterView, useRoute} from 'vue-router';
-import { inGame, inHome, TPStore, BYFOFirebaseAdapter, BYFODependencyProvider } from 'byfo-utils/rollup';
+import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import '@component/byfo-logo';
 import '@component/byfo-settings-modal';
+import '@component/byfo-provider';
 import { firebaseConfig } from '../firebase.secrets';
 
 const path = useRoute().path;
@@ -19,13 +20,11 @@ const goHome = () => {
 const settingsmodal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
 
-const tp = new TPStore();
-provide('TpStore', tp);
+const store = new TPStore();
+provide('TpStore', store);
 
 const firebase = new BYFOFirebaseAdapter(firebaseConfig);
 provide('Firebase',firebase);
-
-const provider = new BYFODependencyProvider({firebase,store:tp});
 
 watch(useRoute(), (r) => {
   isInGame.value = inGame(r.path);
@@ -33,8 +32,8 @@ watch(useRoute(), (r) => {
 });
 
 onBeforeMount(() => {
-  tp.useTheme();
-  tp.useCustomStyles();
+  store.useTheme();
+  store.useCustomStyles();
 });
 </script>
 
@@ -51,7 +50,8 @@ onBeforeMount(() => {
   <Suspense>
     <RouterView />
   </Suspense>
-  <byfo-settings-modal ref="settingsmodal" :buildDate="buildDate"></byfo-settings-modal>
+  <byfo-provider :sources="{firebase,store}"></byfo-provider>
+  <byfo-settings-modal :buildDate="buildDate"></byfo-settings-modal>
 </template>
 
 <style scoped>

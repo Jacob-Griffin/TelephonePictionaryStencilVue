@@ -1,9 +1,8 @@
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { TargetedEvent, TargetedInputEvent, toggleStyles } from './common';
+import { Dependency, TargetedEvent, TargetedInputEvent, toggleStyles } from './common';
 import { ByfoModal } from './byfo-modal';
 import './byfo-info-bubble';
-import type { DependencyList } from 'byfo-utils';
 import { themes } from 'byfo-themes';
 
 /**
@@ -11,7 +10,7 @@ import { themes } from 'byfo-themes';
  */
 @customElement('byfo-settings-modal')
 export class ByfoSettingsModal extends ByfoModal {
-  static uses: (keyof DependencyList)[] = ['store'];
+  static uses = ['store'] as Dependency[];
 
   /**
    * Used in beta builds to display the full date of the most recent build

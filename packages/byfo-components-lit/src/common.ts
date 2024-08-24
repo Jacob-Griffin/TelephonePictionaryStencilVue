@@ -194,3 +194,17 @@ export const format = (input: string, allowLinks: boolean) => {
   const output = sanitize(parse(input, allowLinks));
   return html`<span class="markdown">${unsafeHTML(output)}</span>`;
 };
+
+import { BYFOFirebaseAdapter, TPStore } from 'byfo-utils';
+
+export type DependencyList = {
+  firebase?: BYFOFirebaseAdapter;
+  store?: TPStore;
+};
+
+export type Dependency = keyof DependencyList;
+
+export type InjectionRequest = {
+  sourceElement: HTMLElement & DependencyList;
+  dependencies: Dependency[];
+};

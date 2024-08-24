@@ -1,7 +1,7 @@
 import { Database } from 'firebase/database';
 import { Firestore } from 'firebase/firestore';
 import { FirebaseStorage } from 'firebase/storage';
-export { TPStore } from './Store';
+export { TPStore } from './store';
 
 export declare type ActionResponse = {
   action?: string; // The action being done
