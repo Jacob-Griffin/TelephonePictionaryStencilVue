@@ -74,12 +74,6 @@ execSync('git pull');
 console.log(`switching back to branch ${branch}`);
 execSync(`git switch ${branch}`);
 
-
-
-console.log(`returning cli and git user`);
-execSync(`gh auth switch -u ${currentAuth}`);
-execSync(`git config set user.name ${currentUserName}`);
-
 console.log(`Labeling installed:beta issues as installed:release`)
 const issuesText = execSync(`gh issue list --label "C - Beta"`).toString();
 const issues = [...issuesText.matchAll(/^\d+/gm)].map(match => match[0]);
@@ -93,3 +87,7 @@ console.log(`Creating Release post`);
 const releaseMessage = `Released ${issues.length} fixed issues according to labels. Issues fixed:
 ${issues.map(id => `#${id}`).join('\n')}`;
 execSync(`gh release create v${version} --title "Release ${version}" --notes "${releaseMessage}"`);
+
+console.log(`returning cli and git user`);
+execSync(`gh auth switch -u ${currentAuth}`);
+execSync(`git config set user.name ${currentUserName}`);
