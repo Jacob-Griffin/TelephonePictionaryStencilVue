@@ -11,8 +11,11 @@ export class ByfoReviewChat extends ByfoElement {
     return html``;
   }
   static styles = css`
-    :host {
-      display: block;
+    .content-bubble {
+      box-shadow: 0 0 12px -4px;
+      & > .from {
+        box-shadow: 0 3px 8px -4px;
+      }
     }
   `;
 }
