@@ -64,11 +64,18 @@ execSync(`gh pr merge ${releaseid} --merge`);
 
 console.log(`Merged PR #${releaseid}. 'release' is caught up with dev`);
 
-console.log(`Deleting local branch version-${version}`);
-execSync(`git branch -D version-${version}`);
+console.log('Catching up to new origin');
+execSync('git fetch');
+execSync('git switch dev');
+execSync('git pull');
+execSync('git switch release');
+execSync('git pull');
 
 console.log(`switching back to branch ${branch}`);
 execSync(`git switch ${branch}`);
+
+console.log(`Deleting local branch version-${version}`);
+execSync(`git branch -D version-${version}`);
 
 
 
