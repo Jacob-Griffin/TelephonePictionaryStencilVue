@@ -1,6 +1,6 @@
 {
   "name": "telephone-pictionary-app",
-  "version": "0.9.9-test",
+  "version": "1.0.0-rc.3",
   "private": true,
   "workspaces": [
     "apps/*",
