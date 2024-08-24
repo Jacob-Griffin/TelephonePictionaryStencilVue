@@ -74,9 +74,6 @@ execSync('git pull');
 console.log(`switching back to branch ${branch}`);
 execSync(`git switch ${branch}`);
 
-console.log(`Deleting local branch version-${version}`);
-execSync(`git branch -D version-${version}`);
-
 
 
 console.log(`returning cli and git user`);
