@@ -1,5 +1,4 @@
 <script setup>
-import 'byfo-components/tp-content';
 import 'byfo-components/tp-review-chat';
 import 'byfo-components/tp-icon';
 import 'byfo-components/tp-metadata-modal';

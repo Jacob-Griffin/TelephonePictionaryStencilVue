@@ -1,4 +1,4 @@
-import config from './config';
+import { config } from './config';
 export const stopPropagation = (e: Event) => e.stopPropagation();
 
 //#region Strings

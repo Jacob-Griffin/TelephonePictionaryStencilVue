@@ -4,13 +4,6 @@
   justify-content: center;
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
-  max-height: calc(600px * var(--scale-factor));
-  --scale-factor: 1;
+  aspect-ratio: 5/3;
   overflow: hidden;
-}
-
-canvas {
-  width: 1000px;
-  height: 600px;
-  scale: var(--scale-factor) var(--scale-factor);
 }

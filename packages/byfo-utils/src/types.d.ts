@@ -1,6 +1,7 @@
 import { Database } from 'firebase/database';
 import { Firestore } from 'firebase/firestore';
 import { FirebaseStorage } from 'firebase/storage';
+export { TPStore } from './Store';
 
 export declare type ActionResponse = {
   action?: string; // The action being done
@@ -67,6 +68,10 @@ export declare type FirebaseConnections = {
   db: Firestore | null;
   rtdb: Database | null;
   storage: FirebaseStorage | null;
+};
+
+export declare type RefOptions = {
+  noEncode?: boolean;
 };
 
 export declare type Metadata = {

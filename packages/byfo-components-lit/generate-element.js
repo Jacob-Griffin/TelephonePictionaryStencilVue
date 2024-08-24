@@ -1,4 +1,5 @@
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
+import { formatJson } from '../../script-utils.mjs';
 
 const [_1,_2,cname,...args] = process.argv;
 if(cname === undefined){
@@ -29,8 +30,8 @@ try {
 }
 
 //Step 1: create the boilerplate string
-const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit-element';
+import { customElement } from 'lit-element/decorators.js';
 ${componentName.parent ? `import { ${componentName.parent} } from '${componentName.parentFile}'
 ` : ''}
 /**
@@ -42,9 +43,9 @@ export class ${componentName.class} extends ${componentName.parent ?? 'LitElemen
     return html\\\`\\\`;
   }
   static styles = css\\\`
-    :host {
+    ${componentName.parent ? `\\\${${componentName.parent}.styles}` : `:host {
       display: block;
-    }
+    }`}
   \\\`;
 }
 
@@ -70,36 +71,7 @@ if(typeof contents.toString?.() !== 'string'){
 }
 
 let packageJson = JSON.parse(contents.toString());
-packageJson.exports[`./${componentName.normalized}`] = componentName.file;
-
-const formatJson = (json,depth = 1) => {
-  let output = `{\n`;
-  Object.keys(json).forEach(key => {
-    output += '  '.repeat(depth);
-    output += `\\"${key}\\": `;
-    switch(typeof json[key]){
-      case 'string':
-        output += `\\"${json[key]}\\"`;
-        break;
-      case 'number':
-        output += `${json[key]}`;
-        break;
-      case 'boolean':
-        output += json[key] ? 'true' : 'false';
-        break;
-      case 'object':
-        output += formatJson(json[key],depth+1);
-        break;
-    }
-    output += ',\n';
-  });
-  if(depth > 1){
-    output += '  '.repeat(depth - 1);
-  }
-  output += '}';
-  output = output.replaceAll(/,(?=\s+})/g,'');
-  return output;
-}
+packageJson.exports[`./${componentName.normalized}`] = `./dist/${componentName.tagname}.js`;
 
 const newContents = formatJson(packageJson);
 

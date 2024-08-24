@@ -1,9 +1,8 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
-import 'byfo-components-lit/logo';
-import 'byfo-components/tp-logo';
 import 'byfo-components/tp-routing-modal';
 import 'byfo-components/tp-tutorial-modal';
+import { computed } from 'vue';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
@@ -11,6 +10,12 @@ const modalEl = ref(null);
 const tutorialModal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
 const devMode = ref(__IS_DEV__);
+if(window.location.hash === '#enable-tutorial'){
+  localStorage.setItem('tutorial','true');
+} else if(window.location.hash === '#disable-tutorial') {
+  localStorage.removeItem('tutorial');
+}
+const tutorialVisible = !!localStorage.getItem('tutorial');
 
 const switchModal = event => {
   modalEl.value.rejoin = store.getRejoinData();
@@ -22,7 +27,7 @@ const viewTutorial = () => {
   tutorialModal.value.enabled = true;
 }
 
-document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
+const handleHost = ({detail:{gameid,name}})=>{
   store.setHosting(gameid);
   store.setUsername(name);
   store.setGameid(gameid);
@@ -32,9 +37,9 @@ document.addEventListener('tp-modal-action-host',({detail:{gameid,name}})=>{
   } else {
     location.href = `/lobby/${gameid}`;
   }
-});
+}
 
-document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,name}})=>{
+const handleJoin = ({detail:{dest,gameid,playerid,name}})=>{
   store.setRejoinNumber(playerid);
   store.setUsername(name);
   store.setGameid(gameid);
@@ -46,22 +51,28 @@ document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,
     location.href = `/game/${gameid}`;
     return;
   }
-})
+}
 
-document.addEventListener('tp-modal-action-result',({detail:{gameid}})=>{
+const handleResults = ({detail:{gameid}})=>{
   location.href = `/review/${gameid}`;
   return;
-});
+}
 
-document.addEventListener('tp-modal-action-search',({detail:{query}}) =>{
+const handleSearch = ({detail:{query}}) =>{
   location.href = `/search?q=${query}`;
   return;
-})
+}
+
+document.addEventListener('tp-modal-action-host',handleHost);
+document.addEventListener('tp-modal-action-join',handleJoin);
+document.addEventListener('tp-modal-action-result',handleResults);
+document.addEventListener('tp-modal-action-search',handleSearch);
+
 onBeforeUnmount(()=>{
-  document.removeEventListener('tp-modal-action-host');
-  document.removeEventListener('tp-modal-action-join');
-  document.removeEventListener('tp-modal-action-result');
-  document.removeEventListener('tp-modal-action-search');
+  document.removeEventListener('tp-modal-action-host',handleHost);
+  document.removeEventListener('tp-modal-action-join',handleJoin);
+  document.removeEventListener('tp-modal-action-result',handleResults);
+  document.removeEventListener('tp-modal-action-search',handleSearch);
 })
 </script>
 
@@ -73,7 +84,7 @@ onBeforeUnmount(()=>{
       <button @click="switchModal" modal="host">Host Game</button>
       <button @click="switchModal" modal="result">View Completed Games</button>
       <button @click="switchModal" modal="search">Search Completed Games</button>
-      <button @click="viewTutorial">How to play</button>
+      <button @click="viewTutorial" v-if="tutorialVisible">How to play</button>
     </div>
     <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
     <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
