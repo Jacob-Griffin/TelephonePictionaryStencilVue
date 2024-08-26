@@ -84,8 +84,18 @@ issues.forEach(id => {
 });
 
 console.log(`Creating Release post`);
-const releaseMessage = `Released ${issues.length} fixed issues according to labels. Issues fixed:
-${issues.map(id => `#${id}`).join('\n')}`;
+const changeItems = execSync('ls ./changes').toString().split('\n');
+const changeContents = [];
+changeItems.forEach(filename => {
+  if(filename.startsWith('[')){
+    return;
+  }
+  const contents = execSync(`cat ./changes/${filename}`).toString();
+  changeContents.push(contents);
+  execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);
+})
+const releaseMessage = `Released ${issues.length} fixed issues according to labels. Changes:
+${changeContents.join('\n\n')}`
 execSync(`gh release create v${version} --title "Release ${version}" --notes "${releaseMessage}"`);
 
 console.log(`returning cli and git user`);
