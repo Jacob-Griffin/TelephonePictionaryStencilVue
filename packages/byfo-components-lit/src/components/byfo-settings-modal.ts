@@ -1,6 +1,6 @@
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Dependency, TargetedEvent, TargetedInputEvent, toggleStyles } from './common';
+import { Dependency, TargetedEvent, TargetedInputEvent, toggleStyles } from '../common';
 import { ByfoModal } from './byfo-modal';
 import './byfo-info-bubble';
 import { themes } from 'byfo-themes';
@@ -176,6 +176,9 @@ export class ByfoSettingsModal extends ByfoModal {
       font-size: medium;
     }
   `;
+  connectedCallback(): void {
+    super.connectedCallback();
+  }
 }
 
 declare global {

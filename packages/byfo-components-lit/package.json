@@ -21,6 +21,7 @@
     "vite": "^5.4.2"
   },
   "exports": {
+    "./loader": "./dist/loader.js",
     "./logo": "./dist/byfo-logo.js",
     "./content": "./dist/byfo-content.js",
     "./info-bubble": "./dist/byfo-info-bubble.js",

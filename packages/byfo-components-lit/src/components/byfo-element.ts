@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { BYFOFirebaseAdapter, TPStore } from 'byfo-utils';
-import { Dependency, InjectionRequest } from './common';
+import { Dependency, InjectionRequest } from '../common';
 
 interface ByfoElementConstructor extends Function {
   uses: Dependency[];
@@ -45,7 +45,7 @@ export class ByfoElement extends LitElement {
     const dependencies = this.static.uses;
     if (dependencies.length > 0 && !!dependencies.forEach) {
       const request = new CustomEvent<InjectionRequest>('byfo-injection-request', { detail: { sourceElement: this, dependencies } });
-      document.getElementsByTagName('byfo-provider')[0].dispatchEvent(request);
+      document.dispatchEvent(request);
     }
   }
 

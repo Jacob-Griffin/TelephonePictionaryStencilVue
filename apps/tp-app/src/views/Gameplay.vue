@@ -2,8 +2,6 @@
 //These are auto-imports for the stencil components
 import 'byfo-components/tp-input-zone';
 import 'byfo-components/tp-player-list';
-import '@component/byfo-content';
-import '@component/byfo-timer';
 
 import { computed, onMounted, onBeforeUnmount, ref, inject } from 'vue';
 import { useRoute } from 'vue-router';

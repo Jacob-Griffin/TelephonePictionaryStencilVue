@@ -1,6 +1,5 @@
 <script setup>
 import 'byfo-components/tp-player-list';
-import '@component/byfo-time-input';
 import { onMounted } from 'vue';
 import { config, sortNamesBy } from 'byfo-utils/rollup';
 import { useRoute } from 'vue-router';

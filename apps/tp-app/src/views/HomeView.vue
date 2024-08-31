@@ -1,7 +1,6 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
 import 'byfo-components/tp-routing-modal';
-import '@component/byfo-tutorial-modal';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');

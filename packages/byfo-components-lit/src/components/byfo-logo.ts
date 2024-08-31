@@ -1,12 +1,14 @@
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ByfoElement } from './byfo-element';
-
+import { DependencyList } from '../common';
 /**
  * A logo element. Used to attributify the "shape" of the logo
  */
 @customElement('byfo-logo')
 export class ByfoLogo extends ByfoElement {
+  static uses = ['firebase'] as (keyof DependencyList)[];
+
   render() {
     return html``;
   }

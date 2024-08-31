@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { DependencyList, InjectionRequest } from './common';
+import { DependencyList, InjectionRequest } from '../common';
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
@@ -22,11 +22,11 @@ export class ByfoProvider extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('byfo-injection-request', this.handleInjection);
+    document.removeEventListener('byfo-injection-request', this.handleInjection);
   }
   connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('byfo-injection-request', this.handleInjection);
+    document.addEventListener('byfo-injection-request', this.handleInjection);
   }
 }
 
@@ -34,7 +34,7 @@ declare global {
   interface HTMLElementTagNameMap {
     'byfo-provider': ByfoProvider;
   }
-  interface HTMLElementEventMap {
+  interface DocumentEventMap {
     'byfo-injection-request': CustomEvent<InjectionRequest>;
   }
 }

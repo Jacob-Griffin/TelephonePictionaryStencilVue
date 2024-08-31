@@ -2,7 +2,7 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ByfoElement } from './byfo-element';
 import { config } from 'byfo-utils';
-import { appStyles, Dependency } from './common';
+import { appStyles, Dependency } from '../common';
 
 /**
  * Description of your element here. Use @ property doc tags to describe props

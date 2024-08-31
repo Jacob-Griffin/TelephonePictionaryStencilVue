@@ -1,6 +1,6 @@
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { appStyles, TargetedInputEvent } from './common';
+import { appStyles, TargetedInputEvent } from '../common';
 import { config } from 'byfo-utils';
 import { ByfoElement } from './byfo-element';
 

@@ -1,7 +1,7 @@
 import { css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ByfoModal } from './byfo-modal';
-import { format } from './common';
+import { format } from '../common';
 
 type Slide = {
   image: string;
