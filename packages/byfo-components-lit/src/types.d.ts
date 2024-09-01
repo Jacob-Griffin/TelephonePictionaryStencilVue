@@ -23,3 +23,19 @@ declare type InjectionRequest = {
   sourceElement: HTMLElement & DependencyList;
   dependency: Dependency;
 };
+
+declare type ModalAction = {
+  gameid?: string;
+  name?: string;
+  playerid?: string;
+  query?: string;
+  dest?: 'lobby' | 'game' | 'search';
+};
+
+declare type Inputs = {
+  gameid?: string;
+  name?: string;
+  search?: string;
+};
+
+declare type RouteType = 'join' | 'host' | 'review' | 'search';

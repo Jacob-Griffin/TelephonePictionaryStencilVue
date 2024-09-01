@@ -23,7 +23,7 @@ export class ByfoSettingsModal extends ByfoModal {
 
   resetBackground() {
     this.store?.resetCustomStyles();
-    Object.entries(this.store?.customStyle ?? {}).forEach(([prop, value]) => {
+    Object.entries(this.store!.customStyle ?? {}).forEach(([prop, value]) => {
       const dashProp = prop.replace(/[A-Z]/, c => `-${c.toLowerCase()}`);
       const input = getChildById(dashProp, this) as HTMLInputElement;
       if (!input) return;
@@ -32,17 +32,16 @@ export class ByfoSettingsModal extends ByfoModal {
   }
 
   styleInput(prop: string, unit?: string) {
-    return (e: TargetedInputEvent) => this.store?.setCustomStyle(prop, `${e.target.value}${unit ?? ''}`);
+    return (e: TargetedInputEvent) => this.store!.setCustomStyle(prop, `${e.target.value}${unit ?? ''}`);
   }
 
   override renderBody() {
-    console.log(this.store?.alwaysShowAll);
     return html`
       <h2>Settings</h2>
       <section class="settings">
         <div>
           <h2 class="label">Theme</h2>
-          <select @input=${(e: InputEvent) => this.store?.setTheme((e.target as HTMLSelectElement).value)}>
+          <select @input=${(e: InputEvent) => this.store!.setTheme((e.target as HTMLSelectElement).value)}>
             ${Object.values(themes).map(theme => {
               return theme.key === this.store?.theme
                 ? html` <option value=${theme.key} selected>${theme.displayName}</option> `
@@ -52,7 +51,7 @@ export class ByfoSettingsModal extends ByfoModal {
         </div>
         <div>
           <h2 class="label">Search As <byfo-info-bubble content="Required for search. Filters results to include games with this username"></byfo-info-bubble></h2>
-          <input type="text" value=${this.store?.searchAs} @input=${(e: TargetedInputEvent) => this.store?.setSearchAs(e.target.value)} />
+          <input type="text" value=${this.store!.searchAs} @input=${(e: TargetedInputEvent) => this.store!.setSearchAs(e.target.value)} />
         </div>
         <div>
           <h2 class="label">Background Customization:</h2>
@@ -66,7 +65,7 @@ export class ByfoSettingsModal extends ByfoModal {
             max="1.3"
             step="0.05"
             id="background-brightness"
-            value=${this.store?.customStyle.backgroundBrightness}
+            value=${this.store!.customStyle.backgroundBrightness}
             @input=${this.styleInput('backgroundBrightness')}
           />
         </div>
@@ -78,7 +77,7 @@ export class ByfoSettingsModal extends ByfoModal {
             max="1.4"
             step="0.05"
             id="background-saturation"
-            value=${this.store?.customStyle.backgroundSaturation}
+            value=${this.store!.customStyle.backgroundSaturation}
             @input=${this.styleInput('backgroundSaturation')}
           />
         </div>
@@ -89,13 +88,13 @@ export class ByfoSettingsModal extends ByfoModal {
             min="0"
             max="10"
             id="background-blur"
-            value=${this.store?.customStyle.backgroundBlur.replace('px', '')}
+            value=${this.store!.customStyle.backgroundBlur.replace('px', '')}
             @input=${this.styleInput('backgroundBlur', 'px')}
           />
         </div>
         <div>
           <h2 class="label">Always "Show all" <byfo-info-bubble content="Applies to review page"></byfo-info-bubble></h2>
-          <byfo-toggle name="showAll" checked=${this.store?.alwaysShowAll || null} @byfo-toggled=${({ detail }: CustomEvent<boolean>) => this.store?.setShowAll?.(detail)} />
+          <byfo-toggle name="showAll" checked=${this.store!.alwaysShowAll || null} @byfo-toggled=${({ detail }: CustomEvent<boolean>) => this.store!.setShowAll?.(detail)} />
         </div>
       </section>
       <h4>Looking for help? Check our <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">knowlege base</a></h4>

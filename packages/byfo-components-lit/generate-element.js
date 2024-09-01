@@ -10,7 +10,7 @@ const componentName = {};
 componentName.normalized = cname.replace(/^byfo-?/,'').replaceAll(/[A-Z]/g,match => `-${match.toLowerCase()}`);
 componentName.class = 'Byfo'+componentName.normalized.replaceAll(/(?:^|-)([a-z])/g,(_,letter)=>letter.toUpperCase());
 componentName.tagname = 'byfo-'+componentName.normalized;
-componentName.file = `./src/${componentName.tagname}.ts`
+componentName.file = `./src/components/${componentName.tagname}.ts`
 
 const extendsIdx = args.indexOf('-e');
 if(extendsIdx > -1 && extendsIdx + 1 < args.length){

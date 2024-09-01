@@ -3,7 +3,6 @@ import { inject, onBeforeUnmount, ref } from 'vue';
 import 'byfo-components/tp-routing-modal';
 
 const store = inject('TpStore');
-const firebase = inject('Firebase');
 const modalEl = ref(null);
 const tutorialModal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
@@ -16,7 +15,6 @@ if(window.location.hash === '#enable-tutorial'){
 const tutorialVisible = !!localStorage.getItem('tutorial');
 
 const switchModal = event => {
-  modalEl.value.rejoin = store.getRejoinData();
   modalEl.value.type = event?.target.getAttribute('modal') ?? '';
   modalEl.value.enabled = true;
 };
@@ -63,13 +61,13 @@ const handleSearch = ({detail:{query}}) =>{
 
 document.addEventListener('tp-modal-action-host',handleHost);
 document.addEventListener('tp-modal-action-join',handleJoin);
-document.addEventListener('tp-modal-action-result',handleResults);
+document.addEventListener('tp-modal-action-review',handleResults);
 document.addEventListener('tp-modal-action-search',handleSearch);
 
 onBeforeUnmount(()=>{
   document.removeEventListener('tp-modal-action-host',handleHost);
   document.removeEventListener('tp-modal-action-join',handleJoin);
-  document.removeEventListener('tp-modal-action-result',handleResults);
+  document.removeEventListener('tp-modal-action-review',handleResults);
   document.removeEventListener('tp-modal-action-search',handleSearch);
 })
 </script>
@@ -80,11 +78,11 @@ onBeforeUnmount(()=>{
     <div class="buttonMenu">
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="host">Host Game</button>
-      <button @click="switchModal" modal="result">View Completed Games</button>
+      <button @click="switchModal" modal="review">View Completed Games</button>
       <button @click="switchModal" modal="search">Search Completed Games</button>
       <button @click="viewTutorial" v-if="tutorialVisible">How to play</button>
     </div>
-    <tp-routing-modal ref="modalEl" :firebase="firebase"></tp-routing-modal>
+    <byfo-routing-modal ref="modalEl"/>
     <byfo-tutorial-modal ref="tutorialModal"></byfo-tutorial-modal>
   </main>
   <footer>

@@ -152,3 +152,19 @@ export function getChildById(id: string, el: { renderRoot: DocumentFragment | HT
     return null;
   }
 }
+
+export function getChildrenByTagName(tagname: 'input', el: { renderRoot: DocumentFragment | HTMLElement } | DocumentFragment | HTMLElement): HTMLInputElement[] | null;
+export function getChildrenByTagName(
+  tagname: keyof HTMLElementTagNameMap,
+  el: { renderRoot: DocumentFragment | HTMLElement } | DocumentFragment | HTMLElement,
+): HTMLElement[] | null {
+  const root = 'renderRoot' in el ? el.renderRoot : el;
+  if ('getElementsByTagName' in root) {
+    return [...root.getElementsByTagName(tagname)];
+  } else if ('querySelectorAll' in root) {
+    return [...root.querySelectorAll(tagname)];
+  } else {
+    console.error('getChildrenByTagName called without a valid target');
+    return null;
+  }
+}

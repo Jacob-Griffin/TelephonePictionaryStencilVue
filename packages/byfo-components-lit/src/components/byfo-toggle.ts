@@ -8,14 +8,6 @@ import { LitElement } from 'lit';
 export class ByfoToggle extends LitElement {
   @property({ attribute: 'name', type: String }) name: string = 'default';
   @property() checked: boolean = false;
-  constructor() {
-    super();
-    console.log(this.checked);
-  }
-  connectedCallback(): void {
-    super.connectedCallback();
-    console.log(this.checked);
-  }
 
   toggle() {
     this.checked = !this.checked;

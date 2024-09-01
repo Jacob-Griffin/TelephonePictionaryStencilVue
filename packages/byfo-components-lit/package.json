@@ -38,6 +38,7 @@
     "./timer": "./dist/byfo-timer.js",
     "./tutorial-modal": "./dist/byfo-tutorial-modal.js",
     "./provider": "./dist/byfo-provider.js",
-    "./toggle": "./dist/byfo-toggle.js"
+    "./toggle": "./dist/byfo-toggle.js",
+    "./routing-content": "./dist/byfo-routing-content.js"
   }
 }
