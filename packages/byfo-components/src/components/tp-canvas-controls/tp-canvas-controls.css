@@ -71,7 +71,7 @@ button svg {
   height: var(--icon-size);
 }
 
-byfo-icon-fill-squiggle {
+tp-icon-fill-squiggle {
   --stroke-color: var(--color-button-text);
   width: var(--squiggle-size);
   height: var(--squiggle-size);
