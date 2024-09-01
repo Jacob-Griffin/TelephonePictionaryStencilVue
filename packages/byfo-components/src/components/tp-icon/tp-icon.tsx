@@ -43,8 +43,8 @@ const icons = {
 };
 
 @Component({
-  tag: 'tp-icon',
-  styleUrl: 'tp-icon.css',
+  tag: 'byfo-icon',
+  styleUrl: 'byfo-icon.css',
   shadow: false,
 })
 export class TpIcon {

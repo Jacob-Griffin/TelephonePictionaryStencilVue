@@ -33,12 +33,12 @@ try {
 const fileContents = `import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 ${componentName.parent ? `import { ${componentName.parent} } from '${componentName.parentFile}'
-` : "import { ByfoElement } from './byfo-element'"}
+` : "import { LitElement } from 'lit'"}
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('${componentName.tagname}')
-export class ${componentName.class} extends ${componentName.parent ?? 'ByfoElement'} {
+export class ${componentName.class} extends ${componentName.parent ?? 'LitElement'} {
   render() {
     return html\\\`\\\`;
   }

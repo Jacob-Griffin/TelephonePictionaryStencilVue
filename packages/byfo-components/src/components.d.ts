@@ -10,6 +10,9 @@ import { RejoinData as RejoinData1 } from "byfo-utils/dist/types";
 export { BYFOFirebaseAdapter, Metadata, Player, RejoinData, RoundData, TPStore } from "byfo-utils";
 export { RejoinData as RejoinData1 } from "byfo-utils/dist/types";
 export namespace Components {
+    interface ByfoIcon {
+        "icon": any;
+    }
     interface TpCanvas {
         "exportDrawing": () => Promise<Blob>;
         "height": number;
@@ -26,9 +29,6 @@ export namespace Components {
         "content": string;
         "sendingTo": string;
         "type": string;
-    }
-    interface TpIcon {
-        "icon": any;
     }
     interface TpInfoBubble {
         "content": string;
@@ -89,6 +89,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLByfoIconElement extends Components.ByfoIcon, HTMLStencilElement {
+    }
+    var HTMLByfoIconElement: {
+        prototype: HTMLByfoIconElement;
+        new (): HTMLByfoIconElement;
+    };
     interface HTMLTpCanvasElement extends Components.TpCanvas, HTMLStencilElement {
     }
     var HTMLTpCanvasElement: {
@@ -106,12 +112,6 @@ declare global {
     var HTMLTpContentElement: {
         prototype: HTMLTpContentElement;
         new (): HTMLTpContentElement;
-    };
-    interface HTMLTpIconElement extends Components.TpIcon, HTMLStencilElement {
-    }
-    var HTMLTpIconElement: {
-        prototype: HTMLTpIconElement;
-        new (): HTMLTpIconElement;
     };
     interface HTMLTpInfoBubbleElement extends Components.TpInfoBubble, HTMLStencilElement {
     }
@@ -180,10 +180,10 @@ declare global {
         new (): HTMLTpTimerElement;
     };
     interface HTMLElementTagNameMap {
+        "byfo-icon": HTMLByfoIconElement;
         "tp-canvas": HTMLTpCanvasElement;
         "tp-canvas-controls": HTMLTpCanvasControlsElement;
         "tp-content": HTMLTpContentElement;
-        "tp-icon": HTMLTpIconElement;
         "tp-info-bubble": HTMLTpInfoBubbleElement;
         "tp-input-zone": HTMLTpInputZoneElement;
         "tp-join-content": HTMLTpJoinContentElement;
@@ -198,6 +198,9 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface ByfoIcon {
+        "icon"?: any;
+    }
     interface TpCanvas {
         "height"?: number;
         "hostEl"?: HTMLElement;
@@ -212,9 +215,6 @@ declare namespace LocalJSX {
         "content"?: string;
         "sendingTo"?: string;
         "type"?: string;
-    }
-    interface TpIcon {
-        "icon"?: any;
     }
     interface TpInfoBubble {
         "content"?: string;
@@ -274,10 +274,10 @@ declare namespace LocalJSX {
         "offset"?: number;
     }
     interface IntrinsicElements {
+        "byfo-icon": ByfoIcon;
         "tp-canvas": TpCanvas;
         "tp-canvas-controls": TpCanvasControls;
         "tp-content": TpContent;
-        "tp-icon": TpIcon;
         "tp-info-bubble": TpInfoBubble;
         "tp-input-zone": TpInputZone;
         "tp-join-content": TpJoinContent;
@@ -295,10 +295,10 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "byfo-icon": LocalJSX.ByfoIcon & JSXBase.HTMLAttributes<HTMLByfoIconElement>;
             "tp-canvas": LocalJSX.TpCanvas & JSXBase.HTMLAttributes<HTMLTpCanvasElement>;
             "tp-canvas-controls": LocalJSX.TpCanvasControls & JSXBase.HTMLAttributes<HTMLTpCanvasControlsElement>;
             "tp-content": LocalJSX.TpContent & JSXBase.HTMLAttributes<HTMLTpContentElement>;
-            "tp-icon": LocalJSX.TpIcon & JSXBase.HTMLAttributes<HTMLTpIconElement>;
             "tp-info-bubble": LocalJSX.TpInfoBubble & JSXBase.HTMLAttributes<HTMLTpInfoBubbleElement>;
             "tp-input-zone": LocalJSX.TpInputZone & JSXBase.HTMLAttributes<HTMLTpInputZoneElement>;
             "tp-join-content": LocalJSX.TpJoinContent & JSXBase.HTMLAttributes<HTMLTpJoinContentElement>;

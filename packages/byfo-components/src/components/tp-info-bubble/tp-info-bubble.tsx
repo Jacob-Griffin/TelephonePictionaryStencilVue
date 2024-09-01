@@ -10,7 +10,7 @@ export class TpInfoBubble {
   render() {
     return (
       <Host>
-        <tp-icon icon="info"></tp-icon>
+        <byfo-icon icon="info"></byfo-icon>
         <div id="bubble">{this.content}</div>
       </Host>
     );

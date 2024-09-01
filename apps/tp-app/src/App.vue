@@ -2,7 +2,6 @@
 import { RouterView, useRoute} from 'vue-router';
 import { inGame, inHome } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, watch } from 'vue';
-import 'byfo-components/tp-icon';
 import { provide } from 'vue';
 
 const path = useRoute().path;
@@ -34,13 +33,13 @@ onBeforeMount(() => {
 
 <template>
   <div float left @click="goHome" v-if="!isInHome && !isInGame">
-    <tp-icon icon="home"></tp-icon>
+    <byfo-icon icon="home"></byfo-icon>
   </div>
   <header :class="isInHome ? 'invisible' : ''">
     <byfo-logo small v-if="!isInHome"/>
   </header>
   <div float right @click="settingsmodal.enabled = true">
-    <tp-icon icon="gear"></tp-icon>
+    <byfo-icon icon="gear"></byfo-icon>
   </div>
   <Suspense>
     <RouterView />
@@ -94,7 +93,7 @@ div[float]{
     border-radius: 0 0 0 1rem;
   }
 
-  & tp-icon {
+  & byfo-icon {
     display: block;
     height: 2.5rem;
     width: 2.5rem;

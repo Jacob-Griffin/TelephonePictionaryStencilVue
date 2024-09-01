@@ -1,6 +1,6 @@
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ByfoElement } from './byfo-element';
+import { LitElement } from 'lit';
 
 /**
  * Displays a piece of round content in proper card aspect ratio
@@ -9,7 +9,7 @@ import { ByfoElement } from './byfo-element';
  * @property sendingTo - The person next in gameplay (optional)
  */
 @customElement('byfo-content')
-export class ByfoContent extends ByfoElement {
+export class ByfoContent extends LitElement {
   @property() type?: string;
   @property() content?: string;
   @property() sendingTo?: string;

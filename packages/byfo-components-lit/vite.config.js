@@ -7,7 +7,7 @@ const components = execSync('ls src/components').toString().trim().split('\n').m
 export default defineConfig({
   build: {
     lib: {
-      entry: [...components,'src/loader'],
+      entry: [...components,'src/index'],
       formats: ['es'],
     }
   },

@@ -1,15 +1,17 @@
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { ByfoElement } from './byfo-element';
-import { config } from 'byfo-utils';
-import { appStyles, Dependency } from '../common';
+import { LitElement } from 'lit';
+import { BYFOFirebaseAdapter, config, TPStore } from 'byfo-utils';
+import { appStyles } from '../common';
+import { inject } from '../dependencies';
 
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('byfo-timer')
-export class ByfoTimer extends ByfoElement {
-  static uses = ['firebase', 'store'] as Dependency[];
+export class ByfoTimer extends LitElement {
+  @inject firebase?: BYFOFirebaseAdapter;
+  @inject store?: TPStore;
   @property() endtime?: number;
   @state() relativeTime?: string;
   @state() timeoutReady: boolean = true;

@@ -1,6 +1,6 @@
 import { css, html, svg } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ByfoElement } from './byfo-element';
+import { LitElement } from 'lit';
 
 const icons = {
   //Credits: Ionicons, licensed under the MIT license
@@ -48,7 +48,7 @@ const icons = {
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('byfo-icon')
-export class ByfoIcon extends ByfoElement {
+export class ByfoIcon extends LitElement {
   @property({ reflect: true, attribute: 'icon' }) icon?: keyof typeof icons;
   render() {
     return html`${this.icon ? icons[this.icon] : null}`;

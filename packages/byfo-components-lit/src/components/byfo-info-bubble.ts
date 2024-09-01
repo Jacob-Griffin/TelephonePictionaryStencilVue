@@ -1,17 +1,16 @@
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ByfoElement } from './byfo-element';
+import { LitElement } from 'lit';
+import { loadChildElements } from '../loader';
 
+loadChildElements(['byfo-icon']);
 /**
  * A tooltip-like element that has custom styling and appears immediately on hover
  */
 @customElement('byfo-info-bubble')
-export class ByfoInfoBubble extends ByfoElement {
+export class ByfoInfoBubble extends LitElement {
   @property() content?: string;
   render() {
-    if (!window.customElements.get('byfo-icon')) {
-      import('./byfo-icon');
-    }
     return html`<byfo-icon icon="info"></byfo-icon>
       <div id="bubble">${this.content}</div>`;
   }

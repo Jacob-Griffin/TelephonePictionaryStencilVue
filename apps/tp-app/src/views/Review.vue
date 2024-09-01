@@ -1,6 +1,5 @@
 <script setup>
 import 'byfo-components/tp-review-chat';
-import 'byfo-components/tp-icon';
 import 'byfo-components/tp-metadata-modal';
 import { sortNames, decodePath } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
@@ -120,7 +119,7 @@ store.clearGameData();
 </script>
 
 <template>
-  <h2>Game {{ gameid }}<tp-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
+  <h2>Game {{ gameid }}<byfo-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
     <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
@@ -191,7 +190,7 @@ store.clearGameData();
   }
 }
 
-tp-icon[icon='statistics']{
+byfo-icon[icon='statistics']{
   display: inline-flex;
   margin-left: 0.5rem;
   height: 1em;

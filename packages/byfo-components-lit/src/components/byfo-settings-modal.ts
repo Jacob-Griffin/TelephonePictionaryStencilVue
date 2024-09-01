@@ -1,47 +1,31 @@
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Dependency, TargetedEvent, TargetedInputEvent, toggleStyles } from '../common';
+import { getChildById } from '../common';
+import { inject } from '../dependencies';
 import { ByfoModal } from './byfo-modal';
-import './byfo-info-bubble';
 import { themes } from 'byfo-themes';
+import { TPStore } from 'byfo-utils';
+import { loadChildElements } from '../loader';
+
+loadChildElements(['byfo-info-bubble', 'byfo-toggle']);
 
 /**
  * A modal that contains various client-side settings
  */
 @customElement('byfo-settings-modal')
 export class ByfoSettingsModal extends ByfoModal {
-  static uses = ['store'] as Dependency[];
+  @inject store?: TPStore;
 
   /**
    * Used in beta builds to display the full date of the most recent build
    */
   @property() buildDate?: { year: string; full?: string; date?: Date };
 
-  passClick(e: TargetedEvent) {
-    const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
-    if (target) {
-      this.renderRoot.getElementById(`${target}Input`)?.click();
-    }
-  }
-
-  handleToggle = (prop: string, setter: (v: boolean) => void, e: TargetedInputEvent) => {
-    const enabled = e.target.checked;
-    setter(enabled);
-    const div = this.renderRoot.getElementById(`${prop}-toggle`)!;
-    if (enabled && !div.classList.contains('checked')) {
-      div.classList.add('checked');
-      return;
-    }
-    if (!enabled) {
-      div.classList.remove('checked');
-    }
-  };
-
   resetBackground() {
     this.store?.resetCustomStyles();
     Object.entries(this.store?.customStyle ?? {}).forEach(([prop, value]) => {
       const dashProp = prop.replace(/[A-Z]/, c => `-${c.toLowerCase()}`);
-      const input = this.renderRoot.getElementById(dashProp) as HTMLInputElement;
+      const input = getChildById(dashProp, this) as HTMLInputElement;
       if (!input) return;
       input.value = /px$/.test(value) ? `${parseInt(value)}` : value;
     });
@@ -52,6 +36,7 @@ export class ByfoSettingsModal extends ByfoModal {
   }
 
   override renderBody() {
+    console.log(this.store?.alwaysShowAll);
     return html`
       <h2>Settings</h2>
       <section class="settings">
@@ -109,16 +94,8 @@ export class ByfoSettingsModal extends ByfoModal {
           />
         </div>
         <div>
-          <h2 class="label">Always "Show all" <tp-info-bubble content="Applies to review page"></tp-info-bubble></h2>
-          <div id="showAll-toggle" class=${`toggle-wrapper${this.store?.alwaysShowAll ? ' checked' : ''}`} @click=${this.passClick}>
-            <input
-              type="checkbox"
-              id="showAllInput"
-              @input=${(e: TargetedInputEvent) => this.handleToggle('showAll', this.store?.setShowAll ?? (() => {}), e)}
-              checked=${this.store?.alwaysShowAll ? true : null}
-            />
-            <label htmlFor="showAllInput"></label>
-          </div>
+          <h2 class="label">Always "Show all" <byfo-info-bubble content="Applies to review page"></byfo-info-bubble></h2>
+          <byfo-toggle name="showAll" checked=${this.store?.alwaysShowAll || null} @byfo-toggled=${({ detail }: CustomEvent<boolean>) => this.store?.setShowAll?.(detail)} />
         </div>
       </section>
       <h4>Looking for help? Check our <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">knowlege base</a></h4>
@@ -135,7 +112,6 @@ export class ByfoSettingsModal extends ByfoModal {
 
   static styles = css`
     ${ByfoModal.styles}
-    ${toggleStyles}
     [icon='info'] {
       display: inline-block;
       position: relative;

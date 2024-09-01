@@ -1,12 +1,12 @@
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { ByfoElement } from './byfo-element';
+import { LitElement } from 'lit';
 
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
 @customElement('byfo-player-list')
-export class ByfoPlayerList extends ByfoElement {
+export class ByfoPlayerList extends LitElement {
   render() {
     return html``;
   }

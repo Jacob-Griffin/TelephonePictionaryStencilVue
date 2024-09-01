@@ -19,7 +19,7 @@ export const renderModal = (context: ModalLike) => {
       <section class="background" onClick={e => checkClose(e, context)}>
         <article>
           <button class="close" onClick={e => checkClose(e, context)}>
-            <tp-icon icon="x"></tp-icon>
+            <byfo-icon icon="x"></byfo-icon>
           </button>
           {...context.renderBody()}
         </article>

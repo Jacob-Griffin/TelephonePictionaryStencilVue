@@ -37,6 +37,7 @@
     "./routing-modal": "./dist/byfo-routing-modal.js",
     "./timer": "./dist/byfo-timer.js",
     "./tutorial-modal": "./dist/byfo-tutorial-modal.js",
-    "./provider": "./dist/byfo-provider.js"
+    "./provider": "./dist/byfo-provider.js",
+    "./toggle": "./dist/byfo-toggle.js"
   }
 }

@@ -108,60 +108,6 @@ export const appStyles = css`
 `;
 
 /**
- * Lit CSS fragment for any element using toggles
- */
-export const toggleStyles = css`
-  .toggle-wrapper {
-    height: 1.32rem;
-    width: 2.3rem;
-    position: relative;
-    border-radius: 1rem;
-    background-color: #777;
-    cursor: pointer;
-  }
-
-  .toggle-wrapper.checked {
-    background-color: var(--color-brand);
-  }
-
-  .toggle-wrapper > input {
-    visibility: hidden;
-  }
-
-  .toggle-wrapper > label {
-    display: block;
-    position: absolute;
-    cursor: pointer;
-    top: 0.15rem;
-    left: 0.15rem;
-    transition: left 0.2s;
-    background-color: var(--color-toggle-handle);
-    z-index: 1;
-    height: 1rem;
-    width: 1rem;
-    border-radius: 0.55rem;
-  }
-
-  input:checked + label {
-    left: 1.15rem;
-  }
-`;
-
-/**
- * Alternate Event typing that explicitly defines target as an element
- */
-export interface TargetedEvent extends Event {
-  target: HTMLElement;
-}
-
-/**
- * Alternate InputEvent typing that explicitly says that target exists and has a value
- */
-export interface TargetedInputEvent extends InputEvent {
-  target: HTMLInputElement;
-}
-
-/**
  * Markdown parsing function
  * @param input - The string to be parsed
  * @param allowLinks - Define whether links should be parsed as links
@@ -195,16 +141,14 @@ export const format = (input: string, allowLinks: boolean) => {
   return html`<span class="markdown">${unsafeHTML(output)}</span>`;
 };
 
-import { BYFOFirebaseAdapter, TPStore } from 'byfo-utils';
-
-export type DependencyList = {
-  firebase?: BYFOFirebaseAdapter;
-  store?: TPStore;
-};
-
-export type Dependency = keyof DependencyList;
-
-export type InjectionRequest = {
-  sourceElement: HTMLElement & DependencyList;
-  dependencies: Dependency[];
-};
+export function getChildById(id: string, el: { renderRoot: DocumentFragment | HTMLElement } | DocumentFragment | HTMLElement): HTMLElement | null {
+  const root = 'renderRoot' in el ? el.renderRoot : el;
+  if ('getElementById' in root) {
+    return root.getElementById(id);
+  } else if ('querySelector' in root) {
+    return root.querySelector(`#${id}`);
+  } else {
+    console.error('getChildById called without a valid target');
+    return null;
+  }
+}
