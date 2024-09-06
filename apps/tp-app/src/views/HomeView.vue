@@ -1,6 +1,5 @@
 <script setup>
 import { inject, onBeforeUnmount, ref } from 'vue';
-import 'byfo-components/tp-routing-modal';
 
 const store = inject('TpStore');
 const modalEl = ref(null);

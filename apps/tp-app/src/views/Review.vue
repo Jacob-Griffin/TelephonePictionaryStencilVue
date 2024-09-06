@@ -15,12 +15,9 @@ const stacks = await firebase.getGameData(gameid);
 const players = sortNames(Object.keys(stacks).map(decodePath));
 const imagesCached = new Set();
 
-const metadata = await firebase.getGameMetadata(gameid);
 const metadataModal = ref(null);
 
 const openMetadata = () => {
-  metadataModal.value.metadata = metadata;
-  metadataModal.value.gameid = gameid;
   metadataModal.value.enabled ||= true;
 }
 const {location:{hash}} = window;
@@ -132,7 +129,7 @@ store.clearGameData();
   <section class="unselected stack" v-else>
     <h3 class='really needs-backdrop'>Select a stack to begin viewing</h3>
   </section>
-  <tp-metadata-modal ref="metadataModal"></tp-metadata-modal>
+  <byfo-metadata-modal :gameid="gameid" ref="metadataModal"></byfo-metadata-modal>
 </template>
 
 <style>

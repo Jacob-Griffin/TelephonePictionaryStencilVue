@@ -1,8 +1,6 @@
 <script setup>
 import { inject } from 'vue';
 import { useRoute } from 'vue-router';
-import 'byfo-components/tp-logo';
-import 'byfo-components/tp-join-content';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
@@ -26,7 +24,7 @@ document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,
 
 <template>
   <main>
-    <tp-logo/>
+    <byfo-logo/>
     <section class="really needs-backdrop padding-wide-l">
       <byfo-routing-content :gameid="gameid" type="join"/>
     </section>
@@ -34,7 +32,7 @@ document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,
 </template>
 
 <style>
-main > tp-logo {
+main > byfo-logo {
     width: 30rem;
     max-width: 80vw;
     margin-inline: 3rem;
