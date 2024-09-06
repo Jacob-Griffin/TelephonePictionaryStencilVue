@@ -1,6 +1,6 @@
 import { css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { appStyles } from '../common';
+import { appStyles } from '../style';
 import { LitElement } from 'lit';
 
 /**

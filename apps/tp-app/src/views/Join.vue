@@ -27,7 +27,9 @@ document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,
 <template>
   <main>
     <tp-logo/>
-    <tp-join-content :firebase="firebase" :gameid="gameid" :rejoinData="rejoinData"/>
+    <section class="really needs-backdrop padding-wide-l">
+      <byfo-routing-content :gameid="gameid" type="join"/>
+    </section>
   </main>
 </template>
 

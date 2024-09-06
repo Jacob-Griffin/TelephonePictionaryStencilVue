@@ -3,10 +3,10 @@ import { TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import App from './App.vue';
 import router from './router';
 import { firebaseConfig } from '../firebase.secrets';
-import { defineByfoElements, ByfoContext } from '@component';
+import { defineByfoElements, ByfoContext, appStyles, injectLitCSS } from '@component';
 import { injectThemes } from 'byfo-themes';
 
-import 'byfo-components/css/global-styles';
+injectLitCSS(appStyles,'byfo-components-styles');
 import './outer.css';
 
 

@@ -3,7 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 import { BYFOFirebaseAdapter, TPStore, validGameId, validUsername } from 'byfo-utils';
 import { inject } from '../dependencies';
-import { appStyles, getChildrenByTagName } from '../common';
+import { getChildrenByTagName } from '../common';
+import { appStyles } from '../style';
 
 const categoryStrings = Object.freeze({
   header: {
@@ -31,7 +32,7 @@ const categoryStrings = Object.freeze({
 @customElement('byfo-routing-content')
 export class ByfoRoutingContent extends LitElement {
   @property() gameid?: string;
-  @property() type?: RouteType;
+  @property({ reflect: true }) type?: RouteType;
 
   @state() inputs: Inputs = {};
   @state() inputsValid: boolean = false;
@@ -61,15 +62,17 @@ export class ByfoRoutingContent extends LitElement {
         this.errorText = '';
       }
     }
-    if (this.uses('name') && this.inputs.name) {
-      const result = validUsername(this.inputs.name);
-      console.log(result);
-      if (typeof result === 'string') {
-        this.errorText = result;
-        return false;
-      } else {
-        this.errorText = '';
+    if (this.uses('name')) {
+      if (this.inputs.name) {
+        const result = validUsername(this.inputs.name);
+        if (typeof result === 'string') {
+          this.errorText = result;
+          return false;
+        } else {
+          this.errorText = '';
+        }
       }
+      this.errorText = '';
     }
     return this.filled;
   }
@@ -160,7 +163,7 @@ export class ByfoRoutingContent extends LitElement {
       return html``;
     }
     return html`<h2>${categoryStrings.header[this.type!]}${this.gameid ? ` ${this.gameid}` : ''}</h2>
-      ${['join', 'host'].includes(this.type) ? this.renderInput('name') : html``} ${['join', 'review'].includes(this.type) ? this.renderInput('gameid') : html``}
+      ${['join', 'host'].includes(this.type) ? this.renderInput('name') : html``} ${['join', 'review'].includes(this.type) && !this.gameid ? this.renderInput('gameid') : html``}
       ${this.type === 'search' ? this.renderInput('search') : html``} ${this.errorText ? html`<p>${this.errorText}</p>` : html``}
       <button @click=${this.handleRoute} disabled=${!this.inputsValid || nothing}>${categoryStrings.action[this.type]}</button>`;
   }

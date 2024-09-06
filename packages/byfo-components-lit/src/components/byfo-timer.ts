@@ -2,7 +2,7 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 import { BYFOFirebaseAdapter, config, TPStore } from 'byfo-utils';
-import { appStyles } from '../common';
+import { appStyles } from '../style';
 import { inject } from '../dependencies';
 
 /**

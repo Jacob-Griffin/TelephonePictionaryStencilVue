@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-import { formatJson } from '../../script-utils.mjs';
 
 const [_1,_2,cname,...args] = process.argv;
 if(cname === undefined){
@@ -57,23 +56,3 @@ declare global {
 
 //Step 2: Write the file contents
 execSync(`cat > ${componentName.file} <<< "${fileContents}"`);
-
-if(args.indexOf('-i') > -1){
-  //"Internal" flag, don't export
-  process.exit(0);
-}
-
-//Step 3: Modify the package.json
-const contents = execSync('cat ./package.json');
-if(typeof contents.toString?.() !== 'string'){
-  console.error('File error: cannot read package.json');
-  process.exit(1);
-}
-
-let packageJson = JSON.parse(contents.toString());
-packageJson.exports[`./${componentName.normalized}`] = `./dist/${componentName.tagname}.js`;
-
-const newContents = formatJson(packageJson);
-
-//Step 4: Write the modified package json to file
-execSync(`cat > ./package.json <<< "${newContents}"`)
