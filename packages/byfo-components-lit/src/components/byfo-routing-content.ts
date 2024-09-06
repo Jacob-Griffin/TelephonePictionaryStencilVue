@@ -1,4 +1,4 @@
-import { css, html, nothing } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 import { BYFOFirebaseAdapter, TPStore, validGameId, validUsername } from 'byfo-utils';
@@ -45,11 +45,11 @@ export class ByfoRoutingContent extends LitElement {
     return !!this.renderRoot.querySelector(`[input-for="${type}"]`);
   }
 
-  get filled() {
-    return getChildrenByTagName('input', this)?.every(input => input.value && input.value.length > 0);
+  get filled(): boolean {
+    return getChildrenByTagName('input', this)?.every(input => input.value && input.value.length > 0) ?? false;
   }
 
-  validateInputs() {
+  validateInputs(): boolean {
     if (this.uses('gameid') && this.inputs.gameid && !validGameId(this.inputs.gameid)) {
       this.errorText = 'Invalid gameId';
       return false;
@@ -80,7 +80,7 @@ export class ByfoRoutingContent extends LitElement {
   handleInput(e: TargetedInputEvent) {
     const key = e.target.getAttribute('input-for') as keyof Inputs;
     this.inputs[key] = e.target.value;
-    this.inputsValid = this.validateInputs() ?? false;
+    this.inputsValid = this.validateInputs();
   }
 
   handleEnter(e: KeyboardEvent) {
@@ -148,24 +148,32 @@ export class ByfoRoutingContent extends LitElement {
 
   renderInput(type: keyof Inputs) {
     return html`<h3>${categoryStrings.input[type]}</h3>
-      <input
-        type="text"
-        input-for=${type}
-        @input=${this.handleInput}
-        @keydown=${this.handleEnter}
-        value=${this.inputs[type] ?? (this.type === 'join' ? this.store?.getRejoinData()?.[type as 'name' | 'gameid'] : '')}
-      />`;
+      <input type="text" input-for=${type} @input=${this.handleInput} @keydown=${this.handleEnter} value=${this.inputs[type]} />`;
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    const rejoinData = this.store?.getRejoinData();
+    if (rejoinData && (!this.gameid || this.gameid === rejoinData.gameid)) {
+      this.inputs = rejoinData;
+    }
+  }
+
+  firstUpdated() {
+    if (Object.keys(this.inputs).length > 0) {
+      //If we had rejoinData, make sure to revalidate when it is rendered
+      this.inputsValid = this.validateInputs();
+    }
   }
 
   render() {
-    this.validateInputs();
     if (!this.type) {
       return html``;
     }
     return html`<h2>${categoryStrings.header[this.type!]}${this.gameid ? ` ${this.gameid}` : ''}</h2>
       ${['join', 'host'].includes(this.type) ? this.renderInput('name') : html``} ${['join', 'review'].includes(this.type) && !this.gameid ? this.renderInput('gameid') : html``}
       ${this.type === 'search' ? this.renderInput('search') : html``} ${this.errorText ? html`<p>${this.errorText}</p>` : html``}
-      <button @click=${this.handleRoute} disabled=${!this.inputsValid || nothing}>${categoryStrings.action[this.type]}</button>`;
+      <button @click=${this.handleRoute} ?disabled=${!this.inputsValid}>${categoryStrings.action[this.type]}</button>`;
   }
   static styles = css`
     :host {
