@@ -114,6 +114,11 @@ export const appStyles = css`
   .padding-wide-l {
     padding: 2rem 4rem;
   }
+
+  .img-cache {
+    height: 0;
+    overflow: hidden;
+  }
 `;
 
 export function injectLitCSS(template: CSSResult, id?: string) {

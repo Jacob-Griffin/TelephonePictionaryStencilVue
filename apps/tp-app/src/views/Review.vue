@@ -13,8 +13,6 @@ const searchedPlayer = route.query?.stack;
 
 const stacks = await firebase.getGameData(gameid);
 const players = sortNames(Object.keys(stacks).map(decodePath));
-const imagesCached = new Set();
-
 const metadataModal = ref(null);
 
 const openMetadata = () => {
@@ -22,7 +20,7 @@ const openMetadata = () => {
 }
 const {location:{hash}} = window;
 const selected = ref(hash && hash in stacks ? hash : '');
-const showAllFlag = ref(!!store.alwaysShowAll);
+const tempShowAllFlag = ref(false);
 
 const playerSelector = ref(null);
 const showCollapse = computed(() => {
@@ -40,18 +38,6 @@ const toggleCollapse = () => {
   collapsed.value = !collapsed.value;
 }
 
-const cacheImage = (player, idx) => {
-  const imgURL = stacks[player][idx].content;
-  //If we already cached this image, move on
-  if (imagesCached.has(imgURL)) return;
-
-  //Otherwise, grab it
-  fetch(imgURL, { mode: 'no-cors' });
-  //We don't actually need to do anything with the fetched data,
-  //we're just pre-emptively grabbing it so that the page can use the cached version instantly instead of waiting
-  imagesCached.add(imgURL);
-};
-
 const clickPlayer = username => {
   selected.value = username;
   let newURL = window.location.href;
@@ -66,28 +52,10 @@ const clickPlayer = username => {
     }
   }
   history.replaceState({},null,newURL);
-  if (!showAllFlag.value) {
-    for (let i = 1; i < players.length; i += 2) {
-      //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
-      cacheImage(username, i);
-    }
-  }
   if(showCollapse.value && !collapsed.value){
     toggleCollapse();
   }
 };
-
-//If the user wasn't looking for something specific, and has the show all flag on, precache the beginning of each stack
-if (showAllFlag.value) {
-  players.forEach(username => {
-    //Get the first (up to) 3 images from each stack if the show all flag is on to avoid weird "laggy" appearance on switch
-    //A player would have to be real fast to click and scroll to the 4th image before it could load
-    //This does cost bandwidth to pre-cache every stack like this when the user may not look at all of them, but it's better than the weird lag effect.
-    for (let i = 1; i < players.length && i <= 5; i += 2) {
-      cacheImage(username, i);
-    }
-  });
-}
 
 // Check if we're coming out of a game
 const self = searchedPlayer ?? store.username;
@@ -100,15 +68,8 @@ const target = sessionStorage.getItem('fromSearch');
 sessionStorage.removeItem('fromSearch');
 
 if (target && target in stacks) {
-  showAllFlag.value = true;
+  tempShowAllFlag.value = true;
   clickPlayer(target);
-} else {
-  document.addEventListener('tp-settings-changed', ({ detail }) => {
-    const { setting, value } = detail;
-    if (setting === 'alwaysShowAll') {
-      showAllFlag.value = value;
-    }
-  });
 }
 
 //Once all of the loading is done, and any effects happened, clear the backed up game data
@@ -124,7 +85,7 @@ store.clearGameData();
     </button>
   </div>
   <section class="stack" v-if="selected">
-    <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
+    <byfo-review-chat :gameid="gameid" :stackName="selected" :showAllOverride="tempShowAllFlag"></byfo-review-chat>
   </section>
   <section class="unselected stack" v-else>
     <h3 class='really needs-backdrop'>Select a stack to begin viewing</h3>

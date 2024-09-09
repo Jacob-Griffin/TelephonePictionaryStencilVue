@@ -39,3 +39,9 @@ declare type Inputs = {
 };
 
 declare type RouteType = 'join' | 'host' | 'review' | 'search';
+
+declare interface Content {
+  from: string;
+  contentType: string;
+  content: string;
+}

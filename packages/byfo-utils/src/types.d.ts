@@ -29,6 +29,8 @@ export declare type RoundContent = {
   content?: string;
 };
 
+export declare type GameRoundContent = RoundContent & { from: string };
+
 export declare type GameStatus = {
   started: boolean;
   finished: boolean;
@@ -60,7 +62,7 @@ export declare type StaticRoundInfo = {
 
 export declare type GameStacks = {
   [author: string]: {
-    [roundnumber: string]: RoundContent;
+    [roundnumber: string]: GameRoundContent;
   };
 };
 

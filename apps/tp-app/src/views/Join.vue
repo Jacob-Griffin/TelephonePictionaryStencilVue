@@ -3,9 +3,7 @@ import { inject } from 'vue';
 import { useRoute } from 'vue-router';
 
 const store = inject('TpStore');
-const firebase = inject('Firebase');
 const gameid = useRoute().params.gameid;
-const rejoinData = store.getRejoinData();
 
 document.addEventListener('tp-modal-action-join',({detail:{dest,gameid,playerid,name}})=>{
     store.setRejoinNumber(playerid);
