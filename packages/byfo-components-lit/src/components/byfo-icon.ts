@@ -61,10 +61,6 @@ export class ByfoIcon extends LitElement {
       width: 100%;
       height: 100%;
     }
-    :host > svg {
-      width: inherit;
-      height: inherit;
-    }
   `;
 }
 
