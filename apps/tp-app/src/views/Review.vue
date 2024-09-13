@@ -1,7 +1,7 @@
 <script setup>
 import 'byfo-components/tp-review-chat';
 import 'byfo-components/tp-metadata-modal';
-import { sortNames, decodePath } from 'byfo-utils/rollup';
+import { sortNames, decodePath, encodePath } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -11,15 +11,18 @@ const route = useRoute();
 const gameid = route.params.gameid;
 const searchedPlayer = route.query?.stack;
 
-const stacks = await firebase.getGameData(gameid);
-const players = sortNames(Object.keys(stacks).map(decodePath));
+const encodedPlayers = new Set()
+const players = await firebase.getPlayers(gameid).then(idMap => Object.values(idMap).map(({username}) => {
+  encodedPlayers.add(encodePath(username)); 
+  return username;
+})).then(sortNames);
 const metadataModal = ref(null);
 
 const openMetadata = () => {
   metadataModal.value.enabled ||= true;
 }
 const {location:{hash}} = window;
-const selected = ref(hash && hash in stacks ? hash : '');
+const selected = ref(hash && encodedPlayers.has(hash) ? hash : '');
 const tempShowAllFlag = ref(false);
 
 const playerSelector = ref(null);
@@ -39,7 +42,7 @@ const toggleCollapse = () => {
 }
 
 const clickPlayer = username => {
-  selected.value = username;
+  selected.value = encodePath(username);
   let newURL = window.location.href;
   const queryParam = `?stack=${username}`
   if(window.location.search){
@@ -59,7 +62,7 @@ const clickPlayer = username => {
 
 // Check if we're coming out of a game
 const self = searchedPlayer ?? store.username;
-if (self && self in stacks) {
+if (self && encodedPlayers.has(self)) {
   clickPlayer(self);
 }
 
@@ -67,7 +70,7 @@ if (self && self in stacks) {
 const target = sessionStorage.getItem('fromSearch');
 sessionStorage.removeItem('fromSearch');
 
-if (target && target in stacks) {
+if (target && encodedPlayers.has(target)) {
   tempShowAllFlag.value = true;
   clickPlayer(target);
 }
@@ -80,7 +83,7 @@ store.clearGameData();
   <h2>Game {{ gameid }}<byfo-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
-    <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
+    <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: encodePath(player) === selected }">
       {{ player }}
     </button>
   </div>

@@ -93,7 +93,8 @@ export class ByfoRoutingContent extends LitElement {
     if (!this.validateInputs()) {
       return;
     }
-    const { gameid, name } = this.inputs;
+    let { gameid, name } = this.inputs;
+    gameid ??= this.gameid;
     let detail = {} as ModalAction;
     switch (this.type) {
       case 'join': {

@@ -176,7 +176,7 @@ export class BYFOFirebaseAdapter {
     }
 
     //Check the players list
-    const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
+    const players: BYFO.PlayerList = await this.getPlayers(gameid);
     const playerNumbers = new Set<number>();
 
     // Check to make sure there isn't a rejoin or duplicate name
@@ -353,7 +353,7 @@ export class BYFOFirebaseAdapter {
     set(roundRef, round0);
 
     //Get the players
-    const playerList: BYFO.Player[] = Object.values(await this.getWaitingPlayers(gameid));
+    const playerList: BYFO.Player[] = Object.values(await this.getPlayers(gameid));
     const staticRoundInfoRef = this.ref(`game/${gameid}/staticRoundInfo`);
     set(staticRoundInfoRef, {
       lastRound: playerList.length - 1,
@@ -573,7 +573,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - Game to be fetched
    * @returns A list of player objects
    */
-  async getWaitingPlayers(gameid: number): Promise<BYFO.PlayerList> {
+  async getPlayers(gameid: number): Promise<BYFO.PlayerList> {
     return this.getRef(`players/${gameid}`);
   }
 
@@ -594,7 +594,7 @@ export class BYFOFirebaseAdapter {
    * @returns The player id within that game
    */
   async getPlayerNumber(gameid: number, name: string) {
-    const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
+    const players: BYFO.PlayerList = await this.getPlayers(gameid);
     for (let num in players) {
       if (players[num].username === name) {
         return num;
