@@ -44,14 +44,9 @@ const toggleCollapse = () => {
 const clickPlayer = cleanName => {
   const username = encodePath(cleanName)
   selected.value = username;
-  let newURL = window.location.href;
-  const hashedName = `#${encodeURIComponent(username)}`
-  if(window.location.hash){
-    newURL = newURL.replace(/#.+/,hashedName);
-  } else {
-    newURL += hashedName;
-  }
-  history.replaceState({},null,newURL);
+  const hashedName = `#${encodeURIComponent(username)}`;
+  const newUrl = window.location.href.replace(/(#.+)?$/,hashedName);
+  history.replaceState({}, null, newUrl);
   if(showCollapse.value && !collapsed.value){
     toggleCollapse();
   }
