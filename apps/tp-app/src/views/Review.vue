@@ -1,7 +1,7 @@
 <script setup>
 import 'byfo-components/tp-review-chat';
 import 'byfo-components/tp-metadata-modal';
-import { sortNames, decodePath, encodePath } from 'byfo-utils/rollup';
+import { sortNames, encodePath } from 'byfo-utils/rollup';
 import { ref, inject, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -21,8 +21,8 @@ const metadataModal = ref(null);
 const openMetadata = () => {
   metadataModal.value.enabled ||= true;
 }
-const {location:{hash}} = window;
-const selected = ref(hash && encodedPlayers.has(hash) ? hash : '');
+const urlPlayer = decodeURIComponent(window.location.hash.substring(1));
+const selected = ref(urlPlayer && encodedPlayers.has(urlPlayer) ? urlPlayer : '');
 const tempShowAllFlag = ref(false);
 
 const playerSelector = ref(null);
@@ -41,18 +41,15 @@ const toggleCollapse = () => {
   collapsed.value = !collapsed.value;
 }
 
-const clickPlayer = username => {
-  selected.value = encodePath(username);
+const clickPlayer = cleanName => {
+  const username = encodePath(cleanName)
+  selected.value = username;
   let newURL = window.location.href;
-  const queryParam = `?stack=${username}`
-  if(window.location.search){
-    newURL = newURL.replace(/\?stack=[^?&]+/,queryParam);
+  const hashedName = `#${encodeURIComponent(username)}`
+  if(window.location.hash){
+    newURL = newURL.replace(/#.+/,hashedName);
   } else {
-    if(window.location.hash){
-      newURL = newURL.replace('#',`?stack=${queryParam}#`);
-    } else {
-      newURL += queryParam;
-    }
+    newURL += hashedName;
   }
   history.replaceState({},null,newURL);
   if(showCollapse.value && !collapsed.value){
@@ -87,12 +84,7 @@ store.clearGameData();
       {{ player }}
     </button>
   </div>
-  <section class="stack" v-if="selected">
-    <byfo-review-chat :gameid="gameid" :stackName="selected" :showAllOverride="tempShowAllFlag"></byfo-review-chat>
-  </section>
-  <section class="unselected stack" v-else>
-    <h3 class='really needs-backdrop'>Select a stack to begin viewing</h3>
-  </section>
+  <byfo-review-chat :gameid="gameid" :stackName="selected" :showAllOverride="tempShowAllFlag"></byfo-review-chat>
   <byfo-metadata-modal :gameid="gameid" ref="metadataModal"></byfo-metadata-modal>
 </template>
 
@@ -134,21 +126,13 @@ store.clearGameData();
   }
 }
 
-.stack {
+byfo-review-chat {
   flex-grow: 1;
   overflow: hidden;
   align-items: center;
   width: 100%;
   max-width: 900px;
   margin-bottom: 1.5rem;
-
-  &.unselected {
-    padding: 1rem;
-    & h3 {
-      line-height: 3.5rem;
-      text-align: center;
-    }
-  }
 }
 
 byfo-icon[icon='statistics']{

@@ -207,15 +207,15 @@ export class ByfoReviewChat extends LitElement {
       this.cacheStack(this.stackName);
     }
     if (!this.gameid) {
-      return html`<article><h3>No Game id was provided</h3></article>`;
+      return html`<article><h3 class="message">No Game id was provided</h3></article>`;
     }
     if (!this.stackName) {
-      return html`<article><h3>Select a stack to begin viewing</h3></article>`;
+      return html`<article><h3 class="message">Select a stack to begin viewing</h3></article>`;
     }
     if (!this.stacks) {
       return html`<article></article>`;
     }
-    this.stack = Object.values(this.stacks![this.stackName]);
+    this.stack = Object.values(this.stacks[this.stackName]);
     return html` <article>${this.chatBubbles()} ${this.stackControls()}</article>
       ${this.lightbox()}`;
   }
@@ -223,24 +223,32 @@ export class ByfoReviewChat extends LitElement {
     :host {
       display: flex;
       width: 100%;
-      height: 100%;
+      max-height: 100%;
       overflow-y: auto;
       background-color: var(--chat-background, none);
       border-radius: 0.5rem;
       padding: 2rem 1rem 3rem 2rem;
     }
 
+    h3.message {
+      align-self: center;
+      justify-self: flex-start;
+      padding: 1rem;
+    }
+
     article {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
+      align-self: start;
       width: 100%;
       height: fit-content;
       gap: 1.75rem;
       color: var(--chat-text, inherit);
     }
 
-    .content-bubble {
+    .content-bubble,
+    .message {
       background-color: var(--chat-bubble);
       padding: 1rem 1rem 0;
       border-radius: 1rem;
