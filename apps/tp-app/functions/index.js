@@ -11,6 +11,9 @@ const transformGame = (payload) => {
     const newPayload = {}
     const stackNames = [];
     for(const stack in payload){
+        if(stack === 'MigratedFromOldBlowYourFaceOffSite' && (payload[stack] === true || payload[stack] === 'true')){
+            stackNames.push(stack);
+        }
         if(typeof payload[stack] !== 'object' || Object.keys(stack).some(key => key !== `${parseInt(key)}`)){
             newPayload[stack] = payload[stack];
             continue;

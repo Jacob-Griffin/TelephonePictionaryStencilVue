@@ -16,7 +16,8 @@
 
     const route = useRoute();
     const initialQuery = route.query?.q;
-    
+
+    const searchLegacy = ref(false);    
 
     const search = async () => {
         const text = searchBar.value?.value;
@@ -24,14 +25,16 @@
             return;
         }
 
-        if(!searchAs.value){
+        if(!searchAs.value && !searchLegacy.value){
             return;
         }
 
-        const filterObj = / /.test(searchAs.value) ? {
-            filters:`stackNames:"${searchAs.value.replace(/'/,"\\'")}"`
+        const target = searchLegacy.value ? 'MigratedFromOldBlowYourFaceOffSite' : searchAs.value;
+
+        const filterObj = / /.test(target) ? {
+            filters:`stackNames:"${target.replace(/'/,"\\'")}"`
         } : {
-            filters:`stackNames:${searchAs.value.replace(/'/,"\\'")}`
+            filters:`stackNames:${target.replace(/'/,"\\'")}`
         };
 
         const { hits } = await searchIndex.search(text, filterObj);
@@ -71,6 +74,9 @@
         //We may be able to figure out which stack they were looking for if there were multiple in one game, but we'll not assume for now
         location.href = dest;
     }
+    const handleLegacyCheck = (e) => {
+        searchLegacy.value = e.target.checked;
+    }
     onMounted(()=>{
         document.addEventListener('tp-settings-changed',e=>{
             if(e.detail.setting === 'searchAs'){
@@ -87,8 +93,12 @@
     <main>
         <input type='text' ref='searchBar' placeholder="Search"/>
         <button @click="search" :disabled="!searchAs">Search</button>
-        <h3 v-if="!searchAs" class="really needs-backdrop">Search requires a username to try and limit it to games you were a part of. Set your "Search as" username in settings</h3>
-        <p v-else class="really needs-backdrop">Searching as {{ searchAs }}</p>
+        <div class='really needs-backdrop legacy-check'>
+            <h3>Search legacy games:</h3>
+            <input type='checkbox' @click="handleLegacyCheck"/>
+        </div>
+        <h3 v-if="!searchAs && !searchLegacy" class="really needs-backdrop">Search requires a username to try and limit it to games you were a part of. Set your "Search as" username in settings</h3>
+        <p v-else class="really needs-backdrop">Searching <span v-if="searchLegacy">legacy games</span><span v-else>as {{ searchAs }}</span></p>
         <section>
             <article v-for="result in results" @click="e=>handleResultClick(e,result)">
                 <h2>Game {{ result.gameId }}</h2>
@@ -133,5 +143,10 @@
     em {
         background-color: var(--color-important);
         color: white;
+    }
+    .legacy-check {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
     }
 </style>
