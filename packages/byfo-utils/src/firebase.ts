@@ -65,10 +65,13 @@ export class BYFOFirebaseAdapter {
    * @param gameid
    * @returns
    */
-  async getGameData(gameid: number): Promise<BYFO.Game> {
+  async getGameData(gameid: number): Promise<BYFO.GameStacks> {
     const docRef = doc(this.connection.db, `games/${gameid}`);
     const snapshot = await getDocFromServer(docRef);
-    const gameData = snapshot.data() as BYFO.Game;
+    const gameData = snapshot.data() as BYFO.GameStacks;
+    if (gameData['MigratedFromOldBlowYourFaceOffSite']) {
+      delete gameData['MigratedFromOldBlowYourFaceOffSite'];
+    }
     return gameData;
   }
 
