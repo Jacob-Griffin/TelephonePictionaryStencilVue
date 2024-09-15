@@ -14,7 +14,7 @@ export class TpMetadataModal {
 
   timeString(ms: number) {
     if (ms < 0) {
-      return '';
+      return 'Unknown round length';
     }
     let seconds = ms / 1000;
     const minutes = Math.floor(seconds / 60);
@@ -33,6 +33,9 @@ export class TpMetadataModal {
   formatDate(date: string) {
     if(date === 'unknown'){
       return 'Unknown'
+    }
+    if(date.startsWith('Migrated')){
+      return date;
     }
     const datePattern = /(?<day>\w{3} \w{3} \d{2} \d{4}) (?<time>[\d:]+) (?<offset>\w{3}[+\-]\d{4}) \((?<timezone>.+)\)/;
     const { groups: parsed } = datePattern.exec(date);
