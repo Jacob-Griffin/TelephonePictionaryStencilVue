@@ -12,7 +12,7 @@
     const searchAs = ref(store.searchAs);
 
     const searchBar = ref(null);
-    const results = ref([]);
+    const results = ref(null);
 
     const route = useRoute();
     const initialQuery = route.query?.q;
@@ -38,6 +38,7 @@
         };
 
         const { hits } = await searchIndex.search(text, filterObj);
+        results.value = [];
         if(!(hits.length > 0)){
             return;
         }
@@ -64,7 +65,7 @@
                 }
             }
             return {gameId,highlights};
-        })
+        });
     }
     const handleResultClick = (e, result) => {
         let dest = `/review/${result.gameId}`
@@ -92,7 +93,7 @@
 <template>
     <main>
         <input type='text' ref='searchBar' placeholder="Search"/>
-        <button @click="search" :disabled="!searchAs">Search</button>
+        <button @click="search" :disabled="!searchAs && !searchLegacy">Search</button>
         <div class='really needs-backdrop legacy-check'>
             <h3>Search legacy games:</h3>
             <input type='checkbox' @click="handleLegacyCheck"/>
@@ -108,6 +109,9 @@
                         <li v-for="string in stack.results" v-html="string"></li>
                     </ul>
                 </div>
+            </article>
+            <article v-if="results?.length === 0">
+                <h3>No results</h3>
             </article>
         </section>
     </main>
