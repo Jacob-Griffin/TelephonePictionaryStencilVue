@@ -54,14 +54,6 @@ export class ByfoRoutingContent extends LitElement {
       this.errorText = 'Invalid gameId';
       return false;
     }
-    if (this.type === 'search') {
-      if (!this.store?.searchAs) {
-        this.errorText = 'Search requires that you set a username to search as.\nCheck your settings (top right)';
-        return false;
-      } else {
-        this.errorText = '';
-      }
-    }
     if (this.uses('name')) {
       if (this.inputs.name) {
         const result = validUsername(this.inputs.name);

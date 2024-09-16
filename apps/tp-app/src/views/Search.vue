@@ -16,6 +16,7 @@
 
     const route = useRoute();
     const initialQuery = route.query?.q;
+    console.log(initialQuery);
     const text = ref(initialQuery);
 
     const search = async () => {
@@ -83,7 +84,7 @@
 </script>
 <template>
     <main>
-        <input type='text' @input="setText" placeholder="Search"/>
+        <input type='text' @input="setText" ref="searchBar" placeholder="Search" class="search-bar"/>
         <button @click="search" :disabled="!text">Search</button>
         <section>
             <article v-for="result in results" @click="e=>handleResultClick(e,result)">
@@ -107,13 +108,15 @@
         gap:1rem;
         max-width: 1200px;
         align-items: center;
+        overflow-y: hidden;
     }
-    input[type='text'] {
+    input[type="text"].search-bar {
         text-align: start;
         padding: 1rem;
         max-width: unset;
     }
     button {
+        flex-shrink: 0;
         align-self: center;
     }
     section {
