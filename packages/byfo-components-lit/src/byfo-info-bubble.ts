@@ -1,14 +1,15 @@
 import { LitElement, css, html } from 'lit-element';
-import { customElement } from 'lit-element/decorators.js';
+import { customElement, property } from 'lit-element/decorators.js';
 
 /**
  * A tooltip-like element that has custom styling and appears immediately on hover
  */
 @customElement('byfo-info-bubble')
 export class ByfoInfoBubble extends LitElement {
+  @property() content: string = '';
   render() {
     return html`<tp-icon icon="info"></tp-icon>
-      <div id="bubble">{this.content}</div>`;
+      <div id="bubble">${this.content}</div>`;
   }
   static styles = css`
     :host {

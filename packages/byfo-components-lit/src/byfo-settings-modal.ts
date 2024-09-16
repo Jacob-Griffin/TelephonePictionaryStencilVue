@@ -68,10 +68,6 @@ export class ByfoSettingsModal extends ByfoModal {
           </select>
         </div>
         <div>
-          <h2 class="label">Search As <byfo-info-bubble content="Required for search. Filters results to include games with this username"></byfo-info-bubble></h2>
-          <input type="text" value=${this.store?.searchAs} @input=${(e: TargetedInputEvent) => this.store?.setSearchAs(e.target.value)} />
-        </div>
-        <div>
           <h2 class="label">Background Customization:</h2>
           <button class="small" @click=${this.resetBackground}>Reset Background</button>
         </div>
@@ -111,7 +107,7 @@ export class ByfoSettingsModal extends ByfoModal {
           />
         </div>
         <div>
-          <h2 class="label">Always "Show all" <tp-info-bubble content="Applies to review page"></tp-info-bubble></h2>
+          <h2 class="label">Always "Show all" <byfo-info-bubble content="Applies to review page"></byfo-info-bubble></h2>
           <div id="showAll-toggle" class=${`toggle-wrapper${this.store?.alwaysShowAll ? ' checked' : ''}`} @click=${this.passClick}>
             <input
               type="checkbox"

@@ -68,10 +68,6 @@ export class TpSettingsModal {
           </select>
         </div>
         <div>
-          <h2 class="label">Search As <tp-info-bubble content='Required for search. Filters results to include games with this username'></tp-info-bubble></h2>
-          <input type='text' value={this.store.searchAs} onInput={e => this.store.setSearchAs((e.target as HTMLInputElement).value)}/>
-        </div>
-        <div>
           <h2 class='label'>Background Customization:</h2>
           <button class='small' onClick={this.resetBackground}>Reset Background</button>
         </div>
