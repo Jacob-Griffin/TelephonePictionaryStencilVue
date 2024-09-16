@@ -90,6 +90,9 @@ changeItems.forEach(filename => {
   if(filename.startsWith('[')){
     return;
   }
+  if(!filename.endsWith('.md')){
+    return;
+  }
   const contents = execSync(`cat ./changes/${filename}`).toString();
   changeContents.push(contents);
   execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);

@@ -50,10 +50,6 @@ export class ByfoSettingsModal extends ByfoModal {
           </select>
         </div>
         <div>
-          <h2 class="label">Search As <byfo-info-bubble content="Required for search. Filters results to include games with this username"></byfo-info-bubble></h2>
-          <input type="text" value=${this.store!.searchAs} @input=${(e: TargetedInputEvent) => this.store!.setSearchAs(e.target.value)} />
-        </div>
-        <div>
           <h2 class="label">Background Customization:</h2>
           <button class="small" @click=${this.resetBackground}>Reset Background</button>
         </div>

@@ -40,6 +40,7 @@ const content = ref({
 
 //Toggles whether to show the actual gameplay or not
 const finishedRound = ref(-1);
+firebase.fetchFinishedRound(gameid,name).then(round => finishedRound.value = round);
 const waiting = computed(() => finishedRound.value >= roundnumber.value);
 const stuckSignal = ref(false);
 const stuck = computed(() => {
@@ -159,8 +160,6 @@ if(!redirect){
         return;
       }
     });
-
-    finishedRound.value = firebase.fetchFinishedRound(gameid,name);
   });
 
   //Wrap up firebase subscriptions on unmount
