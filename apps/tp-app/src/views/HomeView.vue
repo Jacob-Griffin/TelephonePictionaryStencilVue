@@ -60,13 +60,13 @@ const handleSearch = ({detail:{query}}) =>{
 
 document.addEventListener('tp-modal-action-host',handleHost);
 document.addEventListener('tp-modal-action-join',handleJoin);
-document.addEventListener('tp-modal-action-result',handleResults);
+document.addEventListener('tp-modal-action-review',handleResults);
 document.addEventListener('tp-modal-action-search',handleSearch);
 
 onBeforeUnmount(()=>{
   document.removeEventListener('tp-modal-action-host',handleHost);
   document.removeEventListener('tp-modal-action-join',handleJoin);
-  document.removeEventListener('tp-modal-action-result',handleResults);
+  document.removeEventListener('tp-modal-action-review',handleResults);
   document.removeEventListener('tp-modal-action-search',handleSearch);
 })
 </script>
@@ -77,7 +77,7 @@ onBeforeUnmount(()=>{
     <div class="buttonMenu">
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="host">Host Game</button>
-      <button @click="switchModal" modal="result">View Completed Games</button>
+      <button @click="switchModal" modal="review">View Completed Games</button>
       <button @click="switchModal" modal="search">Search Completed Games</button>
       <button @click="viewTutorial" v-if="tutorialVisible">How to play</button>
     </div>
