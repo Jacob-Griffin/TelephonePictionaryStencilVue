@@ -10,7 +10,7 @@ export class BYFOFirebaseAdapter {
   /**
    * Backs up the last submission time to prevent double ups on timeout submissions
    */
-  lastForcedSubmission: number = null;
+  lastSubmission: number = null;
 
   /**
    * Holds the connection objects for the firebase services
@@ -405,12 +405,10 @@ export class BYFOFirebaseAdapter {
     staticRoundInfo: BYFO.StaticRoundInfo,
     forced: boolean = false,
   ): Promise<true | void> {
-    if (forced) {
-      if (Date.now() - this.lastForcedSubmission < config.minRoundLength * 1000) {
-        // If we got 2 forced submissions less than the minimum round length apart, they're surely in error
-        return;
-      }
-      this.lastForcedSubmission = Date.now();
+    this.lastSubmission = Date.now();
+    if (Date.now() - this.lastSubmission < config.minRoundLength * 1000) {
+      // If we got 2 submissions less than the minimum round length apart, they're surely in error
+      return;
     }
     const contentType = round % 2 === 0 ? 'text' : 'image';
     if ((contentType === 'text' && rawContent instanceof Blob) || (contentType === 'image' && typeof rawContent === 'string')) {
