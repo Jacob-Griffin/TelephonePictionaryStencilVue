@@ -87,7 +87,7 @@ console.log(`Creating Release post`);
 const changeItems = execSync('ls ./changes').toString().split('\n');
 const changeContents = [];
 changeItems.forEach(filename => {
-  if(filename.startsWith('[')){
+  if(filename.startsWith('[') || filename === 'example.md'){
     return;
   }
   if(!filename.endsWith('.md')){
