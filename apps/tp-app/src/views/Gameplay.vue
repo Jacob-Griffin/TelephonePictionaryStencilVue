@@ -42,6 +42,7 @@ const content = ref({
 
 //Toggles whether to show the actual gameplay or not
 const finishedRound = ref(-1);
+firebase.fetchFinishedRound(gameid,name).then(round => finishedRound.value = round);
 const waiting = computed(() => finishedRound.value >= roundnumber.value);
 const stuckSignal = ref(false);
 const stuck = computed(() => {
@@ -145,7 +146,12 @@ if(!redirect){
     });
 
     //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
-    document.addEventListener('tp-stuck-signal', e => (stuckSignal.value = true));
+    document.addEventListener('tp-stuck-signal', e => {
+      stuckSignal.value = true
+      if(store.hosting && finishedRound.value === staticRoundInfo.lastRound && playerlist.value.every(({lastRound}) => lastRound === staticRoundInfo.lastRound)){
+        firebase.finalizeGame(gameid)
+      }
+    });
 
     document.addEventListener('keydown', event => {
       if (event.metaKey && event.key === 'z' && !isText.value) {
@@ -161,8 +167,6 @@ if(!redirect){
         return;
       }
     });
-
-    finishedRound.value = firebase.fetchFinishedRound(gameid,name);
   });
 
   //Wrap up firebase subscriptions on unmount
