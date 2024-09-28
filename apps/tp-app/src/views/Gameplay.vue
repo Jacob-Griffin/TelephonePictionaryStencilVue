@@ -200,7 +200,7 @@ const scrollToCanvas = e => {
       </div>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to" :isSending="isSending">
         <div slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText">
-          <tp-timer class="timer" :endtime="roundData.endTime" :offset="firebase.serverOffset" :addTime="isHosting ? addTime : undefined"></tp-timer>
+          <tp-timer class="timer" :endtime="roundData.endTime" :offset="firebase.serverOffset" :addTime="isHosting ? addTime : undefined" :canTimeOut="!waiting"></tp-timer>
         </div>
       </tp-input-zone>
     </section>
