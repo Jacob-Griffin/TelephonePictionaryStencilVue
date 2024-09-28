@@ -221,13 +221,15 @@ export class BYFOFirebaseAdapter {
    * @param username - The host
    * @returns void
    */
-  createLobby(gameid: number, username: string): void {
-    set(this.ref(`game-statuses/${gameid}`), {
+  async createLobby(gameid: number, username: string): Promise<void> {
+    const statusSet = set(this.ref(`game-statuses/${gameid}`), {
       started: false,
       finished: false,
     });
     const newPlayerRef = this.ref(`players/${gameid}/${this.generatePriority()}`);
-    set(newPlayerRef, { username, status: 'ready' });
+    const playerSet = set(newPlayerRef, { username, status: 'ready' });
+    await Promise.all([statusSet, playerSet]);
+    return;
   }
 
   /**
