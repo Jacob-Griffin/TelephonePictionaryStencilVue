@@ -687,8 +687,7 @@ export class BYFOFirebaseAdapter {
       return '/default.png';
     }
     const imgref = storageRef(this.connection.storage, `/games/${gameid}/${round}/${player}.png`);
-    updateMetadata(imgref, { cacheControl: 'public,max-age=86400' });
-    await uploadBytes(imgref, imgData, { contentType: 'image/png' });
+    await uploadBytes(imgref, imgData, { contentType: 'image/png', cacheControl: 'public,max-age=86400' });
     return getDownloadURL(imgref);
   }
   //#endregion
