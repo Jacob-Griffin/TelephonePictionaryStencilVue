@@ -221,13 +221,15 @@ export class BYFOFirebaseAdapter {
    * @param username - The host
    * @returns void
    */
-  createLobby(gameid: number, username: string): void {
-    set(this.ref(`game-statuses/${gameid}`), {
+  async createLobby(gameid: number, username: string): Promise<void> {
+    const statusSet = set(this.ref(`game-statuses/${gameid}`), {
       started: false,
       finished: false,
     });
     const newPlayerRef = this.ref(`players/${gameid}/${this.generatePriority()}`);
-    set(newPlayerRef, { username, status: 'ready' });
+    const playerSet = set(newPlayerRef, { username, status: 'ready' });
+    await Promise.all([statusSet, playerSet]);
+    return;
   }
 
   /**
@@ -405,11 +407,11 @@ export class BYFOFirebaseAdapter {
     staticRoundInfo: BYFO.StaticRoundInfo,
     forced: boolean = false,
   ): Promise<true | void> {
-    this.lastSubmission = Date.now();
     if (Date.now() - this.lastSubmission < config.minRoundLength * 1000) {
       // If we got 2 submissions less than the minimum round length apart, they're surely in error
       return;
     }
+    this.lastSubmission = Date.now();
     const contentType = round % 2 === 0 ? 'text' : 'image';
     if ((contentType === 'text' && rawContent instanceof Blob) || (contentType === 'image' && typeof rawContent === 'string')) {
       if (!forced) {
@@ -685,8 +687,7 @@ export class BYFOFirebaseAdapter {
       return '/default.png';
     }
     const imgref = storageRef(this.connection.storage, `/games/${gameid}/${round}/${player}.png`);
-    updateMetadata(imgref, { cacheControl: 'public,max-age=86400' });
-    await uploadBytes(imgref, imgData, { contentType: 'image/png' });
+    await uploadBytes(imgref, imgData, { contentType: 'image/png', cacheControl: 'public,max-age=86400' });
     return getDownloadURL(imgref);
   }
   //#endregion

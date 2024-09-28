@@ -9,6 +9,7 @@ import { config } from 'byfo-utils';
 export class TpTimer {
   @Prop() endtime: number;
   @Prop() offset: number;
+  @Prop() canTimeOut: boolean;
   @Prop() addTime: ()=>void;
   @State() currentTime: number = Date.now();
   @State() timeoutReady:boolean = true;
@@ -25,8 +26,8 @@ export class TpTimer {
   }
 
   timeoutRound() {
-    if(this.timeoutReady){
-      document.dispatchEvent(new CustomEvent('tp-timer-finished', {}));
+    if(this.timeoutReady && this.canTimeOut){
+      document.dispatchEvent(new CustomEvent('tp-timer-finished'));
       this.timeoutReady = false;
     }
   }
