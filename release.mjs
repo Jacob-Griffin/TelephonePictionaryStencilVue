@@ -28,21 +28,6 @@ if(branch !== 'dev'){
 execSync('git fetch');
 execSync('git pull');
 
-console.log('Assembling changelog');
-const changeItems = execSync('ls ./changes').toString().split('\n');
-const changeContents = [];
-changeItems.forEach(filename => {
-  if(filename.startsWith('[') || filename === 'example.md'){
-    return;
-  }
-  if(!filename.endsWith('.md')){
-    return;
-  }
-  const contents = execSync(`cat ./changes/${filename}`).toString();
-  changeContents.push(contents);
-  execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);
-})
-
 console.log('Creating pr branch for new release');
 execSync(`git branch version-${version}`);
 execSync(`git switch version-${version}`);
@@ -56,6 +41,23 @@ packages.forEach(p => {
 });
 
 packages.forEach(p => execSync(`git add ${p}`));
+
+console.log('Assembling changelog');
+const changeItems = execSync('ls ./changes').toString().split('\n');
+const changeContents = [];
+changeItems.forEach(filename => {
+  if(filename.startsWith('[') || filename === 'example.md'){
+    return;
+  }
+  if(!filename.endsWith('.md')){
+    return;
+  }
+  const contents = execSync(`cat ./changes/${filename}`).toString();
+  changeContents.push(contents);
+  execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);
+  execSync(`git add ./changes/[${version}]-${filename}`);
+})
+
 try{
   execSync(`git commit -m "Automated: Release ${version}"`);
 } catch (e) {
