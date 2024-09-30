@@ -1,5 +1,6 @@
-import { LitElement, css, html } from 'lit-element';
-import { customElement, property } from 'lit-element/decorators.js';
+import { css, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { LitElement } from 'lit';
 
 /**
  * Displays a piece of round content in proper card aspect ratio

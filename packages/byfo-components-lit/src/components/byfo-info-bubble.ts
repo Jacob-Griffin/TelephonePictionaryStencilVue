@@ -1,14 +1,17 @@
-import { LitElement, css, html } from 'lit-element';
-import { customElement, property } from 'lit-element/decorators.js';
+import { css, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { LitElement } from 'lit';
+import { loadChildElements } from '../loader';
 
+loadChildElements(['byfo-icon']);
 /**
  * A tooltip-like element that has custom styling and appears immediately on hover
  */
 @customElement('byfo-info-bubble')
 export class ByfoInfoBubble extends LitElement {
-  @property() content: string = '';
+  @property() content?: string;
   render() {
-    return html`<tp-icon icon="info"></tp-icon>
+    return html`<byfo-icon icon="info"></byfo-icon>
       <div id="bubble">${this.content}</div>`;
   }
   static styles = css`
@@ -45,7 +48,7 @@ export class ByfoInfoBubble extends LitElement {
       transition: opacity 200ms ease, z-index 200ms ease;
     }
 
-    tp-icon {
+    byfo-icon {
       position: relative;
       top: 0.15em;
       display: inline-block;
@@ -53,7 +56,7 @@ export class ByfoInfoBubble extends LitElement {
       width: 1em;
     }
 
-    tp-icon:hover ~ #bubble {
+    byfo-icon:hover ~ #bubble {
       opacity: 1;
       z-index: 3000;
     }

@@ -15,28 +15,29 @@
     "src/globals/css"
   ],
   "exports": {
-    ".":"./dist/index.js",
+    ".": "./dist/index.js",
     "./*": "./dist/components/*",
-    "./css/*":"./src/globals/css/*.css"
+    "./css/*": "./src/globals/css/*.css"
   },
   "scripts": {
     "build": "stencil build",
+    "clean:modules": "rm -rf ./node_modules",
     "dev": "stencil build --watch",
     "start": "stencil build --dev --watch --serve",
     "generate": "stencil generate"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
-    "@stencil/core": "^4.11.0",
+    "@stencil/core": "^4.20.0",
     "byfo-themes": "workspace:^",
     "byfo-utils": "workspace:^",
     "rollup": "2.56.3",
-    "tslib": "^2.6.2"
+    "tslib": "^2.6.3"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^16.18.76",
-    "typescript": "^5.3.3"
+    "@types/node": "^16.18.105",
+    "typescript": "^5.5.4"
   },
   "license": "MIT"
 }

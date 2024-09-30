@@ -1,14 +1,23 @@
 import { createApp } from 'vue';
+import { TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import App from './App.vue';
 import router from './router';
+import { firebaseConfig } from '../firebase.secrets';
+import { defineByfoElements, ByfoContext, appStyles, injectLitCSS } from '@component';
+import { injectThemes } from 'byfo-themes';
 
-import 'byfo-components/css/global-styles';
+injectLitCSS(appStyles,'byfo-components-styles');
 import './outer.css';
 
-import { injectThemes } from 'byfo-themes';
+
+const store = new TPStore();
+const firebase = new BYFOFirebaseAdapter(firebaseConfig);
+const context = new ByfoContext({firebase,store});
+
+defineByfoElements();
 injectThemes();
 
-const app = createApp(App);
+const app = createApp(App, {firebase,store});
 
 app.use(router);
 

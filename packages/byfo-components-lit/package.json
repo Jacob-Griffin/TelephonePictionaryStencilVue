@@ -7,23 +7,17 @@
     "build": "vite build",
     "tsc": "tsc",
     "preview": "vite preview",
+    "clean:modules": "rm -rf ./node_modules",
     "generate": "node ./generate-element.js",
     "g": "node ./generate-element.js"
   },
   "dependencies": {
     "byfo-themes": "workspace:^",
     "byfo-utils": "workspace:^",
-    "lit-element": "^4.1.0"
+    "lit": "^3.2.0"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "vite": "^5.3.4"
-  },
-  "exports": {
-    "./logo": "./dist/byfo-logo.js",
-    "./content": "./dist/byfo-content.js",
-    "./info-bubble": "./dist/byfo-info-bubble.js",
-    "./settings-modal": "./dist/byfo-settings-modal.js",
-    "./time-input": "./dist/byfo-time-input.js"
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
   }
 }

@@ -1,11 +1,11 @@
-import { LitElement, css, html } from 'lit-element';
-import { customElement, property } from 'lit-element/decorators.js';
-import { appStyles } from './common';
+import { css, html } from 'lit';
+import { property } from 'lit/decorators.js';
+import { appStyles } from '../style';
+import { LitElement } from 'lit';
 
 /**
  * Base class that defines a floating window that can be closed
  */
-@customElement('byfo-modal')
 export class ByfoModal extends LitElement {
   @property({ reflect: true, attribute: 'modal-enabled', type: Boolean }) enabled: boolean = false;
 
@@ -25,7 +25,7 @@ export class ByfoModal extends LitElement {
     return html` <section class="background" @click=${this.checkClose}>
       <article>
         <button class="close" @click=${this.checkClose}>
-          <tp-icon icon="x"></tp-icon>
+          <byfo-icon icon="x"></byfo-icon>
         </button>
         ${this.renderBody()}
       </article>
@@ -78,6 +78,7 @@ export class ByfoModal extends LitElement {
       height: 2.25rem;
       background-color: rgba(0, 0, 0, 0);
       border: none;
+      z-index: 10;
     }
 
     .main-action {

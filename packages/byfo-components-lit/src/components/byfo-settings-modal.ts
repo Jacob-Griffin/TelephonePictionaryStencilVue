@@ -1,56 +1,38 @@
-import { css, html } from 'lit-element';
-import { customElement, property } from 'lit-element/decorators.js';
-import { TargetedEvent, TargetedInputEvent, toggleStyles } from './common';
+import { css, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { getChildById } from '../common';
+import { inject } from '../dependencies';
 import { ByfoModal } from './byfo-modal';
-import './byfo-info-bubble';
-import type { TPStore } from '../../byfo-utils/dist';
 import { themes } from 'byfo-themes';
+import { TPStore } from 'byfo-utils';
+import { loadChildElements } from '../loader';
+
+loadChildElements(['byfo-info-bubble', 'byfo-toggle']);
 
 /**
  * A modal that contains various client-side settings
- * @property store - A localstorage management object
- * @property buildDate - An object describing how to format dates
  */
 @customElement('byfo-settings-modal')
 export class ByfoSettingsModal extends ByfoModal {
-  @property() store?: TPStore;
+  @inject store?: TPStore;
+
+  /**
+   * Used in beta builds to display the full date of the most recent build
+   */
   @property() buildDate?: { year: string; full?: string; date?: Date };
-
-  //Explicitly type render root as shadow root
-  renderRoot = this.renderRoot as DocumentFragment;
-
-  passClick(e: TargetedEvent) {
-    const target = e.target?.id?.match(/^(.+)-toggle$/)?.[1];
-    if (target) {
-      this.renderRoot.getElementById(`${target}Input`)?.click();
-    }
-  }
-
-  handleToggle = (prop: string, setter: (v: boolean) => void, e: TargetedInputEvent) => {
-    const enabled = e.target.checked;
-    setter(enabled);
-    const div = this.renderRoot.getElementById(`${prop}-toggle`)!;
-    if (enabled && !div.classList.contains('checked')) {
-      div.classList.add('checked');
-      return;
-    }
-    if (!enabled) {
-      div.classList.remove('checked');
-    }
-  };
 
   resetBackground() {
     this.store?.resetCustomStyles();
-    Object.entries(this.store?.customStyle ?? {}).forEach(([prop, value]) => {
+    Object.entries(this.store!.customStyle ?? {}).forEach(([prop, value]) => {
       const dashProp = prop.replace(/[A-Z]/, c => `-${c.toLowerCase()}`);
-      const input = this.renderRoot.getElementById(dashProp) as HTMLInputElement;
+      const input = getChildById(dashProp, this) as HTMLInputElement;
       if (!input) return;
       input.value = /px$/.test(value) ? `${parseInt(value)}` : value;
     });
   }
 
   styleInput(prop: string, unit?: string) {
-    return (e: TargetedInputEvent) => this.store?.setCustomStyle(prop, `${e.target.value}${unit ?? ''}`);
+    return (e: TargetedInputEvent) => this.store!.setCustomStyle(prop, `${e.target.value}${unit ?? ''}`);
   }
 
   override renderBody() {
@@ -59,7 +41,7 @@ export class ByfoSettingsModal extends ByfoModal {
       <section class="settings">
         <div>
           <h2 class="label">Theme</h2>
-          <select @input=${(e: InputEvent) => this.store?.setTheme((e.target as HTMLSelectElement).value)}>
+          <select @input=${(e: InputEvent) => this.store!.setTheme((e.target as HTMLSelectElement).value)}>
             ${Object.values(themes).map(theme => {
               return theme.key === this.store?.theme
                 ? html` <option value=${theme.key} selected>${theme.displayName}</option> `
@@ -79,7 +61,7 @@ export class ByfoSettingsModal extends ByfoModal {
             max="1.3"
             step="0.05"
             id="background-brightness"
-            value=${this.store?.customStyle.backgroundBrightness}
+            value=${this.store!.customStyle.backgroundBrightness}
             @input=${this.styleInput('backgroundBrightness')}
           />
         </div>
@@ -91,7 +73,7 @@ export class ByfoSettingsModal extends ByfoModal {
             max="1.4"
             step="0.05"
             id="background-saturation"
-            value=${this.store?.customStyle.backgroundSaturation}
+            value=${this.store!.customStyle.backgroundSaturation}
             @input=${this.styleInput('backgroundSaturation')}
           />
         </div>
@@ -102,21 +84,13 @@ export class ByfoSettingsModal extends ByfoModal {
             min="0"
             max="10"
             id="background-blur"
-            value=${this.store?.customStyle.backgroundBlur.replace('px', '')}
+            value=${this.store!.customStyle.backgroundBlur.replace('px', '')}
             @input=${this.styleInput('backgroundBlur', 'px')}
           />
         </div>
         <div>
           <h2 class="label">Always "Show all" <byfo-info-bubble content="Applies to review page"></byfo-info-bubble></h2>
-          <div id="showAll-toggle" class=${`toggle-wrapper${this.store?.alwaysShowAll ? ' checked' : ''}`} @click=${this.passClick}>
-            <input
-              type="checkbox"
-              id="showAllInput"
-              @input=${(e: TargetedInputEvent) => this.handleToggle('showAll', this.store?.setShowAll ?? (() => {}), e)}
-              checked=${this.store?.alwaysShowAll ? true : null}
-            />
-            <label htmlFor="showAllInput"></label>
-          </div>
+          <byfo-toggle name="showAll" checked=${this.store!.alwaysShowAll || null} @byfo-toggled=${({ detail }: CustomEvent<boolean>) => this.store!.setShowAll?.(detail)} />
         </div>
       </section>
       <h4>Looking for help? Check our <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">knowlege base</a></h4>
@@ -133,7 +107,6 @@ export class ByfoSettingsModal extends ByfoModal {
 
   static styles = css`
     ${ByfoModal.styles}
-    ${toggleStyles}
     [icon='info'] {
       display: inline-block;
       position: relative;
@@ -174,6 +147,9 @@ export class ByfoSettingsModal extends ByfoModal {
       font-size: medium;
     }
   `;
+  connectedCallback(): void {
+    super.connectedCallback();
+  }
 }
 
 declare global {

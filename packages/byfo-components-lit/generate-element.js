@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-import { formatJson } from '../../script-utils.mjs';
 
 const [_1,_2,cname,...args] = process.argv;
 if(cname === undefined){
@@ -10,7 +9,7 @@ const componentName = {};
 componentName.normalized = cname.replace(/^byfo-?/,'').replaceAll(/[A-Z]/g,match => `-${match.toLowerCase()}`);
 componentName.class = 'Byfo'+componentName.normalized.replaceAll(/(?:^|-)([a-z])/g,(_,letter)=>letter.toUpperCase());
 componentName.tagname = 'byfo-'+componentName.normalized;
-componentName.file = `./src/${componentName.tagname}.ts`
+componentName.file = `./src/components/${componentName.tagname}.ts`
 
 const extendsIdx = args.indexOf('-e');
 if(extendsIdx > -1 && extendsIdx + 1 < args.length){
@@ -30,10 +29,10 @@ try {
 }
 
 //Step 1: create the boilerplate string
-const fileContents = `import { ${componentName.parent ? '' : 'LitElement, '}css, html } from 'lit-element';
-import { customElement } from 'lit-element/decorators.js';
+const fileContents = `import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 ${componentName.parent ? `import { ${componentName.parent} } from '${componentName.parentFile}'
-` : ''}
+` : "import { LitElement } from 'lit'"}
 /**
  * Description of your element here. Use @ property doc tags to describe props
  */
@@ -57,23 +56,3 @@ declare global {
 
 //Step 2: Write the file contents
 execSync(`cat > ${componentName.file} <<< "${fileContents}"`);
-
-if(args.indexOf('-i') > -1){
-  //"Internal" flag, don't export
-  process.exit(0);
-}
-
-//Step 3: Modify the package.json
-const contents = execSync('cat ./package.json');
-if(typeof contents.toString?.() !== 'string'){
-  console.error('File error: cannot read package.json');
-  process.exit(1);
-}
-
-let packageJson = JSON.parse(contents.toString());
-packageJson.exports[`./${componentName.normalized}`] = `./dist/${componentName.tagname}.js`;
-
-const newContents = formatJson(packageJson);
-
-//Step 4: Write the modified package json to file
-execSync(`cat > ./package.json <<< "${newContents}"`)

@@ -13,6 +13,20 @@ export class BYFOFirebaseAdapter {
   lastSubmission: number = null;
 
   /**
+   * Saves which round was last successfully submitted to prevent double ups
+   */
+  lastSucessfulRound: number = null;
+
+  /**
+   * Cache active round data it does not have to be looked up
+   */
+  currentRoundData: {
+    endTime: number;
+    roundnumber: number;
+    gameid: number;
+  } = null;
+
+  /**
    * Holds the connection objects for the firebase services
    */
   connection: BYFO.FirebaseConnections = {
@@ -110,7 +124,15 @@ export class BYFOFirebaseAdapter {
    * @returns The value stored at that location, or null, if nothing is there
    */
   async getRef(path: string) {
-    return await get(this.ref(path)).then(result => result.val());
+    const data = await get(this.ref(path)).then(result => result.val());
+    const [_, gameid] = path.match(/^game\/(\d{1,7})\/round$/);
+    if (gameid) {
+      this.currentRoundData = {
+        ...data,
+        gameid,
+      };
+    }
+    return data;
   }
 
   /**
@@ -176,7 +198,7 @@ export class BYFOFirebaseAdapter {
     }
 
     //Check the players list
-    const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
+    const players: BYFO.PlayerList = await this.getPlayers(gameid);
     const playerNumbers = new Set<number>();
 
     // Check to make sure there isn't a rejoin or duplicate name
@@ -349,14 +371,11 @@ export class BYFOFirebaseAdapter {
       roundnumber: 0,
       endTime: Date.now() + roundLength + this.serverOffset,
     };
-    console.log(this.serverOffset);
-    console.log(roundLength);
-    console.log(Date.now());
     if (roundLength === -1) round0.endTime = -1;
     set(roundRef, round0);
 
     //Get the players
-    const playerList: BYFO.Player[] = Object.values(await this.getWaitingPlayers(gameid));
+    const playerList: BYFO.Player[] = Object.values(await this.getPlayers(gameid));
     const staticRoundInfoRef = this.ref(`game/${gameid}/staticRoundInfo`);
     set(staticRoundInfoRef, {
       lastRound: playerList.length - 1,
@@ -436,6 +455,11 @@ export class BYFOFirebaseAdapter {
 
     const finished = await this.getRef(`game/${gameid}/finished`);
 
+    const validatedSubmission = await this.getRef(`game/${gameid}`);
+    if (validatedSubmission.stacks[name][round] && validatedSubmission.finished[name] === this.currentRoundData.roundnumber) {
+      this.lastSucessfulRound = this.currentRoundData.roundnumber;
+    }
+
     //Check every player. If someone's not done, leave now
     for (let player in finished) {
       if (finished[player] < round) {
@@ -479,7 +503,10 @@ export class BYFOFirebaseAdapter {
    * @returns void
    */
   async resyncRoundData(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
-    get(this.ref(`/games/${gameid}/finished`)).then(result => callback(result));
+    get(this.ref(`game/${gameid}/round`)).then(result => {
+      this.currentRoundData = { ...result.val(), gameid };
+      callback(result);
+    });
   }
 
   /**
@@ -547,7 +574,10 @@ export class BYFOFirebaseAdapter {
    * @extends {@link attachListener}
    */
   attachRoundListener(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
-    return this.attachListener(`game/${gameid}/round`, callback);
+    return this.attachListener(`game/${gameid}/round`, round => {
+      this.currentRoundData = { ...round.val(), gameid };
+      callback(round);
+    });
   }
 
   /**
@@ -574,7 +604,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - Game to be fetched
    * @returns A list of player objects
    */
-  async getWaitingPlayers(gameid: number): Promise<BYFO.PlayerList> {
+  async getPlayers(gameid: number): Promise<BYFO.PlayerList> {
     return this.getRef(`players/${gameid}`);
   }
 
@@ -595,7 +625,7 @@ export class BYFOFirebaseAdapter {
    * @returns The player id within that game
    */
   async getPlayerNumber(gameid: number, name: string) {
-    const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
+    const players: BYFO.PlayerList = await this.getPlayers(gameid);
     for (let num in players) {
       if (players[num].username === name) {
         return num;

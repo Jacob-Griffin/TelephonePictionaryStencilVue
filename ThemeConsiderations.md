@@ -216,7 +216,7 @@
 - Standard button styling (--color-button, --color-button-text, --color-button-hover, --color-button-disabled)
 - text and link (--color-link, --color-link-hover, --color-text)
 
-### tp-icon
+### byfo-icon
 
 - icon color (--color-text)
 

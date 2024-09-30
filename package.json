@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "clean:modules": "rm -rf ./node_modules",
+    "clean": "turbo run clean:modules",
     "dev": "turbo run dev --parallel",
     "dev:rebuild": "turbo run build && turbo run dev --parallel",
     "lint": "turbo run lint",

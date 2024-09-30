@@ -1,39 +1,39 @@
 /* @display-name: "Light" */
 /* @default */
 :root {
-    --color-brand: rgb(50, 78, 163);
-  
-    --color-background: #f2f2f2;
-  
-    --color-backdrop: rgba(210, 210, 210, 0.85);
-    --color-backdrop-text: #222222;
-  
-    --color-border: rgb(100, 116, 139);
-  
-    --color-heading: #2c3e50;
-    --color-text: #2c3e50;
-  
-    --color-link: rgb(101, 116, 252);
-    --color-link-hover: rgb(70, 70, 200);
-  
-    --color-button: rgb(60, 90, 190);
-    --color-button-text: white;
-    /* hover also applies to the selected state of toggled buttons*/
-    --color-button-hover: rgb(47, 155, 72); 
-    --color-button-disabled: #889;
-  
-    --color-important: #f28705;
-  
-    --icon: url('/byfo-logo.png');
-    --small-icon: url('/byfo-logo.png');
-  
-    --scroll-color: var(--color-text);
-  
-    --color-toggle-handle: #f2f2f2;
-  
-    --chat-background: var(--color-background);
-    --chat-bubble: var(--color-backdrop);
-    --chat-text: var(--color-backdrop-text);
-    --chat-from-backdrop: #a4a4a4;
-    --chat-from-text: var(--color-backdrop-text);
-  }  
+  --color-brand: rgb(50, 78, 163);
+
+  --color-background: #f2f2f2;
+
+  --color-backdrop: rgba(210, 210, 210, 0.85);
+  --color-backdrop-text: #222222;
+
+  --color-border: rgb(100, 116, 139);
+
+  --color-heading: #2c3e50;
+  --color-text: #2c3e50;
+
+  --color-link: rgb(101, 116, 252);
+  --color-link-hover: rgb(70, 70, 200);
+
+  --color-button: rgb(60, 90, 190);
+  --color-button-text: white;
+  /* hover also applies to the selected state of toggled buttons*/
+  --color-button-hover: rgb(47, 155, 72);
+  --color-button-disabled: #889;
+
+  --color-important: #f28705;
+
+  --icon: url('/byfo-logo.png');
+  --small-icon: url('/byfo-logo.png');
+
+  --scroll-color: var(--color-text);
+
+  --color-toggle-handle: #f2f2f2;
+
+  --chat-background: var(--color-background);
+  --chat-bubble: var(--color-backdrop);
+  --chat-text: var(--color-backdrop-text);
+  --chat-from-backdrop: #bbb;
+  --chat-from-text: var(--color-backdrop-text);
+}

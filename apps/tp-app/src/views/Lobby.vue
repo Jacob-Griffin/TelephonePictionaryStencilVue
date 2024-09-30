@@ -1,6 +1,5 @@
 <script setup>
 import 'byfo-components/tp-player-list';
-import '@component/byfo-time-input';
 import { onMounted } from 'vue';
 import { config, sortNamesBy } from 'byfo-utils/rollup';
 import { useRoute } from 'vue-router';
@@ -36,7 +35,7 @@ if (rejoinNumber) {
   }
 }
 
-const playerList = await firebase.getWaitingPlayers(gameid);
+const playerList = await firebase.getPlayers(gameid);
 const rawPlayers = Object.values(playerList);
 //Players by default are sorted by their priority. That is, the player order is generated as they join
 //This realphabetizes the players for displaying in the lobby's list

@@ -1,7 +1,8 @@
-import { LitElement, css, html } from 'lit-element';
-import { customElement, property, state } from 'lit-element/decorators.js';
-import { appStyles, TargetedInputEvent } from './common';
+import { css, html } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { appStyles } from '../style';
 import { config } from 'byfo-utils';
+import { LitElement } from 'lit';
 
 /**
  * Element for inputing a time value, with standardized validation

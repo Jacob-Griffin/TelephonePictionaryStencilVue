@@ -1,11 +1,8 @@
 <script setup>
 import { RouterView, useRoute} from 'vue-router';
-import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
-import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
-import 'byfo-components/tp-icon';
-import '@component/byfo-logo';
-import '@component/byfo-settings-modal';
-import { firebaseConfig } from '../firebase.secrets';
+import { inGame, inHome } from 'byfo-utils/rollup';
+import { ref, onBeforeMount, watch } from 'vue';
+import { provide } from 'vue';
 
 const path = useRoute().path;
 const isInGame = ref(inGame(path));
@@ -19,10 +16,8 @@ const goHome = () => {
 const settingsmodal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
 
-const tp = new TPStore();
-provide('TpStore', tp);
-
-const firebase = new BYFOFirebaseAdapter(firebaseConfig);
+const {store,firebase} = defineProps(['firebase','store']);
+provide('TpStore',store);
 provide('Firebase',firebase);
 
 watch(useRoute(), (r) => {
@@ -31,28 +26,25 @@ watch(useRoute(), (r) => {
 });
 
 onBeforeMount(() => {
-  tp.useTheme();
-  tp.useCustomStyles();
+  store.useTheme();
+  store.useCustomStyles();
 });
-onMounted(()=>{
-  settingsmodal.value.store = tp;
-})
 </script>
 
 <template>
   <div float left @click="goHome" v-if="!isInHome && !isInGame">
-    <tp-icon icon="home"></tp-icon>
+    <byfo-icon icon="home"></byfo-icon>
   </div>
   <header :class="isInHome ? 'invisible' : ''">
     <byfo-logo small v-if="!isInHome"/>
   </header>
   <div float right @click="settingsmodal.enabled = true">
-    <tp-icon icon="gear"></tp-icon>
+    <byfo-icon icon="gear"></byfo-icon>
   </div>
   <Suspense>
     <RouterView />
   </Suspense>
-  <byfo-settings-modal ref="settingsmodal" :buildDate="buildDate"></byfo-settings-modal>
+  <byfo-settings-modal ref='settingsmodal' :buildDate="buildDate"></byfo-settings-modal>
 </template>
 
 <style scoped>
@@ -101,7 +93,7 @@ div[float]{
     border-radius: 0 0 0 1rem;
   }
 
-  & tp-icon {
+  & byfo-icon {
     display: block;
     height: 2.5rem;
     width: 2.5rem;
