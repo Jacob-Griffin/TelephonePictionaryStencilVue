@@ -41,6 +41,23 @@ packages.forEach(p => {
 });
 
 packages.forEach(p => execSync(`git add ${p}`));
+
+console.log('Assembling changelog');
+const changeItems = execSync('ls ./changes').toString().split('\n');
+const changeContents = [];
+changeItems.forEach(filename => {
+  if(filename.startsWith('[') || filename === 'example.md'){
+    return;
+  }
+  if(!filename.endsWith('.md')){
+    return;
+  }
+  const contents = execSync(`cat ./changes/${filename}`).toString();
+  changeContents.push(contents);
+  execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);
+  execSync(`git add ./changes/[${version}]-${filename}`);
+})
+
 try{
   execSync(`git commit -m "Automated: Release ${version}"`);
 } catch (e) {
@@ -84,19 +101,6 @@ issues.forEach(id => {
 });
 
 console.log(`Creating Release post`);
-const changeItems = execSync('ls ./changes').toString().split('\n');
-const changeContents = [];
-changeItems.forEach(filename => {
-  if(filename.startsWith('[')){
-    return;
-  }
-  if(!filename.endsWith('.md')){
-    return;
-  }
-  const contents = execSync(`cat ./changes/${filename}`).toString();
-  changeContents.push(contents);
-  execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);
-})
 const releaseMessage = `Released ${issues.length} fixed issues according to labels. Changes:
 ${changeContents.join('\n\n')}`
 execSync(`gh release create v${version} --title "Release ${version}" --notes "${releaseMessage}"`);

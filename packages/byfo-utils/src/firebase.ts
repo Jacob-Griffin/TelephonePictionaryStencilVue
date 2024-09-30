@@ -10,7 +10,7 @@ export class BYFOFirebaseAdapter {
   /**
    * Backs up the last submission time to prevent double ups on timeout submissions
    */
-  lastForcedSubmission: number = null;
+  lastSubmission: number = null;
 
   /**
    * Holds the connection objects for the firebase services
@@ -69,9 +69,6 @@ export class BYFOFirebaseAdapter {
     const docRef = doc(this.connection.db, `games/${gameid}`);
     const snapshot = await getDocFromServer(docRef);
     const gameData = snapshot.data() as BYFO.GameStacks;
-    if (gameData['MigratedFromOldBlowYourFaceOffSite']) {
-      delete gameData['MigratedFromOldBlowYourFaceOffSite'];
-    }
     return gameData;
   }
 
@@ -225,13 +222,13 @@ export class BYFOFirebaseAdapter {
    * @returns void
    */
   async createLobby(gameid: number, username: string): Promise<void> {
-    const statusPromise = set(this.ref(`game-statuses/${gameid}`), {
+    const statusSet = set(this.ref(`game-statuses/${gameid}`), {
       started: false,
       finished: false,
     });
     const newPlayerRef = this.ref(`players/${gameid}/${this.generatePriority()}`);
-    const playerPromise = set(newPlayerRef, { username, status: 'ready' });
-    await Promise.all([playerPromise, statusPromise]);
+    const playerSet = set(newPlayerRef, { username, status: 'ready' });
+    await Promise.all([statusSet, playerSet]);
     return;
   }
 
@@ -407,13 +404,11 @@ export class BYFOFirebaseAdapter {
     staticRoundInfo: BYFO.StaticRoundInfo,
     forced: boolean = false,
   ): Promise<true | void> {
-    if (forced) {
-      if (Date.now() - this.lastForcedSubmission < config.minRoundLength * 1000) {
-        // If we got 2 forced submissions less than the minimum round length apart, they're surely in error
-        return;
-      }
-      this.lastForcedSubmission = Date.now();
+    if (Date.now() - this.lastSubmission < config.minRoundLength * 1000) {
+      // If we got 2 submissions less than the minimum round length apart, they're surely in error
+      return;
     }
+    this.lastSubmission = Date.now();
     const contentType = round % 2 === 0 ? 'text' : 'image';
     if ((contentType === 'text' && rawContent instanceof Blob) || (contentType === 'image' && typeof rawContent === 'string')) {
       if (!forced) {
@@ -689,8 +684,7 @@ export class BYFOFirebaseAdapter {
       return '/default.png';
     }
     const imgref = storageRef(this.connection.storage, `/games/${gameid}/${round}/${player}.png`);
-    updateMetadata(imgref, { cacheControl: 'public,max-age=86400' });
-    await uploadBytes(imgref, imgData, { contentType: 'image/png' });
+    await uploadBytes(imgref, imgData, { contentType: 'image/png', cacheControl: 'public,max-age=86400' });
     return getDownloadURL(imgref);
   }
   //#endregion

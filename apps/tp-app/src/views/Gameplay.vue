@@ -144,7 +144,12 @@ if(!redirect){
     });
 
     //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
-    document.addEventListener('tp-stuck-signal', e => (stuckSignal.value = true));
+    document.addEventListener('tp-stuck-signal', e => {
+      stuckSignal.value = true
+      if(store.hosting && finishedRound.value === staticRoundInfo.lastRound && playerlist.value.every(({lastRound}) => lastRound === staticRoundInfo.lastRound)){
+        firebase.finalizeGame(gameid)
+      }
+    });
 
     document.addEventListener('keydown', event => {
       if (event.metaKey && event.key === 'z' && !isText.value) {

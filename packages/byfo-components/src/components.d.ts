@@ -84,6 +84,7 @@ export namespace Components {
     }
     interface TpTimer {
         "addTime": ()=>void;
+        "canTimeOut": boolean;
         "endtime": number;
         "offset": number;
     }
@@ -270,6 +271,7 @@ declare namespace LocalJSX {
     }
     interface TpTimer {
         "addTime"?: ()=>void;
+        "canTimeOut"?: boolean;
         "endtime"?: number;
         "offset"?: number;
     }
