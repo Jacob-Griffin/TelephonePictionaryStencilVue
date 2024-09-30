@@ -17,6 +17,10 @@ export class ByfoTimer extends LitElement {
   @state() timeoutReady: boolean = true;
   timerLoop?: NodeJS.Timer;
 
+  get currentRoundSubmitted() {
+    return this.firebase?.currentRoundData?.roundnumber === this.firebase?.lastSucessfulRound;
+  }
+
   checkTime() {
     if (!this.endtime) {
       this.relativeTime = undefined;
@@ -51,7 +55,7 @@ export class ByfoTimer extends LitElement {
   }
 
   timeoutRound() {
-    if (this.timeoutReady) {
+    if (this.timeoutReady && !this.currentRoundSubmitted) {
       document.dispatchEvent(new CustomEvent('tp-timer-finished', {}));
       this.timeoutReady = false;
     }
