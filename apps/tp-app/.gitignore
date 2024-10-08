@@ -33,6 +33,9 @@ coverage
 #personal (not necessarily secret)
 .firebaserc
 
+#runtime built
+**/changelog.md
+
 #secrets
 .env
 *.secrets.js
