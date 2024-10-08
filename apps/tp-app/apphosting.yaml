@@ -1,4 +1,0 @@
-handlers:
-  - url: /.*
-    http_headers:
-      Access-Control-Allow-Origin: ['https://blowyourfaceoff.com', 'https://beta.blowyourfaceoff.com', 'https://byfo.net', 'https://beta.byfo.net']
