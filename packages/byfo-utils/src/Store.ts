@@ -6,6 +6,10 @@ const customStyleDefaults: Record<string, string> = {
   backgroundSaturation: '1',
 };
 export class TPStore {
+  constructor() {
+    this.readFromWindow();
+  }
+
   changeEvent = (setting: string, value: string) => new CustomEvent('tp-settings-changed', { detail: { setting, value } });
 
   theme: string = localStorage.getItem('theme') ?? 'classic';
@@ -128,6 +132,39 @@ export class TPStore {
       gameid: this.gameid,
       name: this.username,
     };
+  }
+
+  setToWindow() {
+    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = this;
+    const transferrableData = {
+      rejoinNumber,
+      hosting,
+      gameid,
+      username,
+      theme,
+      landscapeDismissed,
+      customStyle,
+    };
+    const strData = JSON.stringify(transferrableData);
+    window.name = `BRANCH_SWITCH:${strData}`;
+    return;
+  }
+
+  readFromWindow() {
+    if (!window.name.startsWith('BRANCH_SWITCH:')) {
+      return;
+    }
+    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(window.name.slice('BRANCH_SWITCH:'.length));
+    rejoinNumber && this.setRejoinNumber(rejoinNumber);
+    hosting && this.setHosting(hosting);
+    gameid && this.setGameid(gameid);
+    username && this.setUsername(username);
+    theme && this.setTheme(theme);
+    landscapeDismissed && this.setLandscapeDismissed(landscapeDismissed);
+    if (!customStyle) return;
+    for (const prop in customStyle) {
+      this.setCustomStyle(prop, customStyle[prop]);
+    }
   }
 
   clearGameData() {

@@ -5,6 +5,7 @@ import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import '@component/byfo-logo';
 import '@component/byfo-settings-modal';
+import '@component/byfo-version-modal';
 import { firebaseConfig } from '../firebase.secrets';
 
 const path = useRoute().path;
@@ -17,6 +18,7 @@ const goHome = () => {
 };
 
 const settingsmodal = ref(null);
+const versionmodal = ref(null);
 const buildDate = ref(__BUILD_DATE__);
 
 const tp = new TPStore();
@@ -36,6 +38,7 @@ onBeforeMount(() => {
 });
 onMounted(()=>{
   settingsmodal.value.store = tp;
+  versionmodal.value.store = tp;
 })
 </script>
 
@@ -53,6 +56,7 @@ onMounted(()=>{
     <RouterView />
   </Suspense>
   <byfo-settings-modal ref="settingsmodal" :buildDate="buildDate"></byfo-settings-modal>
+  <byfo-version-modal ref="versionmodal"></byfo-version-modal>
 </template>
 
 <style scoped>
