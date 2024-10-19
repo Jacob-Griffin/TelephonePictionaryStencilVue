@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit-element';
 import { customElement, property, state } from 'lit-element/decorators.js';
 import { ByfoModal } from './byfo-modal';
-import { TPStore } from 'byfo-utils';
+import { TPStore, formatMarkdown } from 'byfo-utils';
 
 /**
  * Description of your element here. Use @ property doc tags to describe props
@@ -47,10 +47,12 @@ export class ByfoVersionModal extends ByfoModal {
 
   renderBody() {
     const isBeta = this.isBeta;
+    const input = Object.assign([formatMarkdown(this.changeContent) as string], { raw: formatMarkdown(this.changeContent) }) as TemplateStringsArray;
+    const content = html(input);
     return html`<h2>We have a beta!</h2>
       ${isBeta ? html`<h5>(you are here)</h5>` : nothing}
       <p>The beta version of the game has features that are mostly stable but just have a few more things to iron out. Here's what's different right now:</p>
-      <div class="changes">${this.changeContent}</div>
+      <div class="changes a"><span>${content}</span></div>
       <button @click=${this.switchBranch}>${isBeta ? 'Return to stable' : 'Try beta'}</button>`;
   }
 }
