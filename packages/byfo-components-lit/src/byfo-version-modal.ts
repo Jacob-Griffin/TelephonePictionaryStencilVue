@@ -1,4 +1,4 @@
-import { css, html, nothing } from 'lit-element';
+import { html, nothing } from 'lit-element';
 import { customElement, property, state } from 'lit-element/decorators.js';
 import { ByfoModal } from './byfo-modal';
 import { TPStore } from 'byfo-utils';
@@ -30,7 +30,7 @@ export class ByfoVersionModal extends ByfoModal {
   isBeta = window.location.hostname.startsWith('beta.');
 
   switchBranch() {
-    this.store.setToWindow();
+    const transferData = this.store.getString();
     let newHost = window.location.host;
     if (newHost.startsWith('localhost')) {
       newHost = 'blowyourfaceoff.com';
@@ -41,10 +41,8 @@ export class ByfoVersionModal extends ByfoModal {
       newHost = newHost.replace(/^beta\./, '');
     }
     const { protocol, pathname, search, hash } = window.location;
-    const newLocation = `${protocol}//${newHost}${pathname}${search}${hash}`;
-    console.log(window.name);
-    console.log(newLocation);
-    //window.location.href = newLocation;
+    const newLocation = `${protocol}//${newHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
+    window.location.href = newLocation;
   }
 
   renderBody() {
@@ -55,11 +53,6 @@ export class ByfoVersionModal extends ByfoModal {
       <div class="changes">${this.changeContent}</div>
       <button @click=${this.switchBranch}>${isBeta ? 'Return to stable' : 'Try beta'}</button>`;
   }
-  static styles = css`
-    :host {
-      display: block;
-    }
-  `;
 }
 
 declare global {

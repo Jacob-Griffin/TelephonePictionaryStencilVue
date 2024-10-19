@@ -134,7 +134,7 @@ export class TPStore {
     };
   }
 
-  setToWindow() {
+  getString() {
     const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = this;
     const transferrableData = {
       rejoinNumber,
@@ -145,16 +145,18 @@ export class TPStore {
       landscapeDismissed,
       customStyle,
     };
-    const strData = JSON.stringify(transferrableData);
-    window.name = `BRANCH_SWITCH:${strData}`;
-    return;
+    const strData = encodeURIComponent(JSON.stringify(transferrableData));
+    return `branchswitchdata=${strData}`;
   }
 
   readFromWindow() {
-    if (!window.name.startsWith('BRANCH_SWITCH:')) {
+    if (!window.location.search.includes('branchswitchdata=')) {
       return;
     }
-    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(window.name.slice('BRANCH_SWITCH:'.length));
+    const branchSwitchRegex = /branchswitchdata=([^&?=]+)/;
+    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(decodeURIComponent(window.location.search.match(branchSwitchRegex)[1]));
+    const newLocation = window.location.href.replace(branchSwitchRegex, '');
+    window.location.replace(newLocation);
     rejoinNumber && this.setRejoinNumber(rejoinNumber);
     hosting && this.setHosting(hosting);
     gameid && this.setGameid(gameid);
