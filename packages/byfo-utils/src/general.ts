@@ -84,7 +84,10 @@ const invalidCharacters = ['/', '\\'];
  * @param input - A potential username
  * @returns True if the name is within max length and does not contain invalid characters
  */
-export function validUsername(input: string) {
+export function validUsername(input?: string): boolean | string {
+  if (!input || !input.trim()) {
+    return false;
+  }
   const maxName = config.usernameMaxCharacters;
   if (input.length > maxName) {
     return `Names cannot exceed ${maxName} characters. ${input.length}/${maxName}`;

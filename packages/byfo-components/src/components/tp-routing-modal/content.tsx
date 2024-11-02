@@ -1,23 +1,17 @@
 import { h } from '@stencil/core';
-import { BYFOFirebaseAdapter, validUsername } from 'byfo-utils';
+import { BYFOFirebaseAdapter, validGameId, validUsername } from 'byfo-utils';
 
 //#region Fields
 export const nameField = {
   key: 'name',
   display: 'Name',
-  isValid: (name: string) => {
-    if (!name) {
-      return false;
-    }
-    const isValidName = validUsername(name);
-    return isValidName;
-  },
+  isValid: validUsername
 };
 
 export const gameIdField = {
   key: 'gameid',
   display: 'Game Id',
-  isValid: (id: string) => /[0-9]{0,7}/.test(id),
+  isValid: validGameId,
 };
 
 export const queryField = {
@@ -73,6 +67,7 @@ export class ModalContent {
     let newError: string | boolean = false;
     this.fields.some(field => {
       const result = field.isValid(this.fieldValues[field.key]);
+      console.log(result);
       if (typeof result === 'string') {
         newError = result;
         return true;
@@ -82,6 +77,7 @@ export class ModalContent {
         // Don't return, if there's a non-silent error, we still want to see it
       }
     });
+    console.log(newError);
     if (newError) {
       if (this.error === newError) return;
       this.error = typeof newError === 'string' ? newError : '';
