@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit-element';
+import { css, CSSResult, html, nothing } from 'lit-element';
 import { customElement, property, state } from 'lit-element/decorators.js';
 import { ByfoModal } from './byfo-modal';
 import { TPStore, formatMarkdown } from 'byfo-utils';
@@ -14,7 +14,8 @@ export class ByfoVersionModal extends ByfoModal {
     }
     fetch('https://beta.blowyourfaceoff.com/changelog.md')
       .then(data => data.text())
-      .then(changes => (this._changeContent = changes));
+      .then(changes => (this._changeContent = changes))
+      .then(() => this.dispatchEvent(new CustomEvent('tp-version-changes-loaded')));
     this._changeContent = '...';
     return this._changeContent;
   }
@@ -40,8 +41,8 @@ export class ByfoVersionModal extends ByfoModal {
     } else {
       newHost = newHost.replace(/^beta\./, '');
     }
-    const { protocol, pathname, search, hash } = window.location;
-    const newLocation = `${protocol}//${newHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
+    const { pathname, search, hash } = window.location;
+    const newLocation = `https://${newHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
     window.location.href = newLocation;
   }
 
@@ -55,6 +56,32 @@ export class ByfoVersionModal extends ByfoModal {
       <div class="changes a"><span>${content}</span></div>
       <button @click=${this.switchBranch}>${isBeta ? 'Return to stable' : 'Try beta'}</button>`;
   }
+
+  static override styles = [
+    super.styles as CSSResult,
+    css`
+      .changes {
+        padding: 1rem;
+        border: 1px solid #888;
+        border-radius: 0.5rem;
+        max-height: 30rem;
+        overflow-y: auto;
+        & h2,
+        h3,
+        h4 {
+          font-weight: 700;
+        }
+
+        & h3 {
+          font-size: 1.55rem;
+        }
+
+        & h4 {
+          font-size: 1.15rem;
+        }
+      }
+    `,
+  ];
 }
 
 declare global {
