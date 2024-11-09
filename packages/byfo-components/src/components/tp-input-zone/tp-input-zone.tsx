@@ -45,7 +45,7 @@ export class TpInputZone {
   }
 
   componentDidLoad() {
-    this.loadedBackup = localStorage.getItem('currentRoundData');
+    this.handleBackup();
     this.saveInterval = setInterval(() => {
       if (this.isTextRound) {
         localStorage.setItem('currentRoundData', this.text);
@@ -53,7 +53,8 @@ export class TpInputZone {
     }, 4000);
   }
 
-  componentDidUpdate() {
+  handleBackup() {
+    this.loadedBackup = localStorage.getItem('currentRoundData');
     if (!this.loadedBackup) return;
     if (this.isTextRound) {
       this.text = this.loadedBackup;

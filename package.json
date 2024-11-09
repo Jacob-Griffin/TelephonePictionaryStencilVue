@@ -2,12 +2,9 @@
   "name": "telephone-pictionary-app",
   "version": "1.0.1",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
+    "build:utils": "turbo run --filter byfo-utils build",
     "dev": "turbo run dev --parallel",
     "dev:rebuild": "turbo run build && turbo run dev --parallel",
     "lint": "turbo run lint",

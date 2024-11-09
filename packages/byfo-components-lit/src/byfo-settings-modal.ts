@@ -120,14 +120,7 @@ export class ByfoSettingsModal extends ByfoModal {
         </div>
       </section>
       <h4>Looking for help? Check our <a href="https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base">knowlege base</a></h4>
-      ${!!this.buildDate?.full
-        ? html`
-            <p>
-              Built on ${this.buildDate.full}
-              <br />${this.buildDate.date!.toString()}
-            </p>
-          `
-        : null}
+      ${!!this.buildDate?.full ? html` <p>Built on ${this.buildDate.full}</p> ` : null}
     `;
   }
 

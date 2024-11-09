@@ -3,7 +3,7 @@ import 'byfo-components/tp-review-chat';
 import 'byfo-components/tp-icon';
 import 'byfo-components/tp-metadata-modal';
 import { sortNames, decodePath } from 'byfo-utils/rollup';
-import { ref, inject, computed } from 'vue';
+import { ref, inject, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 
 const store = inject('TpStore');
@@ -29,15 +29,10 @@ const selected = ref(hash && hash in stacks ? hash : '');
 const showAllFlag = ref(!!store.alwaysShowAll);
 
 const playerSelector = ref(null);
-const showCollapse = computed(() => {
-  if(!playerSelector.value) return false;
-  const height = playerSelector.value.getBoundingClientRect().height;
-  const screenHeight = window.innerHeight;
-  return height/screenHeight > 0.16;
-});
+const showCollapse = ref(false);
 const collapsed = ref(false);
 const toggleCollapse = () => {
-  if(!showCollapse){
+  if(!showCollapse.value){
     collapsed.value = false;
     return;
   }
@@ -115,6 +110,22 @@ if (target && target in stacks) {
   });
 }
 
+const collapserObserver = new ResizeObserver(entries => {
+  const recent = entries.at(-1);
+  if(recent.contentBoxSize > 50){
+    showCollapse.value ||= true;
+  } else {
+    showCollapse.value &&= false;
+  }
+})
+
+onMounted(() => {
+  collapserObserver.observe(playerSelector.value);
+})
+onBeforeUnmount(() => {
+  collapserObserver.disconnect();
+})
+
 //Once all of the loading is done, and any effects happened, clear the backed up game data
 store.clearGameData();
 </script>
@@ -123,7 +134,7 @@ store.clearGameData();
   <h2>Game {{ gameid }}<tp-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
-    <button @click="() => clickPlayer(player)" v-for="player in players" class="small" :class="{ selected: player == selected }">
+    <button @click="() => clickPlayer(player)" v-for="player in players" :key="player" class="small" :class="{ selected: player == selected }">
       {{ player }}
     </button>
   </div>

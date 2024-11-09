@@ -1,7 +1,7 @@
 <script setup>
 import { RouterView, useRoute} from 'vue-router';
 import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
-import { ref, onBeforeMount, provide, onMounted, watch, computed } from 'vue';
+import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import '@component/byfo-logo';
 import '@component/byfo-settings-modal';
@@ -19,12 +19,15 @@ const goHome = () => {
 
 const settingsmodal = ref(null);
 const versionmodal = ref(null);
-const buildDate = ref(__BUILD_DATE__);
 const showVersionButton = ref(window.location.hostname.startsWith('beta.'));
 const versionChangesSeen = ref(false);
 
 const tp = new TPStore();
 provide('TpStore', tp);
+
+// __BUILD_DATE__ is a vite substitution
+const buildDate = __BUILD_DATE__; // eslint-disable-line no-undef
+provide('CurrentYear', buildDate.year);
 
 const firebase = new BYFOFirebaseAdapter(firebaseConfig);
 provide('Firebase',firebase);

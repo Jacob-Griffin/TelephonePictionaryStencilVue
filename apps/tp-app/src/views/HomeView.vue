@@ -5,10 +5,10 @@ import 'byfo-components/tp-tutorial-modal';
 
 const store = inject('TpStore');
 const firebase = inject('Firebase');
+const year = inject('CurrentYear');
 const modalEl = ref(null);
 const tutorialModal = ref(null);
-const buildDate = ref(__BUILD_DATE__);
-const devMode = ref(__IS_DEV__);
+
 if(window.location.hash === '#enable-tutorial'){
   localStorage.setItem('tutorial','true');
 } else if(window.location.hash === '#disable-tutorial') {
@@ -87,7 +87,7 @@ onBeforeUnmount(()=>{
     <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
   </main>
   <footer>
-    <p>Copyright ©{{buildDate.year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved. {{ devMode ? 'Beta Build': '' }}</p>
+    <p>Copyright ©{{year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
   </footer>
 </template>
 

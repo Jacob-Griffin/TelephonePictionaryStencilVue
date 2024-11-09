@@ -12,7 +12,8 @@ export class ByfoVersionModal extends ByfoModal {
     if (this._changeContent) {
       return this._changeContent;
     }
-    fetch('https://beta.blowyourfaceoff.com/changelog.md')
+    const betaUrl = this.isBeta ? '' : `https://beta.${window.location.host}`;
+    fetch(`${betaUrl}/changelog.md`)
       .then(data => data.text())
       .then(changes => (this._changeContent = changes))
       .then(() => this.dispatchEvent(new CustomEvent('tp-version-changes-loaded')));
@@ -28,21 +29,21 @@ export class ByfoVersionModal extends ByfoModal {
   @property({ reflect: false }) store?: TPStore;
 
   @state() _changeContent?: string;
-  isBeta = window.location.hostname.startsWith('beta.');
+  isBeta = window.location.host.startsWith('beta.') || window.location.host.startsWith('localhost');
 
   switchBranch() {
     const transferData = this.store.getString();
-    let newHost = window.location.host;
-    if (newHost.startsWith('localhost')) {
-      newHost = 'blowyourfaceoff.com';
-    }
-    if (this.isBeta) {
-      newHost = 'beta.' + newHost;
+    const oldHost = window.location.host;
+    let newHost;
+    if (oldHost.startsWith('localhost')) {
+      newHost = oldHost;
+    } else if (this.isBeta) {
+      newHost = oldHost.replace(/^beta\./, '');
     } else {
-      newHost = newHost.replace(/^beta\./, '');
+      newHost = 'beta.' + oldHost;
     }
     const { pathname, search, hash } = window.location;
-    const newLocation = `https://${newHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
+    const newLocation = `https://${oldHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
     window.location.href = newLocation;
   }
 

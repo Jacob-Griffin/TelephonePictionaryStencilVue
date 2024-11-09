@@ -151,7 +151,7 @@ export class TpCanvas {
         return;
       }
       if(window.location.hash === '#debug-distance'){
-        console.log(`${performance.now() - this.lastDrawEnd ?? 0}ms of empty space`); ///!!!!
+        console.log(`${performance.now() - (this.lastDrawEnd ?? 0)}ms of empty space`); ///!!!!
       }
       let point = this.transformCoordinates(event);
       // Adjust the point just barely so it renders dots. This is fine unconditionally
