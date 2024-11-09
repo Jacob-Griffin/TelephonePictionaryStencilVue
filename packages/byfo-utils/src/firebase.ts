@@ -123,9 +123,9 @@ export class BYFOFirebaseAdapter {
    * @internal
    */
   generatePriority(taken?: Set<number>): number {
-    let priority = Math.floor(Math.random() * 1000);
+    let priority = Math.floor(Math.random() * Math.random() * 100000) % 997;
     while (taken && taken.has(priority)) {
-      priority = Math.floor(Math.random() * 1000);
+      priority = Math.floor(Math.random() * Math.random() * 100000) % 997;
     }
     return priority;
   }
