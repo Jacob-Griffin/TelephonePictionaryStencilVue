@@ -12,6 +12,7 @@ export const varNames = [
     '--color-link-hover',
     '--color-button',
     '--color-button-hover',
+    '--color-button-hover-subtle',
     '--color-button-disabled',
     '--color-important',
     '--icon',
