@@ -1,5 +1,6 @@
 import { css, CSSResult, html, nothing } from 'lit-element';
 import { customElement, property, state } from 'lit-element/decorators.js';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { ByfoModal } from './byfo-modal';
 import { TPStore, formatMarkdown } from 'byfo-utils';
 
@@ -48,14 +49,11 @@ export class ByfoVersionModal extends ByfoModal {
   }
 
   renderBody() {
-    const isBeta = this.isBeta;
-    const input = Object.assign([formatMarkdown(this.changeContent) as string], { raw: formatMarkdown(this.changeContent) }) as TemplateStringsArray;
-    const content = html(input);
     return html`<h2>We have a beta!</h2>
-      ${isBeta ? html`<h5>(you are here)</h5>` : nothing}
+      ${this.isBeta ? html`<h5>(you are here)</h5>` : nothing}
       <p>The beta version of the game has features that are mostly stable but just have a few more things to iron out. Here's what's different right now:</p>
-      <div class="changes a"><span>${content}</span></div>
-      <button @click=${this.switchBranch}>${isBeta ? 'Return to stable' : 'Try beta'}</button>`;
+      <div class="changes a"><span>${unsafeHTML(formatMarkdown(this.changeContent))}</span></div>
+      <button @click=${this.switchBranch}>${this.isBeta ? 'Return to stable' : 'Try beta'}</button>`;
   }
 
   static override styles = [
@@ -63,22 +61,33 @@ export class ByfoVersionModal extends ByfoModal {
     css`
       .changes {
         padding: 1rem;
+        padding-inline-start: 2.5rem;
         border: 1px solid #888;
         border-radius: 0.5rem;
         max-height: 30rem;
         overflow-y: auto;
-        & h2,
+        h2,
         h3,
         h4 {
+          margin-inline-start: -1rem;
+          margin-bottom: 0.25em;
           font-weight: 700;
         }
 
-        & h3 {
+        h3 {
           font-size: 1.55rem;
         }
 
-        & h4 {
+        h4 {
           font-size: 1.15rem;
+        }
+        
+        p {
+          margin-bottom: 1em;
+        }
+
+        ul, ol {
+          margin-inline-start: -1.5rem;
         }
       }
     `,

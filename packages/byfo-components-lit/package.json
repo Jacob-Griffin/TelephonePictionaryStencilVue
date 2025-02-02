@@ -13,7 +13,8 @@
   "dependencies": {
     "byfo-themes": "workspace:^",
     "byfo-utils": "workspace:^",
-    "lit-element": "^4.1.0"
+    "lit-element": "^4.1.0",
+    "lit-html": "^3.2.1"
   },
   "devDependencies": {
     "typescript": "^5.2.2",

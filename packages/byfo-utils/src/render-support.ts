@@ -30,10 +30,11 @@ const parse = (input: string, allowLinks: boolean) => {
   const withLinks = allowLinks ? withoutTags.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>') : withoutTags;
   const withBold = withLinks.replace(/(\*\*|__)(\*?)(.+?)\2\1/g, '<strong>$2$3$2</strong>');
   const withItalics = withBold.replace(/\*([^*]*)\*/g, '<em>$1</em>');
-  const withHeaders = withItalics.replace(/^(#{1,4})(.+)$/gm, (_, hashes, content) => `<h${hashes.length + 1}>${content}</h${hashes.length}>`);
+  const withHeaders = withItalics.replace(/^(#{1,4})(.+)$/gm, (_, hashes, content) => `<h${hashes.length + 1}>${content}</h${hashes.length + 1}>`);
   const withList = parseList(withHeaders);
-  const withBr = withList.replaceAll(/(?<!<\/(?:h\d|p)>)\n\n/g, '<br>');
-  return withBr;
+  const withP = withList.replaceAll(/(^[^<][^\n]+)\n{2}/gm, (_,text) => `<p>${text}</p>`);
+  const withBr = withP.replaceAll(/(<p>[^<]+)\n/g, (_,content) => `${content}<br>`);
+  return withP;
 };
 
 const sanitize = (input: string) => {
