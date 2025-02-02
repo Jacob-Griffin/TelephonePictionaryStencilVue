@@ -111,11 +111,9 @@ div[float]{
 
   &[left]{
     left: 0;
-    border-radius: 0 0 1rem 0;
   }
   &[right]{
     right: 0;
-    border-radius: 0 0 0 1rem;
   }
 
   & tp-icon {
@@ -135,9 +133,10 @@ div[float]{
   align-items: center;
   justify-content: center;
   font-weight: black;
-  & + div {
-    border-radius: 0;
+  .invisible + & {
+    border-radius: 0 0 0 1rem;
   }
+  
 
   & #unseen-changes {
     color: var(--color-button-hover);
