@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "byfo-themes": "workspace:*",
-    "firebase": "^9.23.0"
+    "firebase": "11.2.0"
   },
   "devDependencies": {
     "typescript": "5.7.3",
