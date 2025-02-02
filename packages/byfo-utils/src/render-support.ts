@@ -34,7 +34,7 @@ const parse = (input: string, allowLinks: boolean) => {
   const withList = parseList(withHeaders);
   const withP = withList.replaceAll(/(^[^<][^\n]+)\n{2}/gm, (_,text) => `<p>${text}</p>`);
   const withBr = withP.replaceAll(/(<p>[^<]+)\n/g, (_,content) => `${content}<br>`);
-  return withP;
+  return withBr;
 };
 
 const sanitize = (input: string) => {
