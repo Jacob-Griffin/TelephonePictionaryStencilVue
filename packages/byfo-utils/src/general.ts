@@ -121,7 +121,7 @@ export function invalidCharactersList(input: string) {
     return rawList.join(' or ');
   }
 
-  let stringList = rawList.join(', ');
+  const stringList = rawList.join(', ');
   return stringList.replace(/, ([^,]+)$/, ', or $1');
 }
 

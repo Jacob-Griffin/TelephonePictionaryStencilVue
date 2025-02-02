@@ -1,5 +1,5 @@
 <script setup>
-    import { inject, onMounted, ref, computed } from 'vue';
+    import { inject, onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
     import createSearchClient from 'algoliasearch';
@@ -56,7 +56,7 @@
     const setText = (e) => {
         text.value = e.target.value;
     }
-    const handleResultClick = (e, result) => {
+    const handleResultClick = (_, result) => {
         let dest = `/review/${result.gameId}`
         if(result.highlights.length === 1){
             dest += `?stack=${result.highlights[0].stack}`;
@@ -86,12 +86,12 @@
         <input type='text' @input="setText" placeholder="Search"/>
         <button @click="search" :disabled="!text">Search</button>
         <section>
-            <article v-for="result in results" @click="e=>handleResultClick(e,result)">
+            <article v-for="result in results" :key="result.gameId" @click="e=>handleResultClick(e,result)">
                 <h2>Game {{ result.gameId }}</h2>
-                <div v-for="stack in result.highlights">
+                <div v-for="stack in result.highlights" :key="stack.stack">
                     <h3>{{ stack.stack }}'s Stack:</h3>
                     <ul>
-                        <li v-for="string in stack.results" v-html="string"></li>
+                        <li v-for="string in stack.results" :key="string" v-html="string"></li>
                     </ul>
                 </div>
             </article>

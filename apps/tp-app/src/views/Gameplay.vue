@@ -46,15 +46,9 @@ firebase.fetchFinishedRound(gameid,name).then(round => finishedRound.value = rou
 const waiting = computed(() => finishedRound.value >= roundnumber.value);
 const stuckSignal = ref(false);
 const stuck = computed(() => {
-  //Stuck signal is just to get dependencies
-  if (stuckSignal.value) {
-    stuckSignal.value = false;
-  }
   const timeDiff = Date.now() - roundData.value.endTime;
   return roundData.value.endTime !== -1 && timeDiff > 4000;
 });
-//Which players are done with the current round
-const widthVar = ref('');
 
 let redirect = false;
 //Check the game status and redirect if necessary
@@ -139,32 +133,18 @@ if(!redirect){
         await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo,forced);
         finishedRound.value = submittedRound;
         window.scroll({top:0});
-      } catch (e) {
+      } catch {
+        // If there's an error, we're just leaving it be
       } finally {
         isSending.value = false;
       }
     });
 
     //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
-    document.addEventListener('tp-stuck-signal', e => {
-      stuckSignal.value = true
+    document.addEventListener('tp-stuck-signal', () => {
+      stuckSignal.value = !stuckSignal.value
       if(store.hosting && finishedRound.value === staticRoundInfo.lastRound && playerlist.value.every(({lastRound}) => lastRound === staticRoundInfo.lastRound)){
         firebase.finalizeGame(gameid)
-      }
-    });
-
-    document.addEventListener('keydown', event => {
-      if (event.metaKey && event.key === 'z' && !isText.value) {
-        //ctrl+z during a drawing round will send an undo input
-        const undoEvent = new CustomEvent('undo-input');
-        inputzone?.dispatchEvent(undoEvent);
-        return;
-      }
-      if (event.metaKey && event.key === 'Z' && !isText.value) {
-        //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
-        const redoEvent = new CustomEvent('redo-input');
-        inputzone?.dispatchEvent(redoEvent);
-        return;
       }
     });
   });
@@ -175,11 +155,11 @@ if(!redirect){
   });
 }
 const timeValue = config.addTimeIncrement;
-const addTime = e => {
+const addTime = () => {
   firebase.sendAddTime(gameid,timeValue*1000);
 };
 
-const scrollToCanvas = e => {
+const scrollToCanvas = () => {
   window.scrollTo(0,2000)
 }
 </script>

@@ -5,6 +5,7 @@ import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import '@component/byfo-logo';
 import '@component/byfo-settings-modal';
+import '@component/byfo-version-modal';
 import { firebaseConfig } from '../firebase.secrets';
 
 const path = useRoute().path;
@@ -17,10 +18,16 @@ const goHome = () => {
 };
 
 const settingsmodal = ref(null);
-const buildDate = ref(__BUILD_DATE__);
+const versionmodal = ref(null);
+const showVersionButton = ref(window.location.hostname.startsWith('beta.'));
+const versionChangesSeen = ref(false);
 
 const tp = new TPStore();
 provide('TpStore', tp);
+
+// __BUILD_DATE__ is a vite substitution
+const buildDate = __BUILD_DATE__; // eslint-disable-line no-undef
+provide('CurrentYear', buildDate.year);
 
 const firebase = new BYFOFirebaseAdapter(firebaseConfig);
 provide('Firebase',firebase);
@@ -36,6 +43,10 @@ onBeforeMount(() => {
 });
 onMounted(()=>{
   settingsmodal.value.store = tp;
+  versionmodal.value.store = tp;
+  versionmodal.value.addEventListener('tp-version-changes-loaded', ()=> {
+    showVersionButton.value = versionmodal.value.isBeta || versionmodal.value.hasChanges
+  })
 })
 </script>
 
@@ -46,6 +57,7 @@ onMounted(()=>{
   <header :class="isInHome ? 'invisible' : ''">
     <byfo-logo small v-if="!isInHome"/>
   </header>
+  <div float right @click="(versionmodal.enabled = true) && (versionChangesSeen = true)" id="beta-button" v-if="showVersionButton"><span id="unseen-changes" v-if="versionmodal?.hasChanges && !versionChangesSeen">•</span><span>β</span></div>
   <div float right @click="settingsmodal.enabled = true">
     <tp-icon icon="gear"></tp-icon>
   </div>
@@ -53,6 +65,7 @@ onMounted(()=>{
     <RouterView />
   </Suspense>
   <byfo-settings-modal ref="settingsmodal" :buildDate="buildDate"></byfo-settings-modal>
+  <byfo-version-modal ref="versionmodal"></byfo-version-modal>
 </template>
 
 <style scoped>
@@ -92,13 +105,15 @@ div[float]{
   background-color: var(--color-brand);
   cursor: pointer;
 
+  &:hover {
+    background-color: var(--color-button-hover-subtle);
+  }
+
   &[left]{
     left: 0;
-    border-radius: 0 0 1rem 0;
   }
   &[right]{
     right: 0;
-    border-radius: 0 0 0 1rem;
   }
 
   & tp-icon {
@@ -107,6 +122,27 @@ div[float]{
     width: 2.5rem;
     stroke: var(--color-button-text);
     fill: var(--color-button-text);
+  }
+}
+
+#beta-button {
+  right: 4.5rem;
+  color: var(--color-button-text);
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: black;
+  .invisible + & {
+    border-radius: 0 0 0 1rem;
+  }
+  
+
+  & #unseen-changes {
+    color: var(--color-button-hover);
+    position: absolute;
+    top: -0.2em;
+    right: 1rem;
   }
 }
 </style>

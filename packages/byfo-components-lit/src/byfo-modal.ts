@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { CSSResult, LitElement, css, html } from 'lit-element';
 import { customElement, property } from 'lit-element/decorators.js';
 import { appStyles } from './common';
 
@@ -32,7 +32,7 @@ export class ByfoModal extends LitElement {
     </section>`;
   }
 
-  static styles = css`
+  static styles: CSSResult | CSSResult[] = css`
     ${appStyles}
     :host > section {
       width: 100vw;

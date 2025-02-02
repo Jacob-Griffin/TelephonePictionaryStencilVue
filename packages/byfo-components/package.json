@@ -1,6 +1,6 @@
 {
   "name": "byfo-components",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -21,8 +21,6 @@
   },
   "scripts": {
     "build": "stencil build",
-    "dev": "stencil build --watch",
-    "start": "stencil build --dev --watch --serve",
     "generate": "stencil generate"
   },
   "dependencies": {

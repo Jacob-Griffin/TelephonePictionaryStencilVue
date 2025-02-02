@@ -170,7 +170,7 @@ const parse = (input: string, allowLinks: boolean) => {
   const withoutTags = input.replace('<', '&lt;').replace('>', '&gt');
   const withLinks = allowLinks ? withoutTags.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>') : withoutTags;
   const withBold = withLinks.replace(/(\*\*|__)(\*?)(.+?)\2\1/g, '<strong>$2$3$2</strong>');
-  const withItalics = withBold.replace(/\*([^\*]*)\*/g, '<em>$1</em>');
+  const withItalics = withBold.replace(/\*([^*]*)\*/g, '<em>$1</em>');
   return withItalics;
 };
 

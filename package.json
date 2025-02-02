@@ -1,27 +1,25 @@
 {
   "name": "telephone-pictionary-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
+    "build:utils": "turbo run --filter byfo-utils build",
     "dev": "turbo run dev --parallel",
     "dev:rebuild": "turbo run build && turbo run dev --parallel",
-    "lint": "turbo run lint",
+    "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "release": "node ./release.mjs",
+    "release": "node ./release.node.mjs",
     "generate": "pnpm --filter 'byfo-components-lit' generate",
     "g": "pnpm generate"
   },
   "devDependencies": {
+    "eslint": "^9.9.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "globals": "^15.12.0",
     "prettier": "^2.8.8",
-    "turbo": "^2.0.14"
+    "turbo": "^2.0.14",
+    "typescript-eslint": "^8.22.0"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "packageManager": "pnpm@9.2.0"
+  "packageManager": "pnpm@10.1.0"
 }

@@ -6,6 +6,10 @@ const customStyleDefaults: Record<string, string> = {
   backgroundSaturation: '1',
 };
 export class TPStore {
+  constructor() {
+    this.readFromWindow();
+  }
+
   changeEvent = (setting: string, value: string) => new CustomEvent('tp-settings-changed', { detail: { setting, value } });
 
   theme: string = localStorage.getItem('theme') ?? 'classic';
@@ -128,6 +132,41 @@ export class TPStore {
       gameid: this.gameid,
       name: this.username,
     };
+  }
+
+  getString() {
+    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = this;
+    const transferrableData = {
+      rejoinNumber,
+      hosting,
+      gameid,
+      username,
+      theme,
+      landscapeDismissed,
+      customStyle,
+    };
+    const strData = encodeURIComponent(JSON.stringify(transferrableData));
+    return `branchswitchdata=${strData}`;
+  }
+
+  readFromWindow() {
+    if (!window.location.search.includes('branchswitchdata=')) {
+      return;
+    }
+    const branchSwitchRegex = /branchswitchdata=([^&?=]+)/;
+    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(decodeURIComponent(window.location.search.match(branchSwitchRegex)[1]));
+    const newLocation = window.location.href.replace(branchSwitchRegex, '');
+    window.location.replace(newLocation);
+    if(rejoinNumber) this.setRejoinNumber(rejoinNumber);
+    if(hosting) this.setHosting(hosting);
+    if(gameid) this.setGameid(gameid);
+    if(username) this.setUsername(username);
+    if(theme) this.setTheme(theme);
+    if(landscapeDismissed) this.setLandscapeDismissed(landscapeDismissed);
+    if (!customStyle) return;
+    for (const prop in customStyle) {
+      this.setCustomStyle(prop, customStyle[prop]);
+    }
   }
 
   clearGameData() {

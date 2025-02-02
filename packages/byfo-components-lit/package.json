@@ -1,19 +1,20 @@
 {
   "name": "byfo-components-lit",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "build": "vite build",
     "tsc": "tsc",
     "preview": "vite preview",
-    "generate": "node ./generate-element.js",
-    "g": "node ./generate-element.js"
+    "generate": "node ./generate-element.node.js",
+    "g": "node ./generate-element.node.js"
   },
   "dependencies": {
     "byfo-themes": "workspace:^",
     "byfo-utils": "workspace:^",
-    "lit-element": "^4.1.0"
+    "lit-element": "^4.1.0",
+    "lit-html": "^3.2.1"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
@@ -24,6 +25,7 @@
     "./content": "./dist/byfo-content.js",
     "./info-bubble": "./dist/byfo-info-bubble.js",
     "./settings-modal": "./dist/byfo-settings-modal.js",
-    "./time-input": "./dist/byfo-time-input.js"
+    "./time-input": "./dist/byfo-time-input.js",
+    "./version-modal": "./dist/byfo-version-modal.js"
   }
 }

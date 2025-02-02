@@ -37,6 +37,8 @@ export class TpCanvasControls {
     this.getElement('invert').addEventListener('click', () => {
       this.sendInvert();
     });
+
+    document.addEventListener('keydown', this.handleShortcut)
   }
 
   //#region control events
@@ -69,6 +71,21 @@ export class TpCanvasControls {
 
   sendInvert = () => {
     this.hostEl.dispatchEvent(new CustomEvent('invert-input'));
+  }
+
+  handleShortcut = e => {
+    if (e.ctrlKey && e.key === 'z') {
+      //ctrl+z during a drawing round will send an undo input
+      const undoEvent = new CustomEvent('undo-input');
+      this.hostEl.dispatchEvent(undoEvent);
+      return;
+    }
+    if (e.ctrlKey && e.key === 'Z') {
+      //ctrl+shift+z (aka ctrl+Z) during a drawing round will send a redo input
+      const redoEvent = new CustomEvent('redo-input');
+      this.hostEl.dispatchEvent(redoEvent);
+      return;
+    }
   }
 
   //#endregion

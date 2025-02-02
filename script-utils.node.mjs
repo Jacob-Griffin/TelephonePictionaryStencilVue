@@ -2,7 +2,7 @@ export function processArgs(argv,unaryArgs,binaryArgs) {
   const args = argv.splice(2);
   const argMap = new Map();
   for(let i = 0; i < args.length; i++){
-    const rawName = args[i].replace(/^\-/,'');
+    const rawName = args[i].replace(/^-/,'');
     if(unaryArgs.includes(rawName)){
       argMap.set(rawName, true);
     } else if (binaryArgs.includes(rawName)){
