@@ -15,9 +15,9 @@
     "src/globals/css"
   ],
   "exports": {
-    ".":"./dist/index.js",
+    ".": "./dist/index.js",
     "./*": "./dist/components/*",
-    "./css/*":"./src/globals/css/*.css"
+    "./css/*": "./src/globals/css/*.css"
   },
   "scripts": {
     "build": "stencil build",

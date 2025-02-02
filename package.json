@@ -13,7 +13,8 @@
     "generate": "pnpm --filter 'byfo-components-lit' generate",
     "g": "pnpm generate",
     "version-sync": "syncpack fix-mismatches",
-    "up:all": "syncpack update && syncpack fix-mismatches"
+    "up:all": "syncpack update && syncpack fix-mismatches",
+    "up:local": "node ./set-version.node.mjs"
   },
   "devDependencies": {
     "eslint": "^9.19.0",

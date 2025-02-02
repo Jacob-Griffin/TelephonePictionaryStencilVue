@@ -20,13 +20,16 @@ export function processArgs(argv,unaryArgs,binaryArgs) {
 }
 
 export function formatJson(json,depth = 1){
-  let output = `{\n`;
-  Object.keys(json).forEach(key => {
+  const isArray = Array.isArray(json);
+  let output = isArray ? '[\n' : '{\n';
+  for(const key in json) {
     output += '  '.repeat(depth);
-    output += `\\"${key}\\": `;
+    if(!isArray){
+      output += `"${key}": `;
+    }
     switch(typeof json[key]){
       case 'string':
-        output += `\\"${json[key]}\\"`;
+        output += `"${json[key].replaceAll('"', '\\"')}"`;
         break;
       case 'number':
         output += `${json[key]}`;
@@ -39,11 +42,11 @@ export function formatJson(json,depth = 1){
         break;
     }
     output += ',\n';
-  });
+  };
   if(depth > 1){
     output += '  '.repeat(depth - 1);
   }
-  output += '}';
-  output = output.replaceAll(/,(?=\s+})/g,'');
+  output += isArray ? ']' : '}';
+  output = output.replaceAll(/,(?=\s+(}|]))/g,'');
   return output;
 }
