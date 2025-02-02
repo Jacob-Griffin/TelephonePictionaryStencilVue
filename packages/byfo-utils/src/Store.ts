@@ -157,12 +157,12 @@ export class TPStore {
     const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(decodeURIComponent(window.location.search.match(branchSwitchRegex)[1]));
     const newLocation = window.location.href.replace(branchSwitchRegex, '');
     window.location.replace(newLocation);
-    rejoinNumber && this.setRejoinNumber(rejoinNumber);
-    hosting && this.setHosting(hosting);
-    gameid && this.setGameid(gameid);
-    username && this.setUsername(username);
-    theme && this.setTheme(theme);
-    landscapeDismissed && this.setLandscapeDismissed(landscapeDismissed);
+    if(rejoinNumber) this.setRejoinNumber(rejoinNumber);
+    if(hosting) this.setHosting(hosting);
+    if(gameid) this.setGameid(gameid);
+    if(username) this.setUsername(username);
+    if(theme) this.setTheme(theme);
+    if(landscapeDismissed) this.setLandscapeDismissed(landscapeDismissed);
     if (!customStyle) return;
     for (const prop in customStyle) {
       this.setCustomStyle(prop, customStyle[prop]);

@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
-import { formatJson } from '../../script-utils.mjs';
+import { formatJson } from '../../script-utils.node.mjs';
 
-const [_1,_2,cname,...args] = process.argv;
+const [_,__,cname,...args] = process.argv;
 if(cname === undefined){
   console.error('Args Error: No component name is given');
   process.exit(1);
@@ -24,7 +24,7 @@ try {
   execSync(`cat ${componentName.file} 2>/dev/null`);
   console.error(`Error: ${componentName.tagname} already exists`);
   process.exit(1);
-} catch (e) {
+} catch {
   //Success! There wasn't a file to read.
   //If the error was *not* file not found, then that'll show itself later
 }

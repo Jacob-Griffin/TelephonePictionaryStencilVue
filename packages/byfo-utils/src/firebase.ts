@@ -1,6 +1,6 @@
 import { setDoc, doc, getDocFromServer, getFirestore } from 'firebase/firestore';
-import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot, Unsubscribe } from 'firebase/database';
-import { getDownloadURL, ref as storageRef, updateMetadata, uploadBytes, getStorage } from 'firebase/storage';
+import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot } from 'firebase/database';
+import { getDownloadURL, ref as storageRef, uploadBytes, getStorage } from 'firebase/storage';
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import * as BYFO from './types';
 import { config } from './config';
@@ -180,7 +180,7 @@ export class BYFOFirebaseAdapter {
     const playerNumbers = new Set<number>();
 
     // Check to make sure there isn't a rejoin or duplicate name
-    for (let playerNumber in players) {
+    for (const playerNumber in players) {
       const player = players[playerNumber];
       if (player.username === username) {
         if (player.status === 'missing') {
@@ -437,7 +437,7 @@ export class BYFOFirebaseAdapter {
     const finished = await this.getRef(`game/${gameid}/finished`);
 
     //Check every player. If someone's not done, leave now
-    for (let player in finished) {
+    for (const player in finished) {
       if (finished[player] < round) {
         return;
       }
@@ -596,7 +596,7 @@ export class BYFOFirebaseAdapter {
    */
   async getPlayerNumber(gameid: number, name: string) {
     const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
-    for (let num in players) {
+    for (const num in players) {
       if (players[num].username === name) {
         return num;
       }
@@ -629,7 +629,7 @@ export class BYFOFirebaseAdapter {
     };
 
     const finalStackData: BYFO.GameStacks = {};
-    for (let player in stackData) {
+    for (const player in stackData) {
       let source = player;
       finalStackData[player] = {};
       for (let i = 0; i < stackData[source].length; i++) {
@@ -642,11 +642,11 @@ export class BYFOFirebaseAdapter {
     set(gameFinishedRef, true);
 
     this.storeGame(gameid, finalStackData, metadata).then(
-      success => {
+      _success => {
         //Delete the game from the realtime database
         remove(this.ref(`game/${gameid}`));
       },
-      failure => {
+      _failure => {
         console.log('failed to store game');
       },
     );

@@ -56,7 +56,7 @@
     const setText = (e) => {
         text.value = e.target.value;
     }
-    const handleResultClick = (e, result) => {
+    const handleResultClick = (_, result) => {
         let dest = `/review/${result.gameId}`
         if(result.highlights.length === 1){
             dest += `?stack=${result.highlights[0].stack}`;

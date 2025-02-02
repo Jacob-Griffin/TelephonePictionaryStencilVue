@@ -43,7 +43,7 @@ export class ByfoVersionModal extends ByfoModal {
       newHost = 'beta.' + oldHost;
     }
     const { pathname, search, hash } = window.location;
-    const newLocation = `https://${oldHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
+    const newLocation = `https://${newHost}${pathname}${search}${search ? '&' : '?'}${transferData}${hash}`;
     window.location.href = newLocation;
   }
 

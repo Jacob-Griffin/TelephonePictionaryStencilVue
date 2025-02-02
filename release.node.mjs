@@ -1,4 +1,4 @@
-import { processArgs } from "./script-utils.mjs";
+import { processArgs } from "./script-utils.node.mjs";
 import { execSync } from 'child_process';
 import { exit } from 'process'
 const automationAccount = 'griffin-automation';

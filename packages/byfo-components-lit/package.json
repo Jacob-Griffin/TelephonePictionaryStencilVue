@@ -7,8 +7,8 @@
     "build": "vite build",
     "tsc": "tsc",
     "preview": "vite preview",
-    "generate": "node ./generate-element.js",
-    "g": "node ./generate-element.js"
+    "generate": "node ./generate-element.node.js",
+    "g": "node ./generate-element.node.js"
   },
   "dependencies": {
     "byfo-themes": "workspace:^",
