@@ -24,16 +24,16 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-commonjs": "28.0.2",
     "@stencil/core": "^4.11.0",
     "byfo-themes": "workspace:*",
     "byfo-utils": "workspace:*",
-    "rollup": "2.56.3",
+    "rollup": "4.34.0",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^16.18.76",
+    "@rollup/plugin-typescript": "12.1.2",
+    "@types/node": "22.13.0",
     "typescript": "5.7.3"
   },
   "license": "MIT"
