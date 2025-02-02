@@ -1,12 +1,20 @@
 <script setup>
 import { RouterView, useRoute} from 'vue-router';
-import { inGame, inHome, TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
+import { TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
 import '@component/byfo-logo';
 import '@component/byfo-settings-modal';
 import '@component/byfo-version-modal';
 import { firebaseConfig } from '../firebase.secrets';
+
+function inGame(path) {
+  return /\/game\/[0-9]{1,7}\/?$/.test(path);
+}
+
+function inHome(path) {
+  return path === '/';
+}
 
 const path = useRoute().path;
 const isInGame = ref(inGame(path));

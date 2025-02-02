@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc && cp ./src/types.d.ts ./dist/types.d.ts"
+    "build": "tsc && cp ./src/types.d.ts ./dist/types.d.ts",
+    "test": "vitest"
   },
   "dependencies": {
     "byfo-themes": "workspace:*",

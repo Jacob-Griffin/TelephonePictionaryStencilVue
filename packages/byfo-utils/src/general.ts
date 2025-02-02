@@ -11,19 +11,22 @@ export function sortNames(names: string[]) {
   return names.sort((a: string, b: string) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
 }
 
-type inObject = { [key: string]: string };
 /**
  * Sorts a list of username objects by the given key
  * @param names - An array of objects that contain the names to be sorted
  * @param sortKey - The object prop containing the name
  * @returns A sorted list of the objects
  */
-export function sortNamesBy(names: inObject[], sortKey: keyof inObject) {
-  const keyMap = new Map<string, inObject>();
+export function sortNamesBy<T extends { [key: string]: unknown }>(names: T[], sortKey: keyof T) {
+  const keyMap = new Map<string, T>();
   const nameArray: string[] = [];
-  names.forEach((obj: inObject) => {
-    nameArray.push(obj[sortKey]);
-    keyMap.set(obj[sortKey], obj);
+  names.forEach((obj: T) => {
+    if(typeof obj[sortKey] !== 'string'){
+      throw new Error('Unexpected non-string value used as name');
+    }
+    const name = obj[sortKey] as string;
+    nameArray.push(name);
+    keyMap.set(name, obj);
   });
   const keyOrder = nameArray.sort((a: string, b: string) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
   return keyOrder.map(name => keyMap.get(name));
@@ -123,23 +126,5 @@ export function invalidCharactersList(input: string) {
 
   const stringList = rawList.join(', ');
   return stringList.replace(/, ([^,]+)$/, ', or $1');
-}
-
-/**
- * Checks if the given window location is a valid gameplay url
- * @param location - The window.Location in question
- * @returns True if the location is in game
- */
-export function inGame(path: string) {
-  return /\/game\/[0-9]{1,7}\/?$/.test(path);
-}
-
-/**
- * Checks if the given window location is the home url
- * @param location - The window.Location in question
- * @returns True if the location is in home
- */
-export function inHome(path: string) {
-  return path === '/';
 }
 //#endregion Regexp
