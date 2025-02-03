@@ -57,7 +57,7 @@ export class TpCanvas {
   scaleRatio:number // Cached value of bounding box width to internal width ratio
   lastDrawEnd:number;
   drawCount:number;
-  debugInterval:NodeJS.Timer;
+  debugInterval:NodeJS.Timeout;
 
   //#region setup
   componentDidLoad() {

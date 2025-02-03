@@ -24,11 +24,11 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "28.0.2",
+    "@rollup/plugin-commonjs": "^21.1.0",
     "@stencil/core": "^4.11.0",
     "byfo-themes": "workspace:*",
     "byfo-utils": "workspace:*",
-    "rollup": "4.34.0",
+    "rollup": "2.56.3",
     "tslib": "^2.6.2"
   },
   "devDependencies": {

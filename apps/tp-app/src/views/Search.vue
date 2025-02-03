@@ -2,11 +2,10 @@
     import { inject, onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
-    import createSearchClient from 'algoliasearch';
+    import { liteClient } from 'algoliasearch/lite';
     import { searchAPIKey, searchAppId } from '../../algolia.secrets';
 
-    const searchClient = createSearchClient(searchAppId, searchAPIKey);
-    const searchIndex = searchClient.initIndex('blow_your_face_off_index');
+    const searchClient = liteClient(searchAppId, searchAPIKey);
 
     const store = inject('TpStore');
     const searchAs = ref(store.searchAs);
@@ -23,7 +22,8 @@
             return;
         }
 
-        const { hits } = await searchIndex.search(text.value);
+        const { results:[{hits}] } = await searchClient.searchForHits({requests:[{indexName: 'blow_your_face_off_index', query:text.value}]});
+        console.log(hits);
         results.value = [];
         if(!(hits.length > 0)){
             return;
