@@ -3,14 +3,11 @@ const parseList = (md: string) => {
   let indentLevel = 0;
   const mdLines: string[] = [];
   lines.forEach(line => {
-    const r = line.match(/^(\t| {2})*-(.+)/);
-    let newIL = 0;
-    if (r) {
-      newIL = 1;
-      if (r[1]) {
-        newIL += r[1].length;
-      }
+    const r = line.match(/^((?!\t| {2})*)-(.+)/);
+    if(!r){
+      return line;
     }
+    const newIL = r[1].replaceAll(/ {2}|\t/g, 's').length;
 
     while (indentLevel < newIL) {
       mdLines.push('<ul>');
@@ -20,7 +17,7 @@ const parseList = (md: string) => {
       mdLines.push('</ul>');
       indentLevel -= 1;
     }
-    mdLines.push(newIL > 0 ? `<li>${r[2]}</li>` : line);
+    mdLines.push(r ? `<li>${r[2]}</li>` : line);
   });
   return mdLines.join('\n');
 };

@@ -1,8 +1,7 @@
-import { setDoc, doc, getDocFromServer, getFirestore } from 'firebase/firestore';
-import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot } from 'firebase/database';
-import { getDownloadURL, ref as storageRef, uploadBytes, getStorage } from 'firebase/storage';
+import { setDoc, doc, getDocFromServer, getFirestore, type Firestore } from 'firebase/firestore';
+import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot, type Database } from 'firebase/database';
+import { getDownloadURL, ref as storageRef, uploadBytes, getStorage, type FirebaseStorage } from 'firebase/storage';
 import { FirebaseOptions, initializeApp } from 'firebase/app';
-import * as BYFO from './types';
 import { config } from './config';
 import { decodePath, encodePath, validUsername } from './general';
 
@@ -10,12 +9,16 @@ export class BYFOFirebaseAdapter {
   /**
    * Backs up the last submission time to prevent double ups on timeout submissions
    */
-  lastSubmission: number = null;
+  lastSubmission: number | null = null;
 
   /**
    * Holds the connection objects for the firebase services
    */
-  connection: BYFO.FirebaseConnections = {
+  connection: {
+    db: Firestore | null;
+    rtdb: Database | null;
+    storage: FirebaseStorage | null;
+  } = {
     db: null,
     rtdb: null,
     storage: null,
@@ -51,7 +54,8 @@ export class BYFOFirebaseAdapter {
    * @param stacks - The full stack data object with all players and rounds
    * @returns true if successful, otherwise void
    */
-  async storeGame(gameid: number, stacks: BYFO.GameStacks, metadata: BYFO.Metadata): Promise<boolean> {
+  async storeGame(gameid: number, stacks: GameStacks, metadata: Metadata): Promise<boolean> {
+    if (!this.connection.db) throw new Error("Firebase database did not connect, can't store game");
     const docRef = doc(this.connection.db, `games/${gameid}`);
     await setDoc(docRef, stacks);
 
@@ -65,10 +69,11 @@ export class BYFOFirebaseAdapter {
    * @param gameid
    * @returns
    */
-  async getGameData(gameid: number): Promise<BYFO.GameStacks> {
+  async getGameData(gameid: number): Promise<GameStacks> {
+    if (!this.connection.db) throw new Error("Firebase database did not connect, can't fetch stacks");
     const docRef = doc(this.connection.db, `games/${gameid}`);
     const snapshot = await getDocFromServer(docRef);
-    const gameData = snapshot.data() as BYFO.GameStacks;
+    const gameData = snapshot.data() as GameStacks;
     return gameData;
   }
 
@@ -77,10 +82,11 @@ export class BYFOFirebaseAdapter {
    * @param gameid
    * @returns
    */
-  async getGameMetadata(gameid: number): Promise<BYFO.Metadata> {
+  async getGameMetadata(gameid: number): Promise<Metadata> {
+    if (!this.connection.db) throw new Error("Firebase database did not connect, can't fetch game info");
     const docRef = doc(this.connection.db, `metadata/${gameid}`);
     const snapshot = await getDocFromServer(docRef);
-    const metadata = (snapshot.data() as BYFO.Metadata | undefined) ?? { roundLength: 180000, date: 'unknown' };
+    const metadata = (snapshot.data() as Metadata | undefined) ?? { roundLength: 180000, date: 'unknown' };
     return metadata;
   }
   //#endregion
@@ -150,7 +156,7 @@ export class BYFOFirebaseAdapter {
   }
 
   /**
-   * Interface function to put a player into a given lobby
+   * interface function to put a player into a given lobby
    *
    * @param gameid - Game to join
    * @param username - User being added
@@ -159,10 +165,10 @@ export class BYFOFirebaseAdapter {
    * @async
    * @external
    */
-  async addPlayerToLobby(gameid: number, username: string): Promise<BYFO.ActionResponse> {
+  async addPlayerToLobby(gameid: number, username: string): Promise<ActionResponse> {
     //Grab the game status
     const gameStatus = await this.getRef(`game-statuses/${gameid}`);
-    const result: BYFO.ActionResponse = {
+    const result: ActionResponse = {
       action: 'error',
     };
     //If the game exists, read the data
@@ -176,7 +182,7 @@ export class BYFOFirebaseAdapter {
     }
 
     //Check the players list
-    const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
+    const players: PlayerList = await this.getWaitingPlayers(gameid);
     const playerNumbers = new Set<number>();
 
     // Check to make sure there isn't a rejoin or duplicate name
@@ -237,7 +243,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - The game to get the status of
    * @returns Game status (if any)
    */
-  async getGameStatus(gameid: number): Promise<BYFO.GameStatus> {
+  async getGameStatus(gameid: number): Promise<GameStatus> {
     return this.getRef(`game-statuses/${gameid}`);
   }
 
@@ -245,7 +251,7 @@ export class BYFOFirebaseAdapter {
    * Gets the list of all game statuses
    * @returns An object pairing gameids to statuses
    */
-  async listGameStatus(): Promise<{ [id: number]: BYFO.GameStatus }> {
+  async listGameStatus(): Promise<{ [id: number]: GameStatus }> {
     return this.getRef('game-statuses');
   }
 
@@ -294,7 +300,7 @@ export class BYFOFirebaseAdapter {
     const isDraw = /^draw$/i.test(key);
 
     try {
-      const promises = [];
+      const promises: Promise<unknown>[] = [];
 
       promises.push(
         set(this.ref(`game-statuses/${gameid}`), {
@@ -356,7 +362,7 @@ export class BYFOFirebaseAdapter {
     set(roundRef, round0);
 
     //Get the players
-    const playerList: BYFO.Player[] = Object.values(await this.getWaitingPlayers(gameid));
+    const playerList: Player[] = Object.values(await this.getWaitingPlayers(gameid));
     const staticRoundInfoRef = this.ref(`game/${gameid}/staticRoundInfo`);
     set(staticRoundInfoRef, {
       lastRound: playerList.length - 1,
@@ -364,7 +370,7 @@ export class BYFOFirebaseAdapter {
     });
 
     //List of outstanding promises, that way we can let them all run in parallel and only block for them at the end
-    const promises = [];
+    const promises: Promise<unknown>[] = [];
     for (let i = 0; i < playerList.length; i++) {
       const name = playerList[i].username;
 
@@ -404,10 +410,10 @@ export class BYFOFirebaseAdapter {
     name: string,
     round: number,
     rawContent: Blob | string | undefined,
-    staticRoundInfo: BYFO.StaticRoundInfo,
+    staticRoundInfo: StaticRoundInfo,
     forced: boolean = false,
   ): Promise<true | void> {
-    if (Date.now() - this.lastSubmission < config.minRoundLength * 1000) {
+    if (Date.now() - (this.lastSubmission ?? 0) < config.minRoundLength * 1000) {
       // If we got 2 submissions less than the minimum round length apart, they're surely in error
       return;
     }
@@ -419,14 +425,14 @@ export class BYFOFirebaseAdapter {
       }
       rawContent = this.getDefaultContent(contentType);
     }
-    if (contentType === 'text' && (rawContent as string).length > config.textboxMaxCharacters) {
+    if (contentType === 'text' && typeof rawContent === 'string' && rawContent.length > config.textboxMaxCharacters) {
       if (!forced) {
         throw new Error();
       }
       rawContent = rawContent.slice(0, config.textboxMaxCharacters);
     }
     const content: string = rawContent instanceof Blob ? await this.uploadImage(gameid, name, round, rawContent) : rawContent || this.getDefaultContent(contentType);
-    const savedContent: BYFO.RoundContent = { contentType, content };
+    const savedContent: RoundContent = { contentType, content };
 
     const stackRef = this.ref(`game/${gameid}/stacks/${name}/${round}`);
     await set(stackRef, savedContent);
@@ -451,7 +457,7 @@ export class BYFOFirebaseAdapter {
     }
     //Set the round number and end time forward
     const roundRef = this.ref(`game/${gameid}/round/`);
-    const newRoundData: BYFO.RoundData = {
+    const newRoundData: RoundData = {
       roundnumber: round + 1,
       endTime: Date.now() + staticRoundInfo.roundLength + this.serverOffset,
     };
@@ -574,7 +580,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - Game to be fetched
    * @returns A list of player objects
    */
-  async getWaitingPlayers(gameid: number): Promise<BYFO.PlayerList> {
+  async getWaitingPlayers(gameid: number): Promise<PlayerList> {
     return this.getRef(`players/${gameid}`);
   }
 
@@ -595,7 +601,7 @@ export class BYFOFirebaseAdapter {
    * @returns The player id within that game
    */
   async getPlayerNumber(gameid: number, name: string) {
-    const players: BYFO.PlayerList = await this.getWaitingPlayers(gameid);
+    const players: PlayerList = await this.getWaitingPlayers(gameid);
     for (const num in players) {
       if (players[num].username === name) {
         return num;
@@ -609,7 +615,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - The game
    * @returns The static round info
    */
-  async getStaticRoundInfo(gameid: number): Promise<BYFO.StaticRoundInfo> {
+  async getStaticRoundInfo(gameid: number): Promise<StaticRoundInfo> {
     return this.getRef(`game/${gameid}/staticRoundInfo`);
   }
 
@@ -620,7 +626,7 @@ export class BYFOFirebaseAdapter {
    */
   async finalizeGame(gameid: number) {
     const stackData = await this.getRef(`game/${gameid}/stacks`);
-    const playerOrder: BYFO.GamePlayers = await this.getRef(`game/${gameid}/players`);
+    const playerOrder: GamePlayers = await this.getRef(`game/${gameid}/players`);
     const roundLength: number = await this.getRef(`game/${gameid}/staticRoundInfo/roundLength`);
 
     const metadata = {
@@ -628,7 +634,7 @@ export class BYFOFirebaseAdapter {
       roundLength,
     };
 
-    const finalStackData: BYFO.GameStacks = {};
+    const finalStackData: GameStacks = {};
     for (const player in stackData) {
       let source = player;
       finalStackData[player] = {};
@@ -683,6 +689,7 @@ export class BYFOFirebaseAdapter {
    * @returns The url to the uploaded image
    */
   async uploadImage(gameid: number, player: string, round: number, imgData: Blob | false) {
+    if (!this.connection.storage) throw new Error("Firebase storage did not connect, can't upload image");
     if (!imgData || imgData.size === 0) {
       return '/default.png';
     }
@@ -692,3 +699,74 @@ export class BYFOFirebaseAdapter {
   }
   //#endregion
 }
+
+export interface Player {
+  username: string;
+  status?: string;
+  lastRound?: number;
+}
+
+export interface PlayerList {
+  [key: number]: Player;
+}
+
+export interface RoundContent {
+  contentType: 'text' | 'image';
+  content?: string;
+}
+
+export interface GameStatus {
+  started: boolean;
+  finished: boolean;
+}
+
+export interface Game {
+  players: GamePlayers;
+  round: RoundData;
+  staticRoundInfo: StaticRoundInfo;
+  stacks: GameStacks;
+}
+
+export interface GamePlayers {
+  [name: string]: {
+    to: string;
+    from: string;
+  };
+}
+
+export interface RoundData {
+  roundnumber: number;
+  endTime: number; // unix timestamp
+}
+
+export interface StaticRoundInfo {
+  lastRound: number;
+  roundLength: number; //in ms
+}
+
+export interface GameStacks {
+  [author: string]: {
+    [roundnumber: string]: RoundContent;
+  };
+}
+
+export interface FirebaseConnections {
+  db: Firestore | null;
+  rtdb: Database | null;
+  storage: FirebaseStorage | null;
+}
+
+export interface RefOptions {
+  noEncode?: boolean;
+}
+
+export interface Metadata {
+  date: string;
+  roundLength: number;
+}
+
+export declare type ActionResponse = {
+  action?: string; // The action being done
+  detail?: string; // The return message, if applicable
+  dest?: 'lobby' | 'game'; // The page to redirect to
+};

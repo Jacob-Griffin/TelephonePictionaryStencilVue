@@ -1,4 +1,5 @@
 import { config } from './config';
+import { Player } from './firebase';
 export const stopPropagation = (e: Event) => e.stopPropagation();
 
 //#region Strings
@@ -21,7 +22,7 @@ export function sortNamesBy<T extends { [key: string]: unknown }>(names: T[], so
   const keyMap = new Map<string, T>();
   const nameArray: string[] = [];
   names.forEach((obj: T) => {
-    if(typeof obj[sortKey] !== 'string'){
+    if (typeof obj[sortKey] !== 'string') {
       throw new Error('Unexpected non-string value used as name');
     }
     const name = obj[sortKey] as string;
@@ -38,7 +39,7 @@ export function sortNamesBy<T extends { [key: string]: unknown }>(names: T[], so
  * @param players - a list of player objects
  * @returns The css width for the player section of a list, such as between rounds
  */
-export function calculatePlayerNameWidth(players: { username: string; [other: string]: string | number }[]) {
+export function calculatePlayerNameWidth(players: Player[]) {
   let max = 0;
   players.forEach(player => {
     if (player.username?.length > max) {

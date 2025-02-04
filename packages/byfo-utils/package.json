@@ -8,13 +8,12 @@
     ".": "./dist/index",
     "./firebase": "./dist/firebase",
     "./config": "./dist/config",
-    "./types": "./dist/types",
     "./rollup": "./src/index",
     "./rollup/firebase": "./src/firebase"
   },
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc && cp ./src/types.d.ts ./dist/types.d.ts",
+    "build": "tsc",
     "test": "vitest"
   },
   "dependencies": {

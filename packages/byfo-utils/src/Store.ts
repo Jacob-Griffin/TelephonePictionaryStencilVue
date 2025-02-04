@@ -22,7 +22,7 @@ export class TPStore {
   useTheme = (theme: string = this.theme) => {
     document.body.setAttribute('class', '');
     const visitedThemes = new Set();
-    let currentTheme = theme;
+    let currentTheme: string | undefined = theme;
     while (currentTheme && !visitedThemes.has(currentTheme)) {
       visitedThemes.add(currentTheme);
       document.body.classList.add(currentTheme);
@@ -83,10 +83,10 @@ export class TPStore {
 
   //#region gamedata
   username = localStorage.getItem('username');
-  setUsername = (v: string) => {
+  setUsername = (v: string | null) => {
     if (!v) {
       localStorage.removeItem('username');
-      this.username = undefined;
+      this.username = null;
       return;
     }
     localStorage.setItem('username', v);
@@ -94,10 +94,10 @@ export class TPStore {
   };
 
   gameid = localStorage.getItem('game-playing');
-  setGameid = (v: string) => {
+  setGameid = (v: string | null) => {
     if (!v) {
       localStorage.removeItem('game-playing');
-      this.gameid = undefined;
+      this.gameid = null;
       return;
     }
     localStorage.setItem('game-playing', v);
@@ -105,10 +105,10 @@ export class TPStore {
   };
 
   hosting = localStorage.getItem('hosting');
-  setHosting = (v: string) => {
+  setHosting = (v: string | null) => {
     if (!v) {
       localStorage.removeItem('hosting');
-      this.hosting = undefined;
+      this.hosting = null;
       return;
     }
     localStorage.setItem('hosting', v);
@@ -116,17 +116,17 @@ export class TPStore {
   };
 
   rejoinNumber = localStorage.getItem('rejoinNumber');
-  setRejoinNumber = (v: string) => {
+  setRejoinNumber = (v: string | null) => {
     if (!v) {
       localStorage.removeItem('rejoinNumber');
-      this.rejoinNumber = undefined;
+      this.rejoinNumber = null;
       return;
     }
     localStorage.setItem('rejoinNumber', v);
     this.rejoinNumber = v;
   };
 
-  getRejoinData() {
+  getRejoinData(): RejoinData {
     if (!this.gameid || !this.username) return null;
     return {
       gameid: this.gameid,
@@ -150,19 +150,20 @@ export class TPStore {
   }
 
   readFromWindow() {
-    if (!window.location.search.includes('branchswitchdata=')) {
+    const branchSwitchRegex = /branchswitchdata=([^&?=]+)/;
+    const branchSwitchData = window.location.search.match(branchSwitchRegex)?.[1];
+    if (!branchSwitchData) {
       return;
     }
-    const branchSwitchRegex = /branchswitchdata=([^&?=]+)/;
-    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(decodeURIComponent(window.location.search.match(branchSwitchRegex)[1]));
+    const { rejoinNumber, hosting, gameid, username, theme, landscapeDismissed, customStyle } = JSON.parse(decodeURIComponent(branchSwitchData));
     const newLocation = window.location.href.replace(branchSwitchRegex, '');
     window.location.replace(newLocation);
-    if(rejoinNumber) this.setRejoinNumber(rejoinNumber);
-    if(hosting) this.setHosting(hosting);
-    if(gameid) this.setGameid(gameid);
-    if(username) this.setUsername(username);
-    if(theme) this.setTheme(theme);
-    if(landscapeDismissed) this.setLandscapeDismissed(landscapeDismissed);
+    if (rejoinNumber) this.setRejoinNumber(rejoinNumber);
+    if (hosting) this.setHosting(hosting);
+    if (gameid) this.setGameid(gameid);
+    if (username) this.setUsername(username);
+    if (theme) this.setTheme(theme);
+    if (landscapeDismissed) this.setLandscapeDismissed(landscapeDismissed);
     if (!customStyle) return;
     for (const prop in customStyle) {
       this.setCustomStyle(prop, customStyle[prop]);
@@ -170,10 +171,15 @@ export class TPStore {
   }
 
   clearGameData() {
-    this.setUsername(undefined);
-    this.setGameid(undefined);
-    this.setHosting(undefined);
-    this.setRejoinNumber(undefined);
+    this.setUsername(null);
+    this.setGameid(null);
+    this.setHosting(null);
+    this.setRejoinNumber(null);
   }
   //#endregion gamedata
+}
+
+export interface RejoinData {
+  gameid: string;
+  name: string;
 }
