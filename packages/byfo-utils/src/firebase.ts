@@ -2,7 +2,7 @@ import { setDoc, doc, getDocFromServer, getFirestore, type Firestore } from 'fir
 import { ref as rtdbRef, get, set, onValue, remove, getDatabase, onDisconnect, DataSnapshot, type Database } from 'firebase/database';
 import { getDownloadURL, ref as storageRef, uploadBytes, getStorage, type FirebaseStorage } from 'firebase/storage';
 import { FirebaseOptions, initializeApp } from 'firebase/app';
-import { config } from './config';
+import { BYFOConfig, config as defaultGameConfig } from './config';
 import { decodePath, encodePath, validUsername } from './general';
 
 export class BYFOFirebaseAdapter {
@@ -29,18 +29,21 @@ export class BYFOFirebaseAdapter {
    */
   serverOffset: number;
 
+  gameConfig: BYFOConfig;
+
   /**
    * Passes the firebase settings to the config object
    * Required for all other functions in byfo-utils/firebase
    *
-   * @param config - The firebase config JSON object that the firebase console gives you
+   * @param firebaseConfig - The firebase config JSON object that the firebase console gives you
    */
-  constructor(config: FirebaseOptions) {
-    const app = initializeApp(config);
+  constructor(firebaseConfig: FirebaseOptions, gameConfig?: Partial<BYFOConfig>) {
+    const app = initializeApp(firebaseConfig);
     this.connection.db = getFirestore(app);
     this.connection.rtdb = getDatabase(app);
     this.connection.storage = getStorage(app);
     const offsetRef = rtdbRef(this.connection.rtdb, '.info/serverTimeOffset');
+    this.gameConfig = Object.assign({}, defaultGameConfig, gameConfig);
     onValue(offsetRef, snap => {
       const offset = snap.val();
       this.serverOffset = offset;
@@ -209,7 +212,7 @@ export class BYFOFirebaseAdapter {
       return result;
     }
 
-    if (playerNumbers.size > config.maxPlayers) {
+    if (playerNumbers.size > this.gameConfig.maxPlayers) {
       result.detail = 'Too many players in game';
       return result;
     }
@@ -413,7 +416,7 @@ export class BYFOFirebaseAdapter {
     staticRoundInfo: StaticRoundInfo,
     forced: boolean = false,
   ): Promise<true | void> {
-    if (Date.now() - (this.lastSubmission ?? 0) < config.minRoundLength * 1000) {
+    if (Date.now() - (this.lastSubmission ?? 0) < this.gameConfig.minRoundLength * 1000) {
       // If we got 2 submissions less than the minimum round length apart, they're surely in error
       return;
     }
@@ -425,11 +428,11 @@ export class BYFOFirebaseAdapter {
       }
       rawContent = this.getDefaultContent(contentType);
     }
-    if (contentType === 'text' && typeof rawContent === 'string' && rawContent.length > config.textboxMaxCharacters) {
+    if (contentType === 'text' && typeof rawContent === 'string' && rawContent.length > this.gameConfig.textboxMaxCharacters) {
       if (!forced) {
         throw new Error();
       }
-      rawContent = rawContent.slice(0, config.textboxMaxCharacters);
+      rawContent = rawContent.slice(0, this.gameConfig.textboxMaxCharacters);
     }
     const content: string = rawContent instanceof Blob ? await this.uploadImage(gameid, name, round, rawContent) : rawContent || this.getDefaultContent(contentType);
     const savedContent: RoundContent = { contentType, content };

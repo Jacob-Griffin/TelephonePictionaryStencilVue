@@ -1,6 +1,9 @@
-import { config } from './config';
+import { config as defaultGameConfig } from './config';
 import { Player } from './firebase';
+
 export const stopPropagation = (e: Event) => e.stopPropagation();
+
+const invalidUsernameCharacters = ['/', '\\'];
 
 //#region Strings
 /**
@@ -81,18 +84,16 @@ export function validGameId(input: string) {
   return exp.test(input);
 }
 
-const invalidCharacters = ['/', '\\'];
-
 /**
  * Checks if a username is valid
  * @param input - A potential username
  * @returns True if the name is within max length and does not contain invalid characters
  */
-export function validUsername(input?: string): boolean | string {
+export function validUsername(input?: string, maxCharacters?: number): boolean | string {
   if (!input || !input.trim()) {
     return false;
   }
-  const maxName = config.usernameMaxCharacters;
+  const maxName = maxCharacters ?? defaultGameConfig.usernameMaxCharacters;
   if (input.length > maxName) {
     return `Names cannot exceed ${maxName} characters. ${input.length}/${maxName}`;
   }
@@ -108,9 +109,9 @@ export function validUsername(input?: string): boolean | string {
 export function invalidCharactersList(input: string) {
   const badCharactersUsed = new Set<string>();
   for (let i = 0; i < input.length; i++) {
-    if (invalidCharacters.includes(input[i])) {
+    if (invalidUsernameCharacters.includes(input[i])) {
       badCharactersUsed.add(input[i]);
-      if (badCharactersUsed.size === invalidCharacters.length) {
+      if (badCharactersUsed.size === invalidUsernameCharacters.length) {
         break;
       }
     }

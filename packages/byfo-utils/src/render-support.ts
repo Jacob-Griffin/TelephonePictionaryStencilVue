@@ -4,8 +4,9 @@ const parseList = (md: string) => {
   const mdLines: string[] = [];
   lines.forEach(line => {
     const r = line.match(/^((?!\t| {2})*)-(.+)/);
-    if(!r){
-      return line;
+    if (!r) {
+      mdLines.push(line);
+      return;
     }
     const newIL = r[1].replaceAll(/ {2}|\t/g, 's').length;
 
@@ -29,8 +30,8 @@ const parse = (input: string, allowLinks: boolean) => {
   const withItalics = withBold.replace(/\*([^*]*)\*/g, '<em>$1</em>');
   const withHeaders = withItalics.replace(/^(#{1,4})(.+)$/gm, (_, hashes, content) => `<h${hashes.length + 1}>${content}</h${hashes.length + 1}>`);
   const withList = parseList(withHeaders);
-  const withP = withList.replaceAll(/(^[^<][^\n]+)\n{2}/gm, (_,text) => `<p>${text}</p>`);
-  const withBr = withP.replaceAll(/(<p>[^<]+)\n/g, (_,content) => `${content}<br>`);
+  const withP = withList.replaceAll(/(^[^<][^\n]+)\n{2}/gm, (_, text) => `<p>${text}</p>`);
+  const withBr = withP.replaceAll(/(<p>[^<]+)\n/g, (_, content) => `${content}<br>`);
   return withBr;
 };
 
