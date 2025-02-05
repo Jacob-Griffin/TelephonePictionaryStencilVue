@@ -81,12 +81,13 @@ export class ByfoVersionModal extends ByfoModal {
         h4 {
           font-size: 1.15rem;
         }
-        
+
         p {
           margin-bottom: 1em;
         }
 
-        ul, ol {
+        ul,
+        ol {
           margin-inline-start: -1.5rem;
         }
       }
