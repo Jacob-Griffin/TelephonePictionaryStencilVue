@@ -16,7 +16,9 @@ const bumpVersionJson = async (path) => {
         pkg.version = newVersion;
         const newText = formatJson(pkg) + '\n';
         writeFileSync(path,newText);
-    } catch {}
+    } catch {
+        return;
+    }
 }
 
 const apps = readdirSync('./apps');
