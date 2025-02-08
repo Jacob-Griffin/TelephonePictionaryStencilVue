@@ -246,7 +246,7 @@ export class BYFOFirebaseAdapter {
    * @param gameid - The game to get the status of
    * @returns Game status (if any)
    */
-  async getGameStatus(gameid: number): Promise<GameStatus> {
+  async getGameStatus(gameid: number): Promise<GameStatus | null> {
     return this.getRef(`game-statuses/${gameid}`);
   }
 
