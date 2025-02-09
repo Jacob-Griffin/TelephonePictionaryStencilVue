@@ -1,20 +1,22 @@
 import { config as defaultConfig, BYFOConfig } from './config';
-import { BYFOFirebaseAdapter, PlayerList } from './firebase';
+import { BYFOFirebaseAdapter, PlayerList, RoundContent } from './firebase';
 import { validGameId, validUsername } from './general';
 
-export class BYFOGameState {
-  config: BYFOConfig;
-  #firebase: BYFOFirebaseAdapter;
-  constructor(firebase: BYFOFirebaseAdapter, gameid: number | string, self: string) {
-    this.config = Object.assign({}, defaultConfig, firebase.gameConfig);
+const accessorKeys = ['round', 'endtime', 'players', 'recievedCard'] as const;
+type BYFOGameStateAccessor = (typeof accessorKeys)[number];
 
+export class BYFOGameState {
+  #firebase: BYFOFirebaseAdapter;
+  constructor(firebase?: BYFOFirebaseAdapter, gameid?: number | string, self?: string) {
+    this.#config = Object.assign({}, defaultConfig, firebase?.gameConfig ?? {});
+    accessorKeys.forEach(this.#installAccessor.bind(this));
     if (!validGameId(gameid.toString())) {
-      this.error = new Error(`Game error: invalid gameid ${gameid}`);
+      this.#error = new Error(`Game error: invalid gameid ${gameid}`);
       return;
     }
     const usernameError = validUsername(self, this.config.usernameMaxCharacters);
     if (typeof usernameError === 'string') {
-      this.error = new Error(usernameError);
+      this.#error = new Error(usernameError);
       return;
     }
 
@@ -51,8 +53,7 @@ export class BYFOGameState {
 
   async initializeLobby() {}
 
-  error?: Error;
-
+  //#region readonly
   #gameid?: number;
   get gameid() {
     return this.#gameid;
@@ -63,33 +64,50 @@ export class BYFOGameState {
     return this.#self;
   }
 
+  #config: BYFOConfig;
+  get config() {
+    return this.#config;
+  }
+
+  #error?: Error;
+  get error() {
+    return this.#error;
+  }
+  //#endregion
+
+  //#region Accessors
   #watcherMap = new Map();
 
-  on<T extends keyof BYFOGameState>(prop: T, fn: (v: BYFOGameState[T]) => void) {
-    const watchers = this.#watcherMap.get(prop).slice() ?? [];
+  on<T extends BYFOGameStateAccessor>(prop: T, fn: (v: BYFOGameState[T]) => void, { instant }: { instant?: boolean } = {}) {
+    const watchers = this.#watcherMap.get(prop)?.slice() ?? [];
     watchers.push(fn);
     this.#watcherMap.set(prop, watchers);
+    if (instant) {
+      fn(this[prop]);
+    }
   }
 
-  #round?: number;
-  get round() {
-    return this.#round;
-  }
-  set round(v) {
-    this.#round = v;
-    const watchers = this.#watcherMap.get('round') ?? [];
-    watchers.forEach((watcher: (v: number) => void) => watcher(v));
-  }
+  round?: number;
+  endtime?: number;
+  players?: PlayerList;
+  recievedCard?: RoundContent;
 
-  #players?: PlayerList;
-  get players() {
-    return this.#players;
+  #store: { [T in BYFOGameStateAccessor]: BYFOGameState[T] } | {} = {};
+
+  #installAccessor(key: BYFOGameStateAccessor) {
+    Object.defineProperty(this, key, {
+      get() {
+        return this.#store[key];
+      },
+      set(v) {
+        console.log('used dynamic accessor!!!');
+        this.#store[key] = v;
+        const watchers = this.#watcherMap.get(key) ?? [];
+        watchers.forEach((watcher: (v: BYFOGameState[typeof key]) => void) => watcher(v));
+      },
+    });
   }
-  set players(v) {
-    this.#players = v;
-    const watchers = this.#watcherMap.get('players') ?? [];
-    watchers.forEach((watcher: (v: PlayerList) => void) => watcher(v));
-  }
+  //#endregion
 
   provide(event?: DocumentEventMap['byfo-use-gamestate']) {
     if (event) {

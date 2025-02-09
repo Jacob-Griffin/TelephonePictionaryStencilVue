@@ -9,7 +9,8 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "experimentalDecorators": true
   },
   "include": ["src/**/*"],
 }
