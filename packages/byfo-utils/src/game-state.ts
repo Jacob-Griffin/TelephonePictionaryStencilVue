@@ -92,15 +92,14 @@ export class BYFOGameState {
   players?: PlayerList;
   recievedCard?: RoundContent;
 
-  #store: { [T in BYFOGameStateAccessor]: BYFOGameState[T] } | {} = {};
+  #store: { [T in BYFOGameStateAccessor]: BYFOGameState[T] };
 
   #installAccessor(key: BYFOGameStateAccessor) {
     Object.defineProperty(this, key, {
       get() {
-        return this.#store[key];
+        return this.#store?.[key];
       },
       set(v) {
-        console.log('used dynamic accessor!!!');
         this.#store[key] = v;
         const watchers = this.#watcherMap.get(key) ?? [];
         watchers.forEach((watcher: (v: BYFOGameState[typeof key]) => void) => watcher(v));
