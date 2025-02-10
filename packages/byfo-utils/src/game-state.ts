@@ -2,7 +2,7 @@ import { config as defaultConfig, BYFOConfig } from './config';
 import { BYFOFirebaseAdapter, PlayerList, RoundContent } from './firebase';
 import { validGameId, validUsername } from './general';
 
-const accessorKeys = ['round', 'endtime', 'players', 'recievedCard'] as const;
+const accessorKeys = ['round', 'endtime', 'players', 'recievedCard', 'state'] as const;
 type BYFOGameStateAccessor = (typeof accessorKeys)[number];
 
 export class BYFOGameState {
@@ -49,7 +49,9 @@ export class BYFOGameState {
     }
   }
 
-  async initializeGameplay() {}
+  async initializeGameplay() {
+    // let initialRoundData = await this.#firebase.getRoundData(this.gameid);
+  }
 
   async initializeLobby() {}
 
@@ -76,23 +78,30 @@ export class BYFOGameState {
   //#endregion
 
   //#region Accessors
-  #watcherMap = new Map();
+  state?: 'drawing' | 'writing' | 'waiting' | 'lobby';
+  round?: number;
+  endtime?: number;
+  players?: PlayerList | Record<string, number>;
+  recievedCard?: RoundContent;
 
-  on<T extends BYFOGameStateAccessor>(prop: T, fn: (v: BYFOGameState[T]) => void, { instant }: { instant?: boolean } = {}) {
-    const watchers = this.#watcherMap.get(prop)?.slice() ?? [];
-    watchers.push(fn);
+  #store: { [T in BYFOGameStateAccessor]?: BYFOGameState[T] } = {};
+
+  #watcherMap: Map<BYFOGameStateAccessor, Record<string, (v: BYFOGameState[BYFOGameStateAccessor]) => void>> = new Map();
+
+  on<T extends BYFOGameStateAccessor>(prop: T, fn: (v: BYFOGameState[T]) => void, { instant }: { instant?: boolean } = {}): () => void {
+    const watchers = this.#watcherMap.get(prop) ?? {};
+    const id = Math.floor(Math.random() * 10000).toString();
+    watchers[id] = fn;
     this.#watcherMap.set(prop, watchers);
     if (instant) {
       fn(this[prop]);
     }
+    return () => {
+      const watchers = this.#watcherMap.get(prop);
+      delete watchers[id];
+      this.#watcherMap.set(prop, watchers);
+    };
   }
-
-  round?: number;
-  endtime?: number;
-  players?: PlayerList;
-  recievedCard?: RoundContent;
-
-  #store: { [T in BYFOGameStateAccessor]: BYFOGameState[T] };
 
   #installAccessor(key: BYFOGameStateAccessor) {
     Object.defineProperty(this, key, {
@@ -101,8 +110,8 @@ export class BYFOGameState {
       },
       set(v) {
         this.#store[key] = v;
-        const watchers = this.#watcherMap.get(key) ?? [];
-        watchers.forEach((watcher: (v: BYFOGameState[typeof key]) => void) => watcher(v));
+        const watchers = this.#watcherMap.get(key) ?? {};
+        Object.values(watchers).forEach((watcher: (v: BYFOGameState[typeof key]) => void) => watcher(v));
       },
     });
   }

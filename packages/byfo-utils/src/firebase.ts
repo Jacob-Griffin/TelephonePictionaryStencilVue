@@ -486,9 +486,19 @@ export class BYFOFirebaseAdapter {
    * @param gameid
    * @param callback
    * @returns void
+   * @deprecated
    */
   async resyncRoundData(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
     get(this.ref(`/games/${gameid}/finished`)).then(result => callback(result));
+  }
+
+  /**
+   * Fetch the current round state of the game
+   * @param gameid
+   * @returns The current round data
+   */
+  async getRoundData(gameid: number): Promise<RoundData> {
+    return await this.getRef(`/games/${gameid}/round`);
   }
 
   /**
@@ -538,6 +548,7 @@ export class BYFOFirebaseAdapter {
   /**
    * Listens for a game to be started
    * @extends {@link attachListener}
+   * @deprecated
    */
   attachGameStatusListener(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
     return this.attachListener(`game-statuses/${gameid}`, callback);
@@ -546,6 +557,7 @@ export class BYFOFirebaseAdapter {
   /**
    * Listens for changes to the player list in a lobby
    * @extends {@link attachListener}
+   * @deprecated
    */
   attachPlayerListener(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
     return this.attachListener(`players/${gameid}`, callback);
@@ -554,6 +566,7 @@ export class BYFOFirebaseAdapter {
   /**
    * Listens for new rounds
    * @extends {@link attachListener}
+   * @deprecated
    */
   attachRoundListener(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
     return this.attachListener(`game/${gameid}/round`, callback);
@@ -562,6 +575,7 @@ export class BYFOFirebaseAdapter {
   /**
    * Listens for changes to who's finished which rounds
    * @extends {@link attachListener}
+   * @deprecated
    */
   attachFinishedListener(gameid: number, callback: (snapshot: DataSnapshot) => unknown) {
     return this.attachListener(`game/${gameid}/finished`, callback);
@@ -572,10 +586,54 @@ export class BYFOFirebaseAdapter {
    * @param path - The location to be watched
    * @param callback - The function to be called on watched update
    * @returns Unsubscribe function for the listener
+   * @deprecated
    */
   attachListener(path: string, callback: (snapshot: DataSnapshot) => unknown) {
     const pathRef = this.ref(path);
     return onValue(pathRef, callback);
+  }
+
+  /**
+   * Generic function to add a listener for a given realtime database path
+   * @param path - The location to be watched
+   * @param callback - The function to be called on watched update
+   * @returns Unsubscribe function for the listener
+   */
+  watchPath(path: string, callback: (snapshot: unknown) => void) {
+    const pathRef = this.ref(path);
+    return onValue(pathRef, v => callback(v.val()));
+  }
+
+  /**
+   * Listens for a game to be started
+   * @extends {@link watchPath}
+   */
+  onGameStatusChange(gameid: number, callback: (snapshot: GameStatus) => unknown) {
+    return this.watchPath(`game-statuses/${gameid}`, callback);
+  }
+
+  /**
+   * Listens for changes to the player list in a lobby
+   * @extends {@link watchPath}
+   */
+  onPlayerListChange(gameid: number, callback: (snapshot: PlayerList) => unknown) {
+    return this.watchPath(`players/${gameid}`, callback);
+  }
+
+  /**
+   * Listens for new rounds
+   * @extends {@link watchPath}
+   */
+  onRoundChange(gameid: number, callback: (snapshot: RoundData) => unknown) {
+    return this.watchPath(`game/${gameid}/round`, callback);
+  }
+
+  /**
+   * Listens for changes to who's finished which rounds
+   * @extends {@link watchPath}
+   */
+  onPlayerStatusChange(gameid: number, callback: (snapshot: Record<string, number>) => unknown) {
+    return this.watchPath(`game/${gameid}/finished`, callback);
   }
 
   /**
