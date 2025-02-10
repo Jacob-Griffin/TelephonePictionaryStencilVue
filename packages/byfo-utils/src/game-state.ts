@@ -1,15 +1,12 @@
 import { config as defaultConfig, BYFOConfig } from './config';
 import { BYFOFirebaseAdapter, PlayerList, RoundContent } from './firebase';
 import { validGameId, validUsername } from './general';
-
-const accessorKeys = ['round', 'endtime', 'players', 'recievedCard', 'state'] as const;
-type BYFOGameStateAccessor = (typeof accessorKeys)[number];
+import { useAccessor } from './accessors';
 
 export class BYFOGameState {
   #firebase: BYFOFirebaseAdapter;
   constructor(firebase?: BYFOFirebaseAdapter, gameid?: number | string, self?: string) {
     this.#config = Object.assign({}, defaultConfig, firebase?.gameConfig ?? {});
-    accessorKeys.forEach(this.#installAccessor.bind(this));
     if (!validGameId(gameid.toString())) {
       this.#error = new Error(`Game error: invalid gameid ${gameid}`);
       return;
@@ -50,7 +47,7 @@ export class BYFOGameState {
   }
 
   async initializeGameplay() {
-    // let initialRoundData = await this.#firebase.getRoundData(this.gameid);
+    let initialRoundData = await this.#firebase.getRoundData(this.gameid);
   }
 
   async initializeLobby() {}
@@ -84,37 +81,7 @@ export class BYFOGameState {
   players?: PlayerList | Record<string, number>;
   recievedCard?: RoundContent;
 
-  #store: { [T in BYFOGameStateAccessor]?: BYFOGameState[T] } = {};
-
-  #watcherMap: Map<BYFOGameStateAccessor, Record<string, (v: BYFOGameState[BYFOGameStateAccessor]) => void>> = new Map();
-
-  on<T extends BYFOGameStateAccessor>(prop: T, fn: (v: BYFOGameState[T]) => void, { instant }: { instant?: boolean } = {}): () => void {
-    const watchers = this.#watcherMap.get(prop) ?? {};
-    const id = Math.floor(Math.random() * 10000).toString();
-    watchers[id] = fn;
-    this.#watcherMap.set(prop, watchers);
-    if (instant) {
-      fn(this[prop]);
-    }
-    return () => {
-      const watchers = this.#watcherMap.get(prop);
-      delete watchers[id];
-      this.#watcherMap.set(prop, watchers);
-    };
-  }
-
-  #installAccessor(key: BYFOGameStateAccessor) {
-    Object.defineProperty(this, key, {
-      get() {
-        return this.#store?.[key];
-      },
-      set(v) {
-        this.#store[key] = v;
-        const watchers = this.#watcherMap.get(key) ?? {};
-        Object.values(watchers).forEach((watcher: (v: BYFOGameState[typeof key]) => void) => watcher(v));
-      },
-    });
-  }
+  on = useAccessor<BYFOGameState>(['round', 'endtime', 'players', 'recievedCard', 'state'], this);
   //#endregion
 
   provide(event?: DocumentEventMap['byfo-use-gamestate']) {
