@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+const { onRequest, onCall } = require('firebase-functions/v2/https');
 const logger = require('firebase-functions/logger');
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -27,4 +28,7 @@ const transformGame = (payload) => {
     return newPayload;
 }
 
-exports.transformGameForSearch = functions.region('us-west2').https.onCall(transformGame);
+exports.transformGameForSearch = onCall(transformGame);
+exports.timeserver = onRequest({cors: [/(beta\.)?(byfo\.net|blowyourfaceoff\.com)$/,/localhost:5150$/,/time\.byfo\.net$/]}, (req,res)=>{
+    res.send({time:Date.now()});
+});

@@ -4,6 +4,7 @@ import { getDownloadURL, ref as storageRef, uploadBytes, getStorage, type Fireba
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { BYFOConfig, config as defaultGameConfig } from './config';
 import { decodePath, encodePath, validUsername } from './general';
+import { useAccessor } from './accessors';
 
 export class BYFOFirebaseAdapter {
   /**
@@ -26,8 +27,20 @@ export class BYFOFirebaseAdapter {
 
   /**
    * Stores approximately how far off of the server clock the client is for better syncing
+   * @deprecated
    */
   serverOffset: number;
+
+  timeOffset?: number;
+  get now(): number {
+    return performance.timeOrigin + performance.now() - (this.timeOffset ?? 0);
+  }
+  async syncTimer() {
+    const internetTime = await fetch('https://timeserver-fi5ferccpa-uc.a.run.app')
+      .then(r => r.json())
+      .then(b => b.time);
+    this.timeOffset = performance.timeOrigin + performance.now() - internetTime;
+  }
 
   gameConfig: BYFOConfig;
 
@@ -42,8 +55,9 @@ export class BYFOFirebaseAdapter {
     this.connection.db = getFirestore(app);
     this.connection.rtdb = getDatabase(app);
     this.connection.storage = getStorage(app);
-    const offsetRef = rtdbRef(this.connection.rtdb, '.info/serverTimeOffset');
     this.gameConfig = Object.assign({}, defaultGameConfig, gameConfig);
+    this.syncTimer();
+    const offsetRef = rtdbRef(this.connection.rtdb, '.info/serverTimeOffset');
     onValue(offsetRef, snap => {
       const offset = snap.val();
       this.serverOffset = offset;
@@ -358,9 +372,6 @@ export class BYFOFirebaseAdapter {
       roundnumber: 0,
       endTime: Date.now() + roundLength + this.serverOffset,
     };
-    console.log(this.serverOffset);
-    console.log(roundLength);
-    console.log(Date.now());
     if (roundLength === -1) round0.endTime = -1;
     set(roundRef, round0);
 
