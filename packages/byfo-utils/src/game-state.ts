@@ -1,5 +1,5 @@
 import { config as defaultConfig, BYFOConfig } from './config';
-import { BYFOFirebaseAdapter, PlayerList, RoundContent } from './firebase';
+import { BYFOFirebaseAdapter, PlayerList, RoundContent, RoundData } from './firebase';
 import { validGameId, validUsername } from './general';
 import { useAccessor } from './accessors';
 
@@ -46,8 +46,45 @@ export class BYFOGameState {
     }
   }
 
+  #gameplayHandles: Record<string, number | (() => void)> = {
+    clearAll: () => {
+      Object.values(this.#gameplayHandles).forEach(handle => {
+        if (typeof handle === 'function') {
+          handle();
+        } else {
+          clearInterval(handle);
+        }
+      });
+    },
+  };
+
   async initializeGameplay() {
+    let retries = 3;
     let initialRoundData = await this.#firebase.getRoundData(this.gameid);
+    while (!initialRoundData && retries > 0) {
+      initialRoundData = await this.#firebase.getRoundData(this.gameid);
+    }
+    if (!initialRoundData) {
+      throw new GameStateError('pre-game');
+    }
+    const { from, to } = await this.#firebase.getToAndFrom(this.gameid, this.self);
+    this.#from = from;
+    this.#to = to;
+
+    this.#gameplayHandles.timeChange = this.on('endtime', v => (this.currentTimeRemaining = v - this.#firebase.now));
+    await this.handleRoundChange(initialRoundData);
+    this.#gameplayHandles.time = setInterval(() => (this.currentTimeRemaining = this.endtime - this.#firebase.now), 500);
+
+    this.#gameplayHandles.roundChange = this.#firebase.onRoundChange(this.gameid, this.handleRoundChange);
+  }
+
+  async handleRoundChange(data: RoundData) {
+    this.endtime = data.endTime;
+    this.round = data.roundnumber;
+    this.state = this.round % 2 === 0 ? 'writing' : 'drawing';
+    if (this.round > 0) {
+      this.recievedCard = await this.#firebase.fetchCard(this.gameid, this.from, this.round - 1);
+    }
   }
 
   async initializeLobby() {}
@@ -68,6 +105,16 @@ export class BYFOGameState {
     return this.#config;
   }
 
+  #from: string;
+  get from() {
+    return this.#from;
+  }
+
+  #to: string;
+  get to() {
+    return this.#to;
+  }
+
   #error?: Error;
   get error() {
     return this.#error;
@@ -78,10 +125,11 @@ export class BYFOGameState {
   state?: 'drawing' | 'writing' | 'waiting' | 'lobby';
   round?: number;
   endtime?: number;
+  currentTimeRemaining?: number;
   players?: PlayerList | Record<string, number>;
   recievedCard?: RoundContent;
 
-  on = useAccessor<BYFOGameState>(['round', 'endtime', 'players', 'recievedCard', 'state'], this);
+  on = useAccessor<BYFOGameState>(['round', 'currentTimeRemaining', 'endtime', 'players', 'recievedCard', 'state'], this);
   //#endregion
 
   provide(event?: DocumentEventMap['byfo-use-gamestate']) {

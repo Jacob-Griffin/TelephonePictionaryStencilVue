@@ -31,6 +31,10 @@ export class BYFOFirebaseAdapter {
    */
   serverOffset: number;
 
+  /**
+   * Determines if the firebase times should be determined by
+   */
+  internetTime: boolean;
   timeOffset?: number;
   get now(): number {
     return performance.timeOrigin + performance.now() - (this.timeOffset ?? 0);
@@ -50,18 +54,21 @@ export class BYFOFirebaseAdapter {
    *
    * @param firebaseConfig - The firebase config JSON object that the firebase console gives you
    */
-  constructor(firebaseConfig: FirebaseOptions, gameConfig?: Partial<BYFOConfig>) {
+  constructor(firebaseConfig: FirebaseOptions, gameConfig?: Partial<BYFOConfig>, internetTime?: boolean) {
     const app = initializeApp(firebaseConfig);
     this.connection.db = getFirestore(app);
     this.connection.rtdb = getDatabase(app);
     this.connection.storage = getStorage(app);
     this.gameConfig = Object.assign({}, defaultGameConfig, gameConfig);
-    this.syncTimer();
-    const offsetRef = rtdbRef(this.connection.rtdb, '.info/serverTimeOffset');
-    onValue(offsetRef, snap => {
-      const offset = snap.val();
-      this.serverOffset = offset;
-    });
+    if (internetTime) {
+      this.syncTimer();
+    } else {
+      const offsetRef = rtdbRef(this.connection.rtdb, '.info/serverTimeOffset');
+      onValue(offsetRef, snap => {
+        const offset = snap.val();
+        this.serverOffset = offset;
+      });
+    }
   }
 
   //#region firestore
@@ -370,7 +377,7 @@ export class BYFOFirebaseAdapter {
     const roundRef = this.ref(`game/${gameid}/round`);
     const round0 = {
       roundnumber: 0,
-      endTime: Date.now() + roundLength + this.serverOffset,
+      endTime: this.internetTime ? this.now + roundLength : Date.now() + roundLength + this.serverOffset,
     };
     if (roundLength === -1) round0.endTime = -1;
     set(roundRef, round0);
@@ -473,7 +480,7 @@ export class BYFOFirebaseAdapter {
     const roundRef = this.ref(`game/${gameid}/round/`);
     const newRoundData: RoundData = {
       roundnumber: round + 1,
-      endTime: Date.now() + staticRoundInfo.roundLength + this.serverOffset,
+      endTime: this.internetTime ? this.now + staticRoundInfo.roundLength : Date.now() + staticRoundInfo.roundLength + this.serverOffset,
     };
     if (staticRoundInfo.roundLength === -1) newRoundData.endTime = -1;
     await set(roundRef, newRoundData);
@@ -662,7 +669,7 @@ export class BYFOFirebaseAdapter {
    * @param name - The player being referenced
    * @returns The to and from data for the searched player
    */
-  async getToAndFrom(gameid: number, name: string) {
+  async getToAndFrom(gameid: number, name: string): Promise<{ to: string; from: string }> {
     return this.getRef(`game/${gameid}/players/${name}`);
   }
 
