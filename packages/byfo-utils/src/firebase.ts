@@ -258,7 +258,9 @@ export class BYFOFirebaseAdapter {
     });
     const newPlayerRef = this.ref(`players/${gameid}/${this.generatePriority()}`);
     const playerSet = set(newPlayerRef, { username, status: 'ready' });
-    await Promise.all([statusSet, playerSet]);
+    const hostRef = this.ref(`players/${gameid}/__host`);
+    const hostSet = set(hostRef, { username });
+    await Promise.all([statusSet, playerSet, hostSet]);
     return;
   }
 
@@ -489,12 +491,24 @@ export class BYFOFirebaseAdapter {
   }
 
   /**
+   * Fetches the finished rounds for a each player in a given game
+   * @param gameid
+   * @param name
+   * @returns A mapping of each round each player has completed
+   */
+  async fetchFinishedRounds(gameid: number): Promise<Record<string, number>> {
+    return await this.getRef(`game/${gameid}/finished`);
+  }
+  /**
    * Fetches the finished round for a given player in a given game
    * @param gameid
    * @param name
    * @returns The last round number that the player has submitted a response for
    */
   async fetchFinishedRound(gameid: number, name: string): Promise<number> {
+    if (!name) {
+      throw new Error("Can't fetch round, name is not defined");
+    }
     const round = await this.getRef(`game/${gameid}/finished/${name}`);
     return ~~round;
   }
@@ -528,6 +542,11 @@ export class BYFOFirebaseAdapter {
    */
   async fetchCard(gameid: number, target: string, round: number) {
     return this.getRef(`game/${gameid}/stacks/${target}/${round}`);
+  }
+
+  async getHost(gameid: number): Promise<string> {
+    const encoded = await this.getRef(`players/${gameid}/__host/username`);
+    return decodePath(encoded);
   }
 
   /**
@@ -647,7 +666,7 @@ export class BYFOFirebaseAdapter {
   }
 
   /**
-   * Listens for changes to who's finished which rounds
+   * Listens for changes to who's finished which rounds. Maps usernames to which round they have finished.
    * @extends {@link watchPath}
    */
   onPlayerStatusChange(gameid: number, callback: (snapshot: Record<string, number>) => unknown) {

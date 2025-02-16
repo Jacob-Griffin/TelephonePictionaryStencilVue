@@ -17,7 +17,10 @@ export function useAccessor<T>(propNames: (keyof T)[], context: T & { _store?: {
 
   return function on<T extends (typeof propNames)[number]>(prop: T, fn: (v: (typeof context)[T]) => void, { instant }: { instant?: boolean } = {}): () => void {
     const watchers = this._watcherMap.get(prop) ?? {};
-    const id = Math.floor(Math.random() * 10000).toString();
+    let id = Math.floor(Math.random() * 10000).toString();
+    while (id in watchers) {
+      Math.floor(Math.random() * 10000).toString();
+    }
     watchers[id] = fn;
     this._watcherMap.set(prop, watchers);
     if (instant) {

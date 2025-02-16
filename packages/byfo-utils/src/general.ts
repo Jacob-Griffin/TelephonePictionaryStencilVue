@@ -93,6 +93,9 @@ export function validUsername(input?: string, maxCharacters?: number): boolean |
   if (!input || !input.trim()) {
     return false;
   }
+  if (input === '__host') {
+    return `__host is a reserved name`;
+  }
   const maxName = maxCharacters ?? defaultGameConfig.usernameMaxCharacters;
   if (input.length > maxName) {
     return `Names cannot exceed ${maxName} characters. ${input.length}/${maxName}`;

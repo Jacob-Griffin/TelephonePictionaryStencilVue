@@ -1,5 +1,5 @@
 import { config as defaultConfig, BYFOConfig } from './config';
-import { BYFOFirebaseAdapter, PlayerList, RoundContent, RoundData } from './firebase';
+import { BYFOFirebaseAdapter, PlayerList, RoundContent, RoundData, StaticRoundInfo } from './firebase';
 import { validGameId, validUsername } from './general';
 import { useAccessor } from './accessors';
 
@@ -21,16 +21,11 @@ export class BYFOGameState {
     this.#self = self;
     this.#firebase = firebase;
 
-    this.initialize()
-      .then(() => {
-        this.provide();
-        document.addEventListener('byfo-use-gamestate', this.provide);
-      })
-      .catch(e => {
-        if (e.type === 'StateError') {
-          throw e;
-        }
-      });
+    this.initialize().catch(e => {
+      if (e.type === 'StateError') {
+        throw e;
+      }
+    });
   }
 
   async initialize() {
@@ -42,11 +37,11 @@ export class BYFOGameState {
     } else if (status.finished) {
       throw new GameStateError('post-game');
     } else {
-      return await this.initializeLobby();
+      throw new GameStateError('lobby');
     }
   }
 
-  #gameplayHandles: Record<string, number | (() => void)> = {
+  #gameplayHandles: { clearAll: () => void } & Record<string, number | (() => void)> = {
     clearAll: () => {
       Object.values(this.#gameplayHandles).forEach(handle => {
         if (typeof handle === 'function') {
@@ -67,28 +62,64 @@ export class BYFOGameState {
     if (!initialRoundData) {
       throw new GameStateError('pre-game');
     }
+    const host = await this.#firebase.getHost(this.gameid);
+    this.#isHost = host === this.#self;
     const { from, to } = await this.#firebase.getToAndFrom(this.gameid, this.self);
     this.#from = from;
     this.#to = to;
+    this.players = await this.#firebase.fetchFinishedRounds(this.gameid);
 
     this.#gameplayHandles.timeChange = this.on('endtime', v => (this.currentTimeRemaining = v - this.#firebase.now));
-    await this.handleRoundChange(initialRoundData);
+    await this.#handleRoundChange(initialRoundData);
     this.#gameplayHandles.time = setInterval(() => (this.currentTimeRemaining = this.endtime - this.#firebase.now), 500);
 
-    this.#gameplayHandles.roundChange = this.#firebase.onRoundChange(this.gameid, this.handleRoundChange);
+    this.#gameplayHandles.roundChange = this.#firebase.onRoundChange(this.gameid, this.#handleRoundChange);
+    this.#gameplayHandles.whoFinishedChange = this.#firebase.onPlayerStatusChange(this.gameid, statuses => this.#handleStatusChange);
   }
 
-  async handleRoundChange(data: RoundData) {
+  async #handleRoundChange(data: RoundData) {
+    if (!data) {
+      this.#handleGameOver();
+      return;
+    }
     this.endtime = data.endTime;
     this.round = data.roundnumber;
-    this.state = this.round % 2 === 0 ? 'writing' : 'drawing';
-    if (this.round > 0) {
+    if ((this.players as Record<string, number>)?.[this.#self] >= this.round) {
+      this.state = 'waiting';
+    } else {
+      this.state = this.round % 2 === 0 ? 'writing' : 'drawing';
+    }
+    if (this.round > 0 && this.state !== 'waiting') {
       this.recievedCard = await this.#firebase.fetchCard(this.gameid, this.from, this.round - 1);
     }
   }
 
-  async initializeLobby() {}
+  async #handleStatusChange(data: Record<string, number>) {
+    this.players = data;
+    if (data[this.self] >= this.round) {
+      this.state = 'waiting';
+    }
+  }
 
+  #handleGameOver() {
+    this.#gameplayHandles.clearAll();
+    this.state = 'finished';
+  }
+
+  public async submitRound(data: string | Blob) {
+    if (this.submitting) {
+      return;
+    }
+    this.submitting = true;
+    const forced = this.currentTimeRemaining < 0;
+    try {
+      await this.#firebase.submitRound(this.gameid, this.self, this.round, data, this.#staticRoundInfo, forced);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.submitting = false;
+    }
+  }
   //#region readonly
   #gameid?: number;
   get gameid() {
@@ -115,6 +146,16 @@ export class BYFOGameState {
     return this.#to;
   }
 
+  #isHost: boolean;
+  get isHost() {
+    return this.#isHost;
+  }
+
+  #staticRoundInfo: StaticRoundInfo;
+  get staticRoundInfo() {
+    return this.#staticRoundInfo;
+  }
+
   #error?: Error;
   get error() {
     return this.#error;
@@ -122,23 +163,16 @@ export class BYFOGameState {
   //#endregion
 
   //#region Accessors
-  state?: 'drawing' | 'writing' | 'waiting' | 'lobby';
+  state?: 'drawing' | 'writing' | 'waiting' | 'finished';
   round?: number;
   endtime?: number;
   currentTimeRemaining?: number;
-  players?: PlayerList | Record<string, number>;
+  players?: Record<string, number>;
   recievedCard?: RoundContent;
+  submitting?: boolean;
 
-  on = useAccessor<BYFOGameState>(['round', 'currentTimeRemaining', 'endtime', 'players', 'recievedCard', 'state'], this);
+  on = useAccessor<BYFOGameState>(['round', 'currentTimeRemaining', 'endtime', 'players', 'recievedCard', 'state', 'submitting'], this);
   //#endregion
-
-  provide(event?: DocumentEventMap['byfo-use-gamestate']) {
-    if (event) {
-      event.detail.requester.state = this;
-    } else {
-      document.dispatchEvent(new CustomEvent('byfo-provide-gamestate', { detail: this }));
-    }
-  }
 }
 
 type Destination = 'pre-game' | 'lobby' | 'game' | 'post-game';
@@ -148,12 +182,5 @@ class GameStateError extends Error {
   constructor(destination: Destination) {
     super(`GameState error: global state is ${destination}`);
     this.destination = destination;
-  }
-}
-
-declare global {
-  interface DocumentEventMap {
-    'byfo-use-gamestate': CustomEvent<{ requester: { state: BYFOGameState } }>;
-    'byfo-provide-gamestate': CustomEvent<BYFOGameState>;
   }
 }
