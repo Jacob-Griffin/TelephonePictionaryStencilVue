@@ -4,7 +4,6 @@ import { getDownloadURL, ref as storageRef, uploadBytes, getStorage, type Fireba
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { BYFOConfig, config as defaultGameConfig } from './config';
 import { decodePath, encodePath, validUsername } from './general';
-import { useAccessor } from './accessors';
 
 export class BYFOFirebaseAdapter {
   /**

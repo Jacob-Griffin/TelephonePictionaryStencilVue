@@ -1,5 +1,5 @@
 import { config as defaultConfig, BYFOConfig } from './config';
-import { BYFOFirebaseAdapter, PlayerList, RoundContent, RoundData, StaticRoundInfo } from './firebase';
+import { BYFOFirebaseAdapter, RoundContent, RoundData, StaticRoundInfo } from './firebase';
 import { validGameId, validUsername } from './general';
 import { useAccessor } from './accessors';
 
@@ -41,7 +41,7 @@ export class BYFOGameState {
     }
   }
 
-  #gameplayHandles: { clearAll: () => void } & Record<string, number | (() => void)> = {
+  #gameplayHandles: { clearAll: () => void } & Record<string, number | (() => void) | NodeJS.Timeout> = {
     clearAll: () => {
       Object.values(this.#gameplayHandles).forEach(handle => {
         if (typeof handle === 'function') {
@@ -57,6 +57,7 @@ export class BYFOGameState {
     let retries = 3;
     let initialRoundData = await this.#firebase.getRoundData(this.gameid);
     while (!initialRoundData && retries > 0) {
+      retries -= 1;
       initialRoundData = await this.#firebase.getRoundData(this.gameid);
     }
     if (!initialRoundData) {
@@ -74,7 +75,7 @@ export class BYFOGameState {
     this.#gameplayHandles.time = setInterval(() => (this.currentTimeRemaining = this.endtime - this.#firebase.now), 500);
 
     this.#gameplayHandles.roundChange = this.#firebase.onRoundChange(this.gameid, this.#handleRoundChange);
-    this.#gameplayHandles.whoFinishedChange = this.#firebase.onPlayerStatusChange(this.gameid, statuses => this.#handleStatusChange);
+    this.#gameplayHandles.whoFinishedChange = this.#firebase.onPlayerStatusChange(this.gameid, this.#handleStatusChange);
   }
 
   async #handleRoundChange(data: RoundData) {

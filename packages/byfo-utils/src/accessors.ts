@@ -1,4 +1,4 @@
-export function useAccessor<T>(propNames: (keyof T)[], context: T & { _store?: { [K in keyof T]?: T[K] }; _watcherMap?: Map<keyof T, { [id: string]: (v: any) => void }> }) {
+export function useAccessor<T>(propNames: (keyof T)[], context: T & { _store?: { [K in keyof T]?: T[K] }; _watcherMap?: Map<keyof T, { [id: string]: (v: T[keyof T]) => void }> }) {
   context._store = {};
   context._watcherMap = new Map();
   for (const prop of propNames) {
@@ -19,7 +19,7 @@ export function useAccessor<T>(propNames: (keyof T)[], context: T & { _store?: {
     const watchers = this._watcherMap.get(prop) ?? {};
     let id = Math.floor(Math.random() * 10000).toString();
     while (id in watchers) {
-      Math.floor(Math.random() * 10000).toString();
+      id = Math.floor(Math.random() * 10000).toString();
     }
     watchers[id] = fn;
     this._watcherMap.set(prop, watchers);
