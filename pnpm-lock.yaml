@@ -87,6 +87,9 @@ importers:
 
   packages/byfo-app-components:
     dependencies:
+      byfo-utils:
+        specifier: workspace:*
+        version: link:../byfo-utils
       lit:
         specifier: ^3.2.1
         version: 3.2.1

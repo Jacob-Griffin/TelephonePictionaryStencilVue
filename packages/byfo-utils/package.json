@@ -5,11 +5,11 @@
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index",
-    "./firebase": "./dist/firebase",
-    "./config": "./dist/config",
-    "./rollup": "./src/index",
-    "./rollup/firebase": "./src/firebase"
+    ".": "./dist/index.js",
+    "./firebase": "./dist/firebase.js",
+    "./config": "./dist/config.js",
+    "./rollup": "./src/index.ts",
+    "./rollup/firebase": "./src/firebase.ts"
   },
   "scripts": {
     "dev": "tsc --watch",

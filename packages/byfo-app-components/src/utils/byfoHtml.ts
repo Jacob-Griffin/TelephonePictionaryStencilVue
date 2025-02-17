@@ -5,7 +5,6 @@ export const html: typeof litHtml = (template, ...values) => {
   for (const match of els) {
     const { tag } = match.groups ?? {};
     if (tag && !window.customElements.get(tag)) {
-      console.log(`Importing custom element ${tag}!`);
       import(`../components/${tag}.ts`);
     }
   }
