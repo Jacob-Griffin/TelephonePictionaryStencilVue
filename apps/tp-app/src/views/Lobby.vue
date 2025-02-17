@@ -50,7 +50,7 @@ for (const playerNumber in playerList) {
 
 firebase.attachPlayerListener(gameid, snapshot => {
   const playerList = snapshot.val();
-  const rawPlayers = Object.values(playerList);
+  const rawPlayers = Object.entries(playerList).flatMap(([id, info]) => (id === '__host' ? [] : [info]));
   players.value = sortNamesBy(rawPlayers, 'username');
 
   let isInGame = false;

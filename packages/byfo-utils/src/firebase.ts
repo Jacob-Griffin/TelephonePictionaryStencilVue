@@ -678,7 +678,9 @@ export class BYFOFirebaseAdapter {
    * @returns A list of player objects
    */
   async getWaitingPlayers(gameid: number): Promise<PlayerList> {
-    return this.getRef(`players/${gameid}`);
+    const allEntries = await this.getRef(`players/${gameid}`);
+    delete allEntries['__host'];
+    return allEntries;
   }
 
   /**
