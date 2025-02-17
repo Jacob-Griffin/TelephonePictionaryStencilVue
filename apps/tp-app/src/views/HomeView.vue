@@ -9,9 +9,9 @@ const year = inject('CurrentYear');
 const modalEl = ref(null);
 const tutorialModal = ref(null);
 
-if(window.location.hash === '#enable-tutorial'){
-  localStorage.setItem('tutorial','true');
-} else if(window.location.hash === '#disable-tutorial') {
+if (window.location.hash === '#enable-tutorial') {
+  localStorage.setItem('tutorial', 'true');
+} else if (window.location.hash === '#disable-tutorial') {
   localStorage.removeItem('tutorial');
 }
 const tutorialVisible = !!localStorage.getItem('tutorial');
@@ -24,9 +24,9 @@ const switchModal = event => {
 
 const viewTutorial = () => {
   tutorialModal.value.enabled = true;
-}
+};
 
-const handleHost = ({detail:{gameid,name}})=>{
+const handleHost = ({ detail: { gameid, name } }) => {
   store.setHosting(gameid);
   store.setUsername(name);
   store.setGameid(gameid);
@@ -36,46 +36,46 @@ const handleHost = ({detail:{gameid,name}})=>{
   } else {
     location.href = `/lobby/${gameid}`;
   }
-}
+};
 
-const handleJoin = ({detail:{dest,gameid,playerid,name}})=>{
+const handleJoin = ({ detail: { dest, gameid, playerid, name } }) => {
   store.setRejoinNumber(playerid);
   store.setUsername(name);
   store.setGameid(gameid);
-  if(dest === 'lobby'){
+  if (dest === 'lobby') {
     location.href = `/lobby/${gameid}`;
     return;
   }
-  if(dest === 'game') {
+  if (dest === 'game') {
     location.href = `/game/${gameid}`;
     return;
   }
-}
+};
 
-const handleResults = ({detail:{gameid}})=>{
+const handleResults = ({ detail: { gameid } }) => {
   location.href = `/review/${gameid}`;
   return;
-}
+};
 
-const handleSearch = () =>{
+const handleSearch = () => {
   location.href = `/search`;
   return;
-}
+};
 
-document.addEventListener('tp-modal-action-host',handleHost);
-document.addEventListener('tp-modal-action-join',handleJoin);
-document.addEventListener('tp-modal-action-result',handleResults);
+document.addEventListener('tp-modal-action-host', handleHost);
+document.addEventListener('tp-modal-action-join', handleJoin);
+document.addEventListener('tp-modal-action-result', handleResults);
 
-onBeforeUnmount(()=>{
-  document.removeEventListener('tp-modal-action-host',handleHost);
-  document.removeEventListener('tp-modal-action-join',handleJoin);
-  document.removeEventListener('tp-modal-action-result',handleResults);
-})
+onBeforeUnmount(() => {
+  document.removeEventListener('tp-modal-action-host', handleHost);
+  document.removeEventListener('tp-modal-action-join', handleJoin);
+  document.removeEventListener('tp-modal-action-result', handleResults);
+});
 </script>
 
 <template>
   <main>
-    <byfo-logo/>
+    <byfo-logo />
     <div class="buttonMenu">
       <button @click="switchModal" modal="join">Join Game</button>
       <button @click="switchModal" modal="host">Host Game</button>
@@ -87,7 +87,7 @@ onBeforeUnmount(()=>{
     <tp-tutorial-modal ref="tutorialModal"></tp-tutorial-modal>
   </main>
   <footer>
-    <p>Copyright ©{{year}} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
+    <p>Copyright ©{{ year }} Jacob&nbsp;Griffin, Melinda&nbsp;Morang, Sarah&nbsp;Griffin. All rights reserved</p>
   </footer>
 </template>
 

@@ -51,9 +51,9 @@ export const routerConfig = {
       path: '/search/',
       name: 'search',
       meta: {
-        title: 'Search - Blow Your Face Off'
+        title: 'Search - Blow Your Face Off',
       },
-      component: ()=> import('../views/Search.vue')
+      component: () => import('../views/Search.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
@@ -61,10 +61,10 @@ export const routerConfig = {
       meta: {
         title: 'Redirecting - Blow Your Face Off',
       },
-      redirect: '/'
+      redirect: '/',
     },
   ],
-}
+};
 
 const router = createRouter(routerConfig);
 

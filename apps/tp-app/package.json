@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --host",
     "dev:local": "vite",
-    "build": "node ./scripts/assemble-changelog.mjs && vite build",
+    "build": "node ./scripts/assemble-changelog.node.mjs && vite build",
     "start": "vite build; vite --host",
     "start:local": "vite build; vite",
     "deploy": "firebase deploy",

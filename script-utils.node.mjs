@@ -1,16 +1,16 @@
-export function processArgs(argv,unaryArgs,binaryArgs) {
+export function processArgs(argv, unaryArgs, binaryArgs) {
   const args = argv.splice(2);
   const argMap = new Map();
-  for(let i = 0; i < args.length; i++){
-    const rawName = args[i].replace(/^-/,'');
-    if(unaryArgs.includes(rawName)){
+  for (let i = 0; i < args.length; i++) {
+    const rawName = args[i].replace(/^-/, '');
+    if (unaryArgs.includes(rawName)) {
       argMap.set(rawName, true);
-    } else if (binaryArgs.includes(rawName)){
-      if(!args[i+1] || args[i+1].startsWith('-')){
+    } else if (binaryArgs.includes(rawName)) {
+      if (!args[i + 1] || args[i + 1].startsWith('-')) {
         throw new Error(`Args mismatch: Missing value for argument ${args[i]}`);
       } else {
-        argMap.set(rawName,args[i+1]);
-        i+=1;
+        argMap.set(rawName, args[i + 1]);
+        i += 1;
       }
     } else {
       throw new Error(`Args error: Invalid argument ${args[i]}`);
@@ -19,15 +19,15 @@ export function processArgs(argv,unaryArgs,binaryArgs) {
   return argMap;
 }
 
-export function formatJson(json,depth = 1){
+export function formatJson(json, depth = 1) {
   const isArray = Array.isArray(json);
   let output = isArray ? '[\n' : '{\n';
-  for(const key in json) {
+  for (const key in json) {
     output += '  '.repeat(depth);
-    if(!isArray){
+    if (!isArray) {
       output += `"${key}": `;
     }
-    switch(typeof json[key]){
+    switch (typeof json[key]) {
       case 'string':
         output += `"${json[key].replaceAll('"', '\\"')}"`;
         break;
@@ -38,15 +38,15 @@ export function formatJson(json,depth = 1){
         output += json[key] ? 'true' : 'false';
         break;
       case 'object':
-        output += formatJson(json[key],depth+1);
+        output += formatJson(json[key], depth + 1);
         break;
     }
     output += ',\n';
-  };
-  if(depth > 1){
+  }
+  if (depth > 1) {
     output += '  '.repeat(depth - 1);
   }
   output += isArray ? ']' : '}';
-  output = output.replaceAll(/,(?=\s+(}|]))/g,'');
+  output = output.replaceAll(/,(?=\s+(}|]))/g, '');
   return output;
 }

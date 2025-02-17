@@ -19,7 +19,7 @@ const roundLength = ref(180000);
 const timeError = ref('');
 
 const startGame = async () => {
-  if(players.value.length < config.minPlayers){
+  if (players.value.length < config.minPlayers) {
     return;
   }
   await firebase.beginGame(gameid, roundLength.value);
@@ -44,7 +44,7 @@ players.value = sortNamesBy(rawPlayers, 'username');
 
 for (const playerNumber in playerList) {
   if (playerList[playerNumber]?.username === store.username) {
-    firebase.attachMissingListener(gameid,playerNumber);
+    firebase.attachMissingListener(gameid, playerNumber);
   }
 }
 
@@ -95,17 +95,23 @@ const copyLink = () => {
   navigator.clipboard.writeText(link);
   showCopied.value = true;
   clearTimeout(copiedTimeout);
-  copiedTimeout = setTimeout(()=>{showCopied.value = false;},3000);
-}
+  copiedTimeout = setTimeout(() => {
+    showCopied.value = false;
+  }, 3000);
+};
 </script>
 
 <template>
   <main>
     <section>
       <h2 class="needs-backdrop">Game {{ gameid }}</h2>
-      <button @click="copyLink" class="small">{{showCopied ? `✓ Copied` : `&#xFE0E;📋 Copy Game Link`}}</button>
+      <button @click="copyLink" class="small">{{ showCopied ? `✓ Copied` : `&#xFE0E;📋 Copy Game Link` }}</button>
     </section>
-    <tp-player-list :players="players" :messageStart="'Waiting for players. Invite players with the game number or by sharing the join link above'" :messageEnd="`${players.length} player${players.length !== 1 ? 's' : ''} in game (${players.length < config.minPlayers ? `req. ${config.minPlayers}` : `max ${config.maxPlayers}`})`"/>
+    <tp-player-list
+      :players="players"
+      :messageStart="'Waiting for players. Invite players with the game number or by sharing the join link above'"
+      :messageEnd="`${players.length} player${players.length !== 1 ? 's' : ''} in game (${players.length < config.minPlayers ? `req. ${config.minPlayers}` : `max ${config.maxPlayers}`})`"
+    />
     <div id="host-controls" v-if="store.hosting == gameid">
       <p class="needs-backdrop">Round length in minutes:</p>
       <byfo-time-input init-value="3.0" placeholder="∞" />

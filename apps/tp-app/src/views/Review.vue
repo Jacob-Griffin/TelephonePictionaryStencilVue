@@ -23,8 +23,10 @@ const openMetadata = () => {
   metadataModal.value.metadata = metadata;
   metadataModal.value.gameid = gameid;
   metadataModal.value.enabled ||= true;
-}
-const {location:{hash}} = window;
+};
+const {
+  location: { hash },
+} = window;
 const selected = ref(hash && hash in stacks ? hash : '');
 const showAllFlag = ref(!!store.alwaysShowAll);
 
@@ -32,12 +34,12 @@ const playerSelector = ref(null);
 const showCollapse = ref(false);
 const collapsed = ref(false);
 const toggleCollapse = () => {
-  if(!showCollapse.value){
+  if (!showCollapse.value) {
     collapsed.value = false;
     return;
   }
   collapsed.value = !collapsed.value;
-}
+};
 
 const cacheImage = (player, idx) => {
   const imgURL = stacks[player][idx].content;
@@ -54,24 +56,24 @@ const cacheImage = (player, idx) => {
 const clickPlayer = username => {
   selected.value = username;
   let newURL = window.location.href;
-  const queryParam = `?stack=${username}`
-  if(window.location.search){
-    newURL = newURL.replace(/\?stack=[^?&]+/,queryParam);
+  const queryParam = `?stack=${username}`;
+  if (window.location.search) {
+    newURL = newURL.replace(/\?stack=[^?&]+/, queryParam);
   } else {
-    if(window.location.hash){
-      newURL = newURL.replace('#',`?stack=${queryParam}#`);
+    if (window.location.hash) {
+      newURL = newURL.replace('#', `?stack=${queryParam}#`);
     } else {
       newURL += queryParam;
     }
   }
-  history.replaceState({},null,newURL);
+  history.replaceState({}, null, newURL);
   if (!showAllFlag.value) {
     for (let i = 1; i < players.length; i += 2) {
       //Go through odd rounds and pre-emptively grab the images so that they instant-load on view
       cacheImage(username, i);
     }
   }
-  if(showCollapse.value && !collapsed.value){
+  if (showCollapse.value && !collapsed.value) {
     toggleCollapse();
   }
 };
@@ -112,26 +114,26 @@ if (target && target in stacks) {
 
 const collapserObserver = new ResizeObserver(entries => {
   const recent = entries.at(-1);
-  if(recent.contentBoxSize > 50){
+  if (recent.contentBoxSize > 50) {
     showCollapse.value ||= true;
   } else {
     showCollapse.value &&= false;
   }
-})
+});
 
 onMounted(() => {
   collapserObserver.observe(playerSelector.value);
-})
+});
 onBeforeUnmount(() => {
   collapserObserver.disconnect();
-})
+});
 
 //Once all of the loading is done, and any effects happened, clear the backed up game data
 store.clearGameData();
 </script>
 
 <template>
-  <h2>Game {{ gameid }}<tp-icon icon='statistics' title='Game details' @click="openMetadata"/></h2> 
+  <h2>Game {{ gameid }}<tp-icon icon="statistics" title="Game details" @click="openMetadata" /></h2>
   <div id="playerSelector" :class="collapsed ? 'collapsed' : ''" ref="playerSelector">
     <p v-if="showCollapse" @click="toggleCollapse">▶</p>
     <button @click="() => clickPlayer(player)" v-for="player in players" :key="player" class="small" :class="{ selected: player == selected }">
@@ -142,7 +144,7 @@ store.clearGameData();
     <tp-review-chat :showAll="showAllFlag" :stackProxy.prop="stacks[selected]"></tp-review-chat>
   </section>
   <section class="unselected stack" v-else>
-    <h3 class='really needs-backdrop'>Select a stack to begin viewing</h3>
+    <h3 class="really needs-backdrop">Select a stack to begin viewing</h3>
   </section>
   <tp-metadata-modal ref="metadataModal"></tp-metadata-modal>
 </template>
@@ -161,21 +163,21 @@ store.clearGameData();
   margin-bottom: 1rem;
   user-select: none;
   text-align: center;
-  
-  & > p{
+
+  & > p {
     cursor: pointer;
-    position:absolute;
+    position: absolute;
     top: 0;
     left: 0;
-    transform:rotate(90deg);
+    transform: rotate(90deg);
   }
 
   &.collapsed {
-    height:3rem;
+    height: 3rem;
     overflow-y: hidden;
 
-    & > p{
-      transform:rotate(0);
+    & > p {
+      transform: rotate(0);
     }
   }
 
@@ -202,7 +204,7 @@ store.clearGameData();
   }
 }
 
-tp-icon[icon='statistics']{
+tp-icon[icon='statistics'] {
   display: inline-flex;
   margin-left: 0.5rem;
   height: 1em;

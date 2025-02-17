@@ -42,7 +42,9 @@ export class ByfoInfoBubble extends LitElement {
 
       opacity: 0;
       z-index: -2;
-      transition: opacity 200ms ease, z-index 200ms ease;
+      transition:
+        opacity 200ms ease,
+        z-index 200ms ease;
     }
 
     tp-icon {

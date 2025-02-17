@@ -1,5 +1,5 @@
 <script setup>
-import { RouterView, useRoute} from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import { TPStore, BYFOFirebaseAdapter } from 'byfo-utils/rollup';
 import { ref, onBeforeMount, provide, onMounted, watch } from 'vue';
 import 'byfo-components/tp-icon';
@@ -38,9 +38,9 @@ const buildDate = __BUILD_DATE__; // eslint-disable-line no-undef
 provide('CurrentYear', buildDate.year);
 
 const firebase = new BYFOFirebaseAdapter(firebaseConfig);
-provide('Firebase',firebase);
+provide('Firebase', firebase);
 
-watch(useRoute(), (r) => {
+watch(useRoute(), r => {
   isInGame.value = inGame(r.path);
   isInHome.value = inHome(r.path);
 });
@@ -49,13 +49,13 @@ onBeforeMount(() => {
   tp.useTheme();
   tp.useCustomStyles();
 });
-onMounted(()=>{
+onMounted(() => {
   settingsmodal.value.store = tp;
   versionmodal.value.store = tp;
-  versionmodal.value.addEventListener('tp-version-changes-loaded', ()=> {
-    showVersionButton.value = versionmodal.value.isBeta || versionmodal.value.hasChanges
-  })
-})
+  versionmodal.value.addEventListener('tp-version-changes-loaded', () => {
+    showVersionButton.value = versionmodal.value.isBeta || versionmodal.value.hasChanges;
+  });
+});
 </script>
 
 <template>
@@ -63,9 +63,11 @@ onMounted(()=>{
     <tp-icon icon="home"></tp-icon>
   </div>
   <header :class="isInHome ? 'invisible' : ''">
-    <byfo-logo small v-if="!isInHome"/>
+    <byfo-logo small v-if="!isInHome" />
   </header>
-  <div float right @click="(versionmodal.enabled = true) && (versionChangesSeen = true)" id="beta-button" v-if="showVersionButton"><span id="unseen-changes" v-if="versionmodal?.hasChanges && !versionChangesSeen">•</span><span>β</span></div>
+  <div float right @click="(versionmodal.enabled = true) && (versionChangesSeen = true)" id="beta-button" v-if="showVersionButton">
+    <span id="unseen-changes" v-if="versionmodal?.hasChanges && !versionChangesSeen">•</span><span>β</span>
+  </div>
   <div float right @click="settingsmodal.enabled = true">
     <tp-icon icon="gear"></tp-icon>
   </div>
@@ -102,7 +104,7 @@ header {
   }
 }
 
-div[float]{
+div[float] {
   width: 4.5rem;
   height: 4.5rem;
   padding: 1rem;
@@ -117,10 +119,10 @@ div[float]{
     background-color: var(--color-button-hover-subtle);
   }
 
-  &[left]{
+  &[left] {
     left: 0;
   }
-  &[right]{
+  &[right] {
     right: 0;
   }
 
@@ -144,7 +146,6 @@ div[float]{
   .invisible + & {
     border-radius: 0 0 0 1rem;
   }
-  
 
   & #unseen-changes {
     color: var(--color-button-hover);

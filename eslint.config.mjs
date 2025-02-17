@@ -1,23 +1,25 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import pluginVue from "eslint-plugin-vue";
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import pluginVue from 'eslint-plugin-vue';
+import configPrettier from 'eslint-plugin-prettier/recommended';
 import vueEslintParser from 'vue-eslint-parser';
 import tseslint from 'typescript-eslint';
 
-const willFullyUpdate = ['**/byfo-components/**', '**/byfo-themes/**']
+const willFullyUpdate = ['**/byfo-components/**', '**/byfo-themes/**'];
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
-  {ignores: ['**/dist/**/*', '**/node_modules/**/*', '**/functions/**/*', ...willFullyUpdate]},
-  {files: ["**/*.{js,mjs,cjs}"]},
-  {languageOptions: { globals: globals.browser }},
+  { ignores: ['**/dist/**/*', '**/node_modules/**/*', '**/functions/**/*', ...willFullyUpdate] },
+  { files: ['**/*.{js,mjs,cjs}'] },
+  { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
-  ...pluginVue.configs["flat/essential"],
+  configPrettier,
+  ...pluginVue.configs['flat/essential'],
   {
     rules: {
       'vue/multi-word-component-names': 'off',
-      'vue/no-deprecated-slot-attribute': 'off'
-    }
+      'vue/no-deprecated-slot-attribute': 'off',
+    },
   },
   ...tseslint.configs.recommended,
   {
@@ -25,34 +27,34 @@ const config = [
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          "args": "all",
-          "argsIgnorePattern": "^_",
-          "caughtErrors": "all",
-          "caughtErrorsIgnorePattern": "^_",
-          "destructuredArrayIgnorePattern": "^_",
-          "varsIgnorePattern": "^_",
-          "ignoreRestSiblings": true
-        }
-      ]
-    }
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
   },
   {
-    files:["**/*.node.{js,mjs,cjs}"],
-    languageOptions: {globals: globals.node}
+    files: ['**/*.node.{js,mjs,cjs}'],
+    languageOptions: { globals: globals.node },
   },
   {
-    files: ["**/*.vue"],
+    files: ['**/*.vue'],
     languageOptions: {
-        parser: vueEslintParser,
-        parserOptions: {
-            parser: tseslint.parser,
-            sourceType: "module",
-            ecmaFeatures: {
-                jsx: true
-            }
-        }
-    }
-}
+      parser: vueEslintParser,
+      parserOptions: {
+        parser: tseslint.parser,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+  },
 ];
 
 export default config;

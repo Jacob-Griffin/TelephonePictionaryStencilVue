@@ -26,14 +26,14 @@ const playerlist = ref([]);
 const dismissLandscapeMode = () => {
   store.setLandscapeDismissed(true);
   landscapeDismissed.value = true;
-}
+};
 
 const roundData = ref({
   roundnumber: 0,
   endTime: -1,
 });
 const roundnumber = computed(() => roundData.value.roundnumber);
-const isText = computed(()=> roundnumber.value % 2 === 0);
+const isText = computed(() => roundnumber.value % 2 === 0);
 
 const content = ref({
   content: '',
@@ -42,7 +42,7 @@ const content = ref({
 
 //Toggles whether to show the actual gameplay or not
 const finishedRound = ref(-1);
-firebase.fetchFinishedRound(gameid,name).then(round => finishedRound.value = round);
+firebase.fetchFinishedRound(gameid, name).then(round => (finishedRound.value = round));
 const waiting = computed(() => finishedRound.value >= roundnumber.value);
 const stuckSignal = ref(false);
 const stuck = computed(() => {
@@ -75,9 +75,9 @@ const people = !redirect && (await firebase.getToAndFrom(gameid, name));
 const staticRoundInfo = !redirect && (await firebase.getStaticRoundInfo(gameid));
 
 //Subscribe to changes in roundnumber
-if(!redirect){
+if (!redirect) {
   const playerNumber = await firebase.getPlayerNumber(gameid, name);
-  const missingListener = firebase.attachMissingListener(gameid,playerNumber);
+  const missingListener = firebase.attachMissingListener(gameid, playerNumber);
 
   const handleRoundData = async snapshot => {
     const newRound = snapshot.val();
@@ -96,43 +96,45 @@ if(!redirect){
 
     //Grab the data of your "from" player using pre-updated round#
     content.value = await firebase.fetchCard(gameid, people?.from, roundnumber.value - 1);
-  }
+  };
 
   subscriptions.push(firebase.attachRoundListener(gameid, handleRoundData));
 
-  window.addEventListener('visibilitychange',()=>{
-    if(document.visibilityState === 'visible' && waiting.value){
-      firebase.resyncRoundData(gameid,handleRoundData);
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && waiting.value) {
+      firebase.resyncRoundData(gameid, handleRoundData);
     }
-  })
+  });
 
   //Subscribe to see when the game gets finished
-  subscriptions.push(firebase.attachFinishedListener(gameid,snapshot => {
-    const result = [];
-    const pulledData = snapshot.val();
-    for (let name in pulledData) {
-      const username = decodePath(name);
-      result.push({
-        username,
-        lastRound: pulledData[name],
-      });
-    }
-    playerlist.value = sortNamesBy(result, 'username');
-  }));
+  subscriptions.push(
+    firebase.attachFinishedListener(gameid, snapshot => {
+      const result = [];
+      const pulledData = snapshot.val();
+      for (let name in pulledData) {
+        const username = decodePath(name);
+        result.push({
+          username,
+          lastRound: pulledData[name],
+        });
+      }
+      playerlist.value = sortNamesBy(result, 'username');
+    }),
+  );
 
   //Add event listeners
   onMounted(() => {
-    document.addEventListener('tp-submitted', async ({ detail:{content,forced} }) => {
+    document.addEventListener('tp-submitted', async ({ detail: { content, forced } }) => {
       const submittedRound = roundnumber.value;
-      if(finishedRound.value === roundnumber.value || isSending.value){
+      if (finishedRound.value === roundnumber.value || isSending.value) {
         // No double submissions
         return;
       }
-      try{
+      try {
         isSending.value = true;
-        await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo,forced);
+        await firebase.submitRound(gameid, name, roundnumber.value, content, staticRoundInfo, forced);
         finishedRound.value = submittedRound;
-        window.scroll({top:0});
+        window.scroll({ top: 0 });
       } catch {
         // If there's an error, we're just leaving it be
       } finally {
@@ -142,9 +144,9 @@ if(!redirect){
 
     //All this does is request a new computation for stuck.value, since the template won't poll, and dependencies haven't changed
     document.addEventListener('tp-stuck-signal', () => {
-      stuckSignal.value = !stuckSignal.value
-      if(store.hosting && finishedRound.value === staticRoundInfo.lastRound && playerlist.value.every(({lastRound}) => lastRound === staticRoundInfo.lastRound)){
-        firebase.finalizeGame(gameid)
+      stuckSignal.value = !stuckSignal.value;
+      if (store.hosting && finishedRound.value === staticRoundInfo.lastRound && playerlist.value.every(({ lastRound }) => lastRound === staticRoundInfo.lastRound)) {
+        firebase.finalizeGame(gameid);
       }
     });
   });
@@ -156,30 +158,36 @@ if(!redirect){
 }
 const timeValue = config.addTimeIncrement;
 const addTime = () => {
-  firebase.sendAddTime(gameid,timeValue*1000);
+  firebase.sendAddTime(gameid, timeValue * 1000);
 };
 
 const scrollToCanvas = () => {
-  window.scrollTo(0,2000)
-}
+  window.scrollTo(0, 2000);
+};
 </script>
 
 <template>
   <section v-if="waiting" class="mb-4">
     <h1 class="needs-backdrop">Waiting for next round</h1>
-    <tp-player-list :players="playerlist" :roundData="roundData" :lastRound="staticRoundInfo.lastRound" :addTime="isHosting ? addTime : undefined" :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''"></tp-player-list>
+    <tp-player-list
+      :players="playerlist"
+      :roundData="roundData"
+      :lastRound="staticRoundInfo.lastRound"
+      :addTime="isHosting ? addTime : undefined"
+      :messageStart="stuck ? 'Stuck? [Knowlege base](https://github.com/Jacob-Griffin/TelephonePictionary2.0/wiki/Knowlege-Base)' : ''"
+    ></tp-player-list>
   </section>
   <section id="not-waiting" v-else>
-    <h2 class="needs-backdrop">Round {{ roundnumber+1 }}/{{ (~~staticRoundInfo.lastRound)+1 }}</h2>
+    <h2 class="needs-backdrop">Round {{ roundnumber + 1 }}/{{ ~~staticRoundInfo.lastRound + 1 }}</h2>
     <p v-if="roundData.roundnumber != 0"><strong>From:</strong> {{ people.from }}</p>
     <section id="gameplay-elements" :class="isText ? 'mb-4' : ''">
       <a id="canvas-link" @click="scrollToCanvas" v-if="!isText">Scroll to Canvas</a>
       <byfo-content v-if="roundnumber != 0" :content="content.content" :type="content.contentType" :sendingTo="isText ? undefined : people.to"></byfo-content>
-      <div class='really needs-backdrop' v-if="roundData.endTime !== -1 && isText">
-        <tp-timer class='timer' :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime" :offset="firebase.serverOffset" :canTimeOut="!waiting"></tp-timer>
+      <div class="really needs-backdrop" v-if="roundData.endTime !== -1 && isText">
+        <tp-timer class="timer" :addTime="isHosting ? addTime : undefined" :endtime="roundData.endTime" :offset="firebase.serverOffset" :canTimeOut="!waiting"></tp-timer>
       </div>
       <tp-input-zone :round="roundnumber" ref="inputzone" :characterLimit="config.textboxMaxCharacters" :sendingTo="people.to" :isSending="isSending">
-        <div slot="timer" class='really needs-backdrop' v-if="roundData.endTime !== -1 && !isText">
+        <div slot="timer" class="really needs-backdrop" v-if="roundData.endTime !== -1 && !isText">
           <tp-timer class="timer" :endtime="roundData.endTime" :offset="firebase.serverOffset" :addTime="isHosting ? addTime : undefined" :canTimeOut="!waiting"></tp-timer>
         </div>
       </tp-input-zone>
@@ -211,14 +219,13 @@ section {
   gap: 1rem;
 }
 
-#gameplay-elements byfo-content{
+#gameplay-elements byfo-content {
   max-width: 1100px;
 }
 
 #player-to {
   display: none;
 }
-
 
 * {
   user-select: none;
@@ -251,12 +258,12 @@ tp-input-zone {
 @media screen and (((max-width: 500px) and (max-aspect-ratio:0.9))) {
   #landscape-enforcer {
     position: fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background-color: #000C;
-    color:white;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000c;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -269,9 +276,9 @@ tp-input-zone {
   }
 }
 
-@media screen and ((max-aspect-ratio:1.6) and (max-width:1200px)) {
+@media screen and ((max-aspect-ratio: 1.6) and (max-width:1200px)) {
   tp-input-zone {
-    --flip-pos:column;
+    --flip-pos: column;
     --horizontal: center;
     --flip-height: 10rem;
     --full-width: 100%;

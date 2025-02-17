@@ -1,16 +1,16 @@
-import { processArgs } from "./script-utils.node.mjs";
+import { processArgs } from './script-utils.node.mjs';
 import { execSync } from 'child_process';
-import { exit } from 'process'
+import { exit } from 'process';
 const automationAccount = 'griffin-automation';
 
-const args = processArgs(process.argv,[],['v']);
+const args = processArgs(process.argv, [], ['v']);
 const version = args.get('v');
 console.log(`Releasing version ${version}`);
 const ghAccounts = execSync('gh auth status').toString();
 const currentAuth = ghAccounts.match(/account (\S+).*\n.+Active account: true/)?.[1];
 const currentUserName = execSync('git config get user.name').toString();
-if(currentAuth !== automationAccount){
-  if(!ghAccounts.includes(automationAccount)){
+if (currentAuth !== automationAccount) {
+  if (!ghAccounts.includes(automationAccount)) {
     console.error('Automation account not found, cancelling');
     exit(1);
   }
@@ -20,7 +20,7 @@ if(currentAuth !== automationAccount){
 
 const _branch = execSync('git branch').toString();
 const branch = _branch.match(/\* (.+)/)[1];
-if(branch !== 'dev'){
+if (branch !== 'dev') {
   console.log('switching to branch dev');
   execSync(`git switch dev`);
 }
@@ -32,12 +32,12 @@ console.log('Creating pr branch for new release');
 execSync(`git branch version-${version}`);
 execSync(`git switch version-${version}`);
 
-const packages = execSync("find packages/*/package.json apps/*/package.json ./package.json -iname package.json").toString().trim().split('\n');
+const packages = execSync('find packages/*/package.json apps/*/package.json ./package.json -iname package.json').toString().trim().split('\n');
 
 packages.forEach(p => {
   const oldContent = execSync(`cat ${p}`).toString();
-  const newContent = oldContent.replace(/"version": ".*"/,`"version": "${version}"`);
-  execSync(`echo -n "${newContent.replaceAll('\\"','\\\\"').replaceAll('"','\\"')}" | cat > ${p}`);
+  const newContent = oldContent.replace(/"version": ".*"/, `"version": "${version}"`);
+  execSync(`echo -n "${newContent.replaceAll('\\"', '\\\\"').replaceAll('"', '\\"')}" | cat > ${p}`);
 });
 
 packages.forEach(p => execSync(`git add ${p}`));
@@ -46,19 +46,19 @@ console.log('Assembling changelog');
 const changeItems = execSync('ls ./changes').toString().split('\n');
 const changeContents = [];
 changeItems.forEach(filename => {
-  if(filename.startsWith('[') || filename === 'example.md'){
+  if (filename.startsWith('[') || filename === 'example.md') {
     return;
   }
-  if(!filename.endsWith('.md')){
+  if (!filename.endsWith('.md')) {
     return;
   }
   const contents = execSync(`cat ./changes/${filename}`).toString();
   changeContents.push(contents);
   execSync(`mv ./changes/${filename} ./changes/[${version}]-${filename}`);
   execSync(`git add ./changes/[${version}]-${filename}`);
-})
+});
 
-try{
+try {
   execSync(`git commit -m "Automated: Release ${version}"`);
 } catch (e) {
   console.log(e.output.toString());
@@ -91,7 +91,7 @@ execSync('git pull');
 console.log(`switching back to branch ${branch}`);
 execSync(`git switch ${branch}`);
 
-console.log(`Labeling installed:beta issues as installed:release`)
+console.log(`Labeling installed:beta issues as installed:release`);
 const issuesText = execSync(`gh issue list --label "C - Beta"`).toString();
 const issues = [...issuesText.matchAll(/^\d+/gm)].map(match => match[0]);
 issues.forEach(id => {
@@ -102,7 +102,7 @@ issues.forEach(id => {
 
 console.log(`Creating Release post`);
 const releaseMessage = `Released ${issues.length} fixed issues according to labels. Changes:
-${changeContents.join('\n\n')}`
+${changeContents.join('\n\n')}`;
 execSync(`gh release create v${version} --title "Release ${version}" --notes "${releaseMessage}"`);
 
 console.log(`returning cli and git user`);
