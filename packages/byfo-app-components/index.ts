@@ -7,7 +7,7 @@ export default class BYFOTestpage extends LitElement {
   test = 5;
   render() {
     return html`<h1>BYFO Component test page #${this.test}!</h1>
-      <byfo-canvas></byfo-canvas>`;
+      <byfo-canvas backupKey=${'testkey'}></byfo-canvas>`;
   }
 }
 

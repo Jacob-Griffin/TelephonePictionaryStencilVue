@@ -133,3 +133,32 @@ export function invalidCharactersList(input: string) {
   return stringList.replace(/, ([^,]+)$/, ', or $1');
 }
 //#endregion Regexp
+
+export const control = 'ctrl+';
+export const alt = 'alt+';
+export const shift = 'shift+';
+export const meta = 'meta+';
+export function stringifyKeystroke(event: KeyboardEvent) {
+  const { key, ctrlKey, shiftKey, altKey, metaKey } = event;
+  let code = '';
+  if (ctrlKey) code += control;
+  if (altKey) code += alt;
+  if (metaKey) code += meta;
+  if (shiftKey) code += shift;
+  const letter = key.toLowerCase();
+  if (!['control', 'shift', 'alt', 'meta'].includes(letter)) {
+    code += letter;
+  }
+  return code;
+}
+export function useKeystrokes(map: Record<string, () => void>, logger?: (v: string) => void) {
+  return (event: KeyboardEvent) => {
+    const code = stringifyKeystroke(event);
+    if (logger) {
+      logger(code);
+    }
+    if (code in map) {
+      map[code]();
+    }
+  };
+}

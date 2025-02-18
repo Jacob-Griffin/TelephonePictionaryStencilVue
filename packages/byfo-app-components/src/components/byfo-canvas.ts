@@ -1,6 +1,7 @@
-import { LitElement, PropertyValues, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { LitElement, PropertyValues, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, Ref } from 'lit/directives/ref.js';
+import { html } from '../utils/byfoHtml';
 import { BYFOCanvasState } from 'byfo-utils';
 
 const internalWidth = 1000;
@@ -12,17 +13,39 @@ export default class BYFOCanvas extends LitElement {
   get canvas() {
     return this.#canvas.value!;
   }
-  #ctx: CanvasRenderingContext2D | null = null;
   box?: DOMRect;
   state?: BYFOCanvasState;
 
-  protected firstUpdated(_changedProperties: PropertyValues): void {
-    this.#ctx = this.canvas.getContext('2d');
-    if (!this.#ctx) {
-      throw new Error('Canvas context was not properly started');
+  @property() backupKey?: string;
+  get backup() {
+    if (this.backupKey) {
+      return {
+        set: (data: string) => {
+          if (!data) {
+            localStorage.removeItem(this.backupKey!);
+          }
+          localStorage.setItem(this.backupKey!, data);
+        },
+        get: () => localStorage.getItem(this.backupKey!),
+      };
+    } else {
+      return {
+        set: (_data: string) => void null,
+        get: () => null,
+      };
     }
-    this.box = this.canvas.getBoundingClientRect();
-    this.state = new BYFOCanvasState(this.#ctx, this.box, { internalHeight, internalWidth });
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues): void {
+    const backupdata = this.backup.get() ?? undefined;
+    this.state = new BYFOCanvasState(this.canvas, { internalHeight, internalWidth }, backupdata);
+    this.state.on('backup', this.backup.set);
+    this.addEventListener('contextmenu', e => e.preventDefault());
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.state?.cleanupInputs();
   }
 
   render() {
