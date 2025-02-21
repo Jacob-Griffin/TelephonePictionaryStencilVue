@@ -19,6 +19,8 @@ type PathEntry = {
 type PenSize = 'small' | 'medium' | 'large' | 'xlarge';
 type PenSizeMap = Record<'draw' | 'erase', Record<PenSize, number>>;
 
+const reader = new FileReader();
+
 export class BYFOCanvasState {
   #context: CanvasRenderingContext2D;
   #box: DOMRect;
@@ -207,6 +209,18 @@ export class BYFOCanvasState {
     const canvas = new OffscreenCanvas(this.#width, this.#height);
     canvas.getContext('2d').putImageData(data, 0, 0);
     return await canvas.convertToBlob();
+  }
+
+  public async getDataUrl(): Promise<string> {
+    const blob = await this.getImage();
+    reader.readAsDataURL(blob);
+    return new Promise(resolve => {
+      const onread = () => {
+        reader.removeEventListener('loadend', onread);
+        resolve(reader.result as string);
+      };
+      reader.addEventListener('loadend', onread);
+    });
   }
 
   //#region undo-redo
