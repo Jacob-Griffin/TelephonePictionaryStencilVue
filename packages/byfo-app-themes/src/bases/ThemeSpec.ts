@@ -12,6 +12,7 @@ export interface ThemeColors {
 }
 
 export interface ThemeTextColors {
+  active: string;
   backdrop: string;
   button: string;
   heading: string;
@@ -27,4 +28,5 @@ export interface ThemeHoverColors {
 export interface ThemeImages {
   'icon': string;
   'small-icon': string;
+  'background': string;
 }

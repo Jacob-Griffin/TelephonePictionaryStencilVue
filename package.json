@@ -13,6 +13,7 @@
     "release": "node ./release.node.mjs",
     "generate": "pnpm --filter 'byfo-components-lit' generate",
     "g": "pnpm generate",
+    "generate:theme": "pnpm --filter '@byfo/themes' generate:theme",
     "version-sync": "syncpack fix-mismatches && pnpm install",
     "up:all": "syncpack update && syncpack fix-mismatches && pnpm install",
     "up:local": "node ./set-version.node.mjs && pnpm install",

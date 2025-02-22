@@ -1,9 +1,15 @@
-import { Theme } from '../bases/Theme';
+import { writeFileSync } from 'fs';
 
-export const light = new Theme({
-  name: 'light',
-  displayName: 'Light',
-  isDefault: true,
+let themeName = 'example';
+let displayName = 'Light';
+let isDefault = false;
+
+const themeContents = `import { Theme } from '../bases/Theme';
+
+export const ${themeName} = new Theme({
+  name: '${themeName}',
+  displayName: '${displayName}',
+  ${isDefault ? 'isDefault: true' : 'themeExtends: []'},
   styles: {
     colors: {
       active: 'rgb(47, 155, 72)',
@@ -36,10 +42,12 @@ export const light = new Theme({
   },
 });
 
-export default light;
+export default ${themeName};
 
 declare global {
   interface ThemeMap {
-    light: typeof light;
+    ${themeName}: typeof ${themeName};
   }
-}
+}`;
+
+writeFileSync(`./src/themes/${themeName}.ts`, themeContents);

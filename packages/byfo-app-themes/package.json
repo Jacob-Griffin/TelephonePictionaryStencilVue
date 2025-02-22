@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "tsc --watch",
     "dev:components": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "generate:theme": "node ./generator/generate-theme.node.js"
   },
   "devDependencies": {
     "typescript": "~5.7.2"
