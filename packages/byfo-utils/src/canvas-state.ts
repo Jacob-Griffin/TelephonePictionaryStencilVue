@@ -42,8 +42,6 @@ export class BYFOCanvasState {
       this.paths = JSON.parse(data);
       this.redraw();
     }
-
-    console.log(this);
   }
 
   setupContext() {
@@ -134,9 +132,6 @@ export class BYFOCanvasState {
       this.currentPath = [];
       this.backup = JSON.stringify(this.paths);
 
-      // const backupEvent = new CustomEvent<string>('tp-canvas-line', { detail: JSON.stringify(this.paths) });
-      // this.hostEl.dispatchEvent(backupEvent);
-
       if (event) {
         this.redoStack = [];
         this.redraw();
@@ -193,7 +188,7 @@ export class BYFOCanvasState {
 
   backup: string;
 
-  on = useAccessor<BYFOCanvasState>(['backup'], this);
+  on = useAccessor<BYFOCanvasState>(['backup', 'currentWidth', 'mode'], this);
 
   transformScreenPoint(e: { clientX: number; clientY: number }): [number, number] {
     const relativeX = e.clientX - this.#box.left;

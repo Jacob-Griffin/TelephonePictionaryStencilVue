@@ -3,6 +3,7 @@ export function useAccessor<T>(propNames: (keyof T)[], context: T & { _store?: {
   context._watcherMap = new Map();
   for (const prop of propNames) {
     const key = prop as keyof T;
+    const existingValue = context[prop];
     Object.defineProperty(context, key, {
       get() {
         return context._store?.[key];
@@ -13,6 +14,9 @@ export function useAccessor<T>(propNames: (keyof T)[], context: T & { _store?: {
         Object.values(watchers).forEach((watcher: (val: typeof v) => void) => watcher(v));
       },
     });
+    if (existingValue !== undefined) {
+      context[prop] = existingValue;
+    }
   }
 
   return function on<T extends (typeof propNames)[number]>(prop: T, fn: (v: (typeof context)[T]) => void, { instant }: { instant?: boolean } = {}): () => void {
