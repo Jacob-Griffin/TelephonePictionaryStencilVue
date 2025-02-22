@@ -7,7 +7,7 @@
     "build:utils": "turbo run --filter byfo-utils build",
     "dev": "turbo run dev --parallel",
     "dev:rebuild": "turbo run build && turbo run dev --parallel",
-    "dev:components": "pnpm --filter 'byfo-utils' dev & pnpm --filter '@byfo/components' dev", 
+    "dev:components": "turbo run dev:components --parallel", 
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "release": "node ./release.node.mjs",
