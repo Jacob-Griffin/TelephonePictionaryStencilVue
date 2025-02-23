@@ -1,9 +1,25 @@
-import { ThemeColors, ThemeHoverColors, ThemeImages, ThemeTextColors } from './ThemeSpec';
-
 export class Theme {
   name: keyof ThemeMap;
   displayName: string;
-  styles: { colors?: Partial<ThemeColors>; textColors?: Partial<ThemeTextColors>; hoverColors?: Partial<ThemeHoverColors>; images?: Partial<ThemeImages> };
+  styles: {
+    /**
+     * Contains solid colors used in shapes and backgrounds
+     * @see ThemeColors
+     */
+    colors?: Partial<ThemeColors>;
+    /**
+     * Contains text color for various states
+     */
+    textColors?: Partial<ThemeTextColors>;
+    /**
+     * Contains color offsets to be mixed with their base color when hovered
+     */
+    hoverColors?: Partial<ThemeHoverColors>;
+    /**
+     * Contains urls pointing to images related to the theme
+     */
+    images?: Partial<ThemeImages>;
+  };
   isDefault?: boolean;
   themeExtends?: Theme[];
 

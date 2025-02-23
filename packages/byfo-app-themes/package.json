@@ -15,6 +15,6 @@
     "generate:theme": "node ./generator/generate-theme.node.js"
   },
   "devDependencies": {
-    "typescript": "~5.7.2"
+    "typescript": "5.7.3"
   }
 }

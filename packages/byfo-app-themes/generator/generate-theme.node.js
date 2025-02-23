@@ -1,43 +1,59 @@
-import { writeFileSync } from 'fs';
+import { readdirSync, writeFileSync } from 'fs';
+import readline from 'readline';
 
-let themeName = 'example';
-let displayName = 'Light';
-let isDefault = false;
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+const prompt = query => new Promise(resolve => rl.question(query, resolve));
+
+const displayName = process.argv[2] ?? (await prompt('Theme "pretty" name (ex: My Theme): '));
+if (!displayName) {
+  throw new Error('No theme name provided');
+}
+const isDark = (await prompt('Is this a "dark" theme? (y/[N])')) ?? 'n';
+const extension = isDark.toLowerCase().startsWith('y') ? 'dark' : 'light';
+console.log(`Creating theme "${displayName}"...`);
+const themeName = displayName.toLowerCase().replaceAll(/[^a-z]/g, '');
+if (readdirSync('./src/themes').includes(themeName + '.ts')) {
+  throw new Error('Theme already exists');
+}
 
 const themeContents = `import { Theme } from '../bases/Theme';
+import { ${extension} } from './${extension}';
 
 export const ${themeName} = new Theme({
   name: '${themeName}',
   displayName: '${displayName}',
-  ${isDefault ? 'isDefault: true' : 'themeExtends: []'},
+  themeExtends: [${extension}],
+  // Colors can take any valid css <color> string
+  // If a color is uncommented, you can hover over the label to see what they're for (depending on IDE, vscode supports this)
+  // If a color is not defined, it will simply fall back to the "base" theme's color
   styles: {
     colors: {
-      active: 'rgb(47, 155, 72)',
-      brand: 'rgb(50, 78, 163)',
-      background: '#f2f2f2',
-      backdrop: 'rgba(210, 210, 210, 0.85)',
-      border: 'rgb(100, 116, 139)',
-      button: 'rgb(60, 90, 190)',
-      disabled: '#889',
-      important: '#f28705',
-      scroll: 'var(--byfo-text-main)',
-      toggle: '#f2f2f2',
+      // active: 'white',
+      // brand: 'white',
+      // background: 'white',
+      // backdrop: 'white',
+      // border: 'white',
+      // button: 'white',
+      // disabled: 'white',
+      // important: 'white',
+      // scroll: 'white',
+      // toggle: 'white',
     },
     textColors: {
-      active: 'var(--byfo-text-main)',
-      backdrop: '#222222',
-      button: 'white',
-      heading: '#2c3e50',
-      main: '#2c3e50',
-      link: 'rgb(101, 116, 252)',
+      // active: 'black',
+      // backdrop: 'black',
+      // button: 'black',
+      // heading: 'black',
+      // main: 'black',
+      // link: 'black',
     },
     hoverColors: {
-      link: 'rgb(70, 70, 200)',
-      button: 'rgb(16, 43, 131)',
+      // link: 'red',
+      // button: 'red',
     },
     images: {
-      'icon': "url('/byfo-logo.png')",
-      'small-icon': "url('/byfo-logo.png')",
+      // 'icon': "url('/example.png')",
+      // 'small-icon': "url('/example.png')",
     },
   },
 });
@@ -48,6 +64,25 @@ declare global {
   interface ThemeMap {
     ${themeName}: typeof ${themeName};
   }
-}`;
+}
+`;
 
 writeFileSync(`./src/themes/${themeName}.ts`, themeContents);
+
+const themeList = readdirSync('./src/themes').map(filename => filename.replace('.ts', ''));
+
+const indexContents = `${themeList.map(theme => `import { ${theme} } from './themes/${theme}';`).join('\n')}
+
+const themes: ThemeMap = {
+${themeList.map(theme => `  ${theme},`).join('\n')}
+};
+
+export type { ThemeMap };
+export { themes };
+export default themes;
+`;
+
+writeFileSync(`./src/index.ts`, indexContents);
+
+console.log('Done!');
+rl.close();

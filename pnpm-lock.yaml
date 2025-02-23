@@ -107,7 +107,7 @@ importers:
   packages/byfo-app-themes:
     devDependencies:
       typescript:
-        specifier: ~5.7.2
+        specifier: 5.7.3
         version: 5.7.3
 
   packages/byfo-components:

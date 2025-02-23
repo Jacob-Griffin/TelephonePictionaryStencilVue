@@ -1,8 +1,11 @@
-import { light } from './themes/light';
+import { candyvomit } from './themes/candyvomit';
 import { dark } from './themes/dark';
+import { light } from './themes/light';
+
 const themes: ThemeMap = {
-  light,
+  candyvomit,
   dark,
+  light,
 };
 
 export type { ThemeMap };
