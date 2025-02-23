@@ -7,10 +7,16 @@ export const dark = new Theme({
   themeExtends: [light],
   styles: {
     colors: {
-      active: 'red',
+      background: '#181818',
+      scroll: '#999',
     },
     textColors: {
-      main: 'blue',
+      heading: '#ffffff',
+      link: 'rgb(70, 70, 200)',
+      main: 'rgba(235, 235, 235, 0.64)',
+    },
+    hoverColors: {
+      link: '#CCF 30%',
     },
   },
 });

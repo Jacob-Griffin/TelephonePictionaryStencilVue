@@ -10,4 +10,5 @@ const themes: ThemeMap = {
 
 export type { ThemeMap };
 export { themes };
+export { default as applicationRules } from './bases/applicationRules';
 export default themes;

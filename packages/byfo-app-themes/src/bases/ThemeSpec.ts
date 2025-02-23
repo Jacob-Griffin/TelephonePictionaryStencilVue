@@ -75,6 +75,10 @@ declare global {
      */
     backdrop: string;
     /**
+     * The text/icon color used for "brand" text, like in the footer
+     */
+    brand: string;
+    /**
      * The text/icon color used on normal buttons
      */
     button: string;
@@ -104,9 +108,17 @@ declare global {
    */
   interface ThemeHoverColors {
     /**
+     * The color difference on hovered active buttons
+     */
+    active: string;
+    /**
      * The color difference on hovered buttons
      */
     button: string;
+    /**
+     * The color difference on hovered important buttons
+     */
+    important: string;
     /**
      * The color difference on hovered links
      */

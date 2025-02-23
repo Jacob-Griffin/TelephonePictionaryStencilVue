@@ -79,6 +79,7 @@ ${themeList.map(theme => `  ${theme},`).join('\n')}
 
 export type { ThemeMap };
 export { themes };
+export * from './bases/applicationRules';
 export default themes;
 `;
 

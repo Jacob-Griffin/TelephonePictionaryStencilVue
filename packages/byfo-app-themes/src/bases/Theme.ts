@@ -1,3 +1,5 @@
+import applicationRules from './applicationRules';
+
 export class Theme {
   name: keyof ThemeMap;
   displayName: string;
@@ -42,7 +44,6 @@ export class Theme {
     let result = this.isDefault ? ':root {' : `:root[byfo-theme-${this.name}] {`;
     let { colors, textColors, hoverColors, images } = this.styles;
     const extensions = [this, ...(this.themeExtends ?? [])].toReversed();
-    console.log(extensions.map(e => e.name));
     for (const source of extensions) {
       colors = Object.assign({}, colors, source.styles.colors);
       textColors = Object.assign({}, textColors, source.styles.textColors);
@@ -61,7 +62,9 @@ export class Theme {
     }
     if (hoverColors) {
       for (const key in hoverColors) {
-        result += `--byfo-hover-${key}:${hoverColors[key as keyof ThemeHoverColors]};`;
+        const value = hoverColors[key as keyof ThemeHoverColors];
+        const source = `--byfo-${colors && key in colors ? 'color' : 'text'}-${key}`;
+        result += `--byfo-hover-${key}:color-mix(in srgb, var(${source}), ${value});`;
       }
     }
     if (images) {
@@ -74,8 +77,7 @@ export class Theme {
   }
   install() {
     if (!window.backgroundSheet) {
-      window.backgroundSheet = new CSSStyleSheet();
-      window.backgroundSheet.replaceSync(`:root { background-color: var(--byfo-color-background); background-image: var(--byfo-image-background); } `);
+      window.backgroundSheet = applicationRules;
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, window.backgroundSheet];
     }
     this.loadStylesheet();

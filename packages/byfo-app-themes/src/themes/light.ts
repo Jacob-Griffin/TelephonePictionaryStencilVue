@@ -18,16 +18,19 @@ export const light = new Theme({
       toggle: '#f2f2f2',
     },
     textColors: {
-      active: 'var(--byfo-text-main)',
+      active: 'var(--byfo-text-button)',
       backdrop: '#222222',
       button: 'white',
+      brand: 'white',
       heading: '#2c3e50',
       main: '#2c3e50',
       link: 'rgb(101, 116, 252)',
     },
     hoverColors: {
       link: 'rgb(70, 70, 200)',
-      button: 'rgb(16, 43, 131)',
+      button: '#113 20%',
+      active: '#131 20%',
+      important: '#221 20%',
     },
     images: {
       'icon': "url('/byfo-logo.png')",

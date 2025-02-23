@@ -1,10 +1,10 @@
 import { Theme } from '../bases/Theme';
-import { dark } from './dark';
+import { light } from './light';
 
 export const candyvomit = new Theme({
   name: 'candyvomit',
   displayName: 'Candy Vomit',
-  themeExtends: [dark],
+  themeExtends: [light],
   // Colors can take any valid css <color> string
   // If a color is uncommented, you can hover over the label to see what they're for (depending on IDE, vscode supports this)
   // If a color is not defined, it will simply fall back to the "base" theme's color

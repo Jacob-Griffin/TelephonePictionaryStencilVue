@@ -5,7 +5,8 @@ import { html } from '../utils/byfoHtml';
 import { BYFOCanvasState } from 'byfo-utils';
 import { map } from 'lit/directives/map.js';
 
-import style from '../styles/button.style.ts';
+import buttonStyles from '../styles/button.style.ts';
+import { applicationRules } from '@byfo/themes';
 
 const internalWidth = 1000;
 const internalHeight = 600;
@@ -147,6 +148,8 @@ export default class BYFOCanvas extends LitElement {
         --grid-size: 1fr calc((2 * var(--button-size)) + var(--gap-size));
         display: grid;
         grid-template-rows: var(--grid-size);
+        column-gap: var(--gap-size);
+        row-gap: var(--gap-size);
       }
       :host(.side-by-side) {
         grid-template-columns: var(--grid-size);
@@ -178,7 +181,8 @@ export default class BYFOCanvas extends LitElement {
         border: solid 1px var(--byfo-border, rgb(100, 116, 139));
       }
     `,
-    style,
+    buttonStyles,
+    applicationRules,
   ];
 }
 
