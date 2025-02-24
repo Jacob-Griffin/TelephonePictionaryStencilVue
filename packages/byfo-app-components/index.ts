@@ -20,6 +20,20 @@ export default class BYFOTestpage extends LitElement {
     this.currentTheme = themetag;
     themes[themetag as keyof ThemeMap].apply();
   };
+  formFields = [
+    {
+      id: 'username',
+      label: 'Name',
+      initial: 'Jacob',
+      validate: (v: string) => v.length > 0,
+    },
+    {
+      id: 'gameid',
+      label: 'Game ID',
+      initial: '123456',
+      validate: (v: string) => /\d{1,7}/.test(v),
+    },
+  ];
   render() {
     return html`<h1>BYFO Component test page</h1>
       <byfo-canvas backupKey=${'testkey'}></byfo-canvas>
@@ -30,7 +44,11 @@ export default class BYFOTestpage extends LitElement {
             (theme: ThemeMap[keyof ThemeMap]) => html`<option value=${theme.name} selected=${theme.name === this.currentTheme || nothing}>${theme.displayName}</option>`,
           )}
         </select>
-      </div> `;
+      </div>
+      <byfo-modal
+        ><span slot="buttontext">Hello!</span>
+        <byfo-form slot='content' heading='Join Game' .onSubmit=${() => console.log('yippee!')} .fields=${this.formFields} buttonLabel='Join'></byfo-modal
+      >`;
   }
 }
 
