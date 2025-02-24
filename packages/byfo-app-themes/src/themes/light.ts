@@ -23,6 +23,7 @@ export const light = new Theme({
       button: 'white',
       brand: 'white',
       heading: '#2c3e50',
+      important: 'var(--byfo-text-button)',
       main: '#2c3e50',
       link: 'rgb(101, 116, 252)',
     },

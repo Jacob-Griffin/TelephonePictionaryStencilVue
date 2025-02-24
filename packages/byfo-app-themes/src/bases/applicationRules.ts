@@ -61,7 +61,7 @@ const sheetText = css`
     }
   }
 
-  button[important] {
+  button.important {
     color: var(--byfo-text-important);
     background-color: var(--byfo-color-important);
     &:hover {
