@@ -12,9 +12,9 @@ export default class BYFOModal extends LitElement {
   @property() fields?: Field[];
   @property() onSubmit?: (fieldValues: Record<string, string>) => void;
   @property() buttonLabel?: string;
-  @state() error?: string;
   @state() submissionDisabled: boolean = true;
-  errorEl?: string;
+  error?: string;
+  errors: Record<string, string | undefined> = {};
   values: Record<string, string> = {};
   valid: Record<string, boolean> = {};
 
@@ -29,17 +29,15 @@ export default class BYFOModal extends LitElement {
     const validate = vFn ?? this.fields?.find(f => f.id === id)?.validate ?? ((_v: string) => true);
     try {
       this.valid[id] = validate(value);
-      if (id === this.errorEl) {
-        this.errorEl = undefined;
-        this.error = undefined;
-      }
+      this.errors[id] = undefined;
     } catch (e) {
+      this.valid[id] = false;
       if (e instanceof Error) {
-        this.error = e.message;
-        this.errorEl = id;
+        this.errors[id] = e.message;
       }
     }
-    this.submissionDisabled = !!this.error || Object.values(this.valid).some(v => v === false);
+    this.error = Object.values(this.errors).find(e => (e?.length ?? 0) > 0);
+    this.submissionDisabled = Object.values(this.valid).some(v => !v);
   };
 
   submit() {

@@ -1,25 +1,22 @@
-import { LitElement, nothing } from 'lit';
+import { css, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { html } from './src/utils/byfoHtml';
-import { map } from 'lit/directives/map.js';
-import { themes, applicationRules, ThemeMap } from '@byfo/themes';
+import { ByfoIcon } from './src/components/functional/Icon';
+import type { Theme } from '@byfo/themes';
+import { themes, applicationRules } from '@byfo/themes';
+import { BYFOStore } from 'byfo-utils';
 
 @customElement('byfo-testpage')
 export default class BYFOTestpage extends LitElement {
-  currentTheme: keyof ThemeMap = 'dark';
+  store: BYFOStore = new BYFOStore();
   connectedCallback(): void {
     super.connectedCallback();
-    Object.values(themes).forEach((t: ThemeMap[keyof ThemeMap]) => t.install());
-    themes[this.currentTheme].apply();
+    Object.values(themes).forEach((t: Theme) => t.install());
+    themes[this.store.theme].apply();
     if (this.shadowRoot) {
       this.shadowRoot.adoptedStyleSheets = [...(this.shadowRoot?.adoptedStyleSheets ?? []), applicationRules];
     }
   }
-  handleTheme = (e: InputEvent) => {
-    const themetag = (e.target as HTMLSelectElement).value;
-    this.currentTheme = themetag;
-    themes[themetag as keyof ThemeMap].apply();
-  };
   formFields = [
     {
       id: 'username',
@@ -37,19 +34,25 @@ export default class BYFOTestpage extends LitElement {
   render() {
     return html`<h1>BYFO Component test page</h1>
       <byfo-canvas backupKey=${'testkey'}></byfo-canvas>
-      <div style="position:fixed; top: 1rem; right: 1rem;">
-        <select @input=${this.handleTheme}>
-          ${map(
-            Object.values(themes),
-            (theme: ThemeMap[keyof ThemeMap]) => html`<option value=${theme.name} selected=${theme.name === this.currentTheme || nothing}>${theme.displayName}</option>`,
-          )}
-        </select>
-      </div>
+      <byfo-modal id='settings'><span slot="buttontext">${ByfoIcon('gear')}</span><byfo-settings slot="content" .store=${this.store}></byfo-settings></byfo-modal>
       <byfo-modal
         ><span slot="buttontext">Hello!</span>
         <byfo-form slot='content' heading='Join Game' .onSubmit=${() => console.log('yippee!')} .fields=${this.formFields} buttonLabel='Join'></byfo-modal
       >`;
   }
+
+  static styles = [
+    css`
+      #settings::part(openbutton) {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0 0 0 1rem;
+      }
+    `,
+  ];
 }
 
 declare global {

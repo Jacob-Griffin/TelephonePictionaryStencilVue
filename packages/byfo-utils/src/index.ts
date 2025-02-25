@@ -5,3 +5,4 @@ export * from './firebase';
 export * from './render-support';
 export * from './game-state';
 export * from './canvas-state';
+export * from './storage';

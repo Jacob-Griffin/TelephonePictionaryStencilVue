@@ -23,6 +23,7 @@ const sheetText = css`
     transition:
       color 0.5s,
       background-color 0.5s;
+    font-size: 16px;
   }
 
   h1,

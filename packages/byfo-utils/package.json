@@ -18,6 +18,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@byfo/themes": "workspace:^",
     "byfo-themes": "workspace:*",
     "firebase": "11.2.0",
     "marked": "^15.0.6"

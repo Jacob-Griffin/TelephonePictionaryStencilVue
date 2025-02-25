@@ -1,7 +1,7 @@
 import applicationRules from './applicationRules';
 
 export class Theme {
-  name: keyof ThemeMap;
+  name: ThemeId;
   displayName: string;
   styles: {
     /**

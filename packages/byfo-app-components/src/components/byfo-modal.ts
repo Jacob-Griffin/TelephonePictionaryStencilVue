@@ -21,6 +21,11 @@ export default class BYFOModal extends LitElement {
   };
 
   backdropCloseModal = (e: PointerEvent) => {
+    if ((e.target as HTMLElement) !== this.dialog) {
+      // Other click events will bubble up, and not all of them have the correct mouse positions
+      // If the click was on the backdrop, then the click target will be the dialog
+      return;
+    }
     const bbox = this.dialog!.getBoundingClientRect();
     if (e.clientX > bbox.right || e.clientX < bbox.left || e.clientY > bbox.bottom || e.clientY < bbox.top) {
       this.closeModal();
@@ -28,7 +33,7 @@ export default class BYFOModal extends LitElement {
   };
 
   render() {
-    return html`<button @click=${this.openModal}><slot name="buttontext"></slot></button>
+    return html`<button @click=${this.openModal} part="openbutton"><slot name="buttontext"></slot></button>
       <dialog ${ref(this.#dialog)} @click=${this.backdropCloseModal}>
         <button @click=${this.closeModal} class="close-button">${ByfoIcon('x')}</button><slot name="content"></slot>
       </dialog>`;
@@ -61,6 +66,7 @@ export default class BYFOModal extends LitElement {
         width: 2rem;
         padding: 0;
         background: none;
+        color: var(--byfo-text-main);
         &:hover {
           background: none;
         }

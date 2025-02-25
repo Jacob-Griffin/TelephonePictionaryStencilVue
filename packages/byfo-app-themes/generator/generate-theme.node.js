@@ -71,15 +71,19 @@ writeFileSync(`./src/themes/${themeName}.ts`, themeContents);
 
 const themeList = readdirSync('./src/themes').map(filename => filename.replace('.ts', ''));
 
-const indexContents = `${themeList.map(theme => `import { ${theme} } from './themes/${theme}';`).join('\n')}
+const indexContents = `import { Theme } from './bases/Theme';
+${themeList.map(theme => `import { ${theme} } from './themes/${theme}';`).join('\n')}
 
-const themes: ThemeMap = {
+const themes: Record<ThemeId, Theme> = {
 ${themeList.map(theme => `  ${theme},`).join('\n')}
 };
 
-export type { ThemeMap };
+export { CustomTheme } from './bases/CustomTheme';
+export type { ThemeId, Theme };
+export * from './bases/ThemeSpec';
+export * from './bases/ThemeId';
 export { themes };
-export * from './bases/applicationRules';
+export { default as applicationRules } from './bases/applicationRules';
 export default themes;
 `;
 

@@ -78,8 +78,19 @@ export function decodePath(path: string) {
  * Checks if a game id is valid
  * @param input - A potential gameid
  * @returns True if the input is a gameid, false otherwise
+ * @deprecated
  */
 export function validGameId(input: string) {
+  const exp = /^[0-9]{1,7}$/;
+  return exp.test(input);
+}
+
+/**
+ * Checks if a game id is valid
+ * @param input - A potential gameid
+ * @returns True if the input is a gameid, false otherwise
+ */
+export function isValidGameId(input: string) {
   const exp = /^[0-9]{1,7}$/;
   return exp.test(input);
 }
@@ -102,6 +113,30 @@ export function validUsername(input?: string, maxCharacters?: number): boolean |
   }
   const invalidCharacters = invalidCharactersList(input);
   return invalidCharacters ? `Names cannot contain ${invalidCharacters}` : true;
+}
+
+/**
+ * Checks if a username is valid
+ * @param input - A potential username
+ * @returns true if the name is valid, false if the string is empty
+ * @throws The reason it is invalid, if it is invalid but not empty
+ */
+export function isValidUsername(input?: string, maxCharacters?: number): boolean {
+  if (!input || !input.trim()) {
+    return false;
+  }
+  if (input === '__host') {
+    throw new Error(`__host is a reserved name`);
+  }
+  const maxName = maxCharacters ?? defaultGameConfig.usernameMaxCharacters;
+  if (input.length > maxName) {
+    throw new Error(`Names cannot exceed ${maxName} characters. ${input.length}/${maxName}`);
+  }
+  const invalidCharacters = invalidCharactersList(input);
+  if (invalidCharacters) {
+    throw new Error(`Names cannot contain ${invalidCharacters}`);
+  }
+  return true;
 }
 
 /**
